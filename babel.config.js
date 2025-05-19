@@ -1,9 +1,10 @@
-module.exports = function (api) {
+module.exports = (api) => {
   api.cache(true);
   return {
     presets: ["babel-preset-expo"],
     plugins: [
       ["babel-plugin-react-docgen-typescript", { exclude: "node_modules" }],
+      "react-native-reanimated/plugin", // これを追加！
     ],
   };
 };

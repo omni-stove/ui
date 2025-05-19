@@ -12,3 +12,16 @@ web-build/
 
 # macOS
 .DS_Store
+
+# ai-rules
+.cursorrules
+.clinerules
+.ai-rules-version.json
+.github/copilot-instructions.md
+.roo/rules
+.cursor/rules
+.roomodes
+.roo/rules*
+
+# env
+.env

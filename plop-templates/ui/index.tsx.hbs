@@ -1,0 +1,10 @@
+import { forwardRef, ElementRef } from 'react';
+import { {{pascalCase name}} as RNP{{pascalCase name}}, {{pascalCase name}}Props } from 'react-native-paper';
+
+type Props = {{pascalCase name}}Props & {
+  // Add any additional props here
+};
+
+export const {{pascalCase name}} = forwardRef<ElementRef<typeof RNP{{pascalCase name}}>, Props>((props, ref) => {
+  return <RNP{{pascalCase name}} {...props} ref={ref} />;
+});
