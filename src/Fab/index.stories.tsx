@@ -1,9 +1,21 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import type { ComponentProps } from "react";
+import { StyleSheet, View } from "react-native";
+import { MD3LightTheme, PaperProvider } from "react-native-paper";
 import { FAB as Component } from ".";
 
 const meta: Meta<typeof Component> = {
   component: Component,
+  decorators: [
+    (Story) => (
+      <PaperProvider theme={MD3LightTheme}>
+        {/* Ensure the View takes full screen to allow FAB to position correctly */}
+        <View style={{ flex: 1 }}>
+          <Story />
+        </View>
+      </PaperProvider>
+    ),
+  ],
 };
 
 export default meta;
@@ -12,22 +24,85 @@ type OurComponentProps = ComponentProps<typeof Component>;
 
 type BaseStory = StoryObj<OurComponentProps>;
 
-const baseArgs: Partial<OurComponentProps> = {
-  // visible: true,
+const baseArgs: Required<Pick<OurComponentProps, "icon" | "color">> = {
   icon: "plus",
+  color: "primary",
 };
+
+const commonActions = [
+  { icon: "timer", label: "Action 1", onPress: () => console.log("Action 1") },
+  { icon: "camera", label: "Action 2", onPress: () => console.log("Action 2") },
+  { icon: "timer", label: "TOOOOOO LONG Action 3", onPress: () => console.log("Action 3") },
+];
 
 export const Default: BaseStory = {
-  args: baseArgs,
-  render: (args: OurComponentProps) => <Component {...args} />,
-};
-
-export const WithActions: BaseStory = {
+  name: "Default (56px)",
   args: {
     ...baseArgs,
-    actions: [
-      { icon: "diary", label: "Action 1", onPress: () => {} },
-      { icon: "camera", label: "Action 2", onPress: () => {} },
-    ],
+    onPress: () => console.log("Default FAB pressed"),
+    actions: commonActions,
   },
 };
+
+export const MediumSize: BaseStory = {
+  name: "Medium (80px)",
+  args: {
+    ...baseArgs,
+    size: "medium",
+    onPress: () => console.log("Medium FAB pressed"),
+    actions: commonActions,
+  },
+};
+
+export const LargeSize: BaseStory = {
+  name: "Large (96px)",
+  args: {
+    ...baseArgs,
+    size: "large",
+    onPress: () => console.log("Large FAB pressed"),
+    actions: commonActions,
+  },
+};
+
+export const WithActionsPrimary: BaseStory = {
+  name: "With Actions (Primary)",
+  args: {
+    ...baseArgs,
+    color: "primary",
+    actions: commonActions,
+    onPress: () => console.log("Primary FAB with actions pressed"),
+  },
+};
+
+export const WithActionsSecondary: BaseStory = {
+  name: "With Actions (Secondary)",
+  args: {
+    ...baseArgs,
+    color: "secondary",
+    actions: commonActions,
+    onPress: () => console.log("Secondary FAB with actions pressed"),
+  },
+};
+
+export const WithActionsTertiary: BaseStory = {
+  name: "With Actions (Tertiary)",
+  args: {
+    ...baseArgs,
+    color: "tertiary",
+    actions: commonActions,
+    onPress: () => console.log("Tertiary FAB with actions pressed"),
+  },
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    gap: 32,
+  },
+  section: {
+    flexDirection: "row",
+    gap: 16,
+    alignItems: "center",
+  },
+});
