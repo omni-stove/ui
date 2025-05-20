@@ -3,16 +3,19 @@ import type { Preview } from "@storybook/react";
 import React from "react";
 import { UIProvider } from "../src/Provider";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native";
 
 const preview: Preview = {
 	decorators: [
 		withBackgrounds,
 		(Story) => (
-			<GestureHandlerRootView style={{ flex: 1 }}>
-			<UIProvider>
-				<Story />
-			</UIProvider>
-			</GestureHandlerRootView>
+			<SafeAreaView style={{ flex: 1 }}>
+				<GestureHandlerRootView style={{ flex: 1 }}>
+					<UIProvider>
+						<Story />
+					</UIProvider>
+				</GestureHandlerRootView>
+			</SafeAreaView>
 		),
 	],
 
