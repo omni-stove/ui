@@ -94,15 +94,32 @@ export const WithActionsTertiary: BaseStory = {
   },
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    gap: 32,
+
+export const ExtendedFabDefaultSize: BaseStory = {
+  name: "Extended FAB (Default Size)",
+  args: {
+    ...baseArgs,
+    label: "Extended FAB",
+    onPress: () => console.log("Extended FAB Default Size pressed"),
   },
-  section: {
-    flexDirection: "row",
-    gap: 16,
-    alignItems: "center",
+};
+
+export const ExtendedFabMediumSize: BaseStory = {
+  name: "Extended FAB (Medium Size)",
+  args: {
+    ...baseArgs,
+    label: "Extended FAB",
+    size: "medium",
+    onPress: () => console.log("Extended FAB Medium Size pressed"),
   },
-});
+};
+
+export const ExtendedFabLargeSize: BaseStory = {
+  name: "Extended FAB (Large Size)",
+  args: {
+    ...baseArgs,
+    label: "Extended FAB",
+    size: "large",
+    onPress: () => console.log("Extended FAB Large Size pressed"),
+  },
+};

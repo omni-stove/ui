@@ -18,6 +18,7 @@ type Props = {
   onPress?: () => void;
   size?: Size;
   actions?: Action[];
+  label?: string;
 };
 
 export const FAB = ({
@@ -26,6 +27,7 @@ export const FAB = ({
   onPress,
   color = "primary",
   size,
+  label,
 }: Props) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
@@ -34,6 +36,9 @@ export const FAB = ({
   const closeFabAnim = useMemo(() => new Animated.Value(0), []);
 
   const toggleOpen = useCallback(() => {
+    if (!actions || actions.length === 0) {
+      return;
+    }
     setOpen((prev) => !prev);
     Animated.parallel([
       Animated.spring(scaleAnim, {
@@ -53,14 +58,15 @@ export const FAB = ({
         useNativeDriver: true,
       }),
     ]).start();
-  }, [open, scaleAnim, mainFabAnim, closeFabAnim]);
+  }, [actions, open, scaleAnim, mainFabAnim, closeFabAnim]);
 
   const onPressFab = useCallback(() => {
-    if (actions) {
+    if (actions && actions.length > 0) {
       toggleOpen();
+    } else {
+      onPress?.();
     }
-    onPress?.();
-  }, [toggleOpen, actions]);
+  }, [toggleOpen, actions, onPress]);
 
   const colorSet = useMemo(() => {
     if (color === "secondary") {
@@ -93,19 +99,36 @@ export const FAB = ({
       return {
         customSize: 96,
         iconSize: 36,
+        labelFontSize: 24,
       };
 
     if (size === "medium")
       return {
         customSize: 80,
         iconSize: 28,
+        labelFontSize: 22,
       };
 
     return {
       customSize: 56,
       iconSize: 24,
+      labelFontSize: 16,
     };
   }, [size]);
+
+  const customTheme = useMemo(
+    () => ({
+      ...theme,
+      fonts: {
+        ...theme.fonts,
+        labelLarge: {
+          ...theme.fonts.labelLarge,
+          fontSize: fabSizeStyle.labelFontSize,
+        },
+      },
+    }),
+    [theme, fabSizeStyle.labelFontSize]
+  );
 
   return (
     <View style={[
@@ -158,8 +181,11 @@ export const FAB = ({
             style={[styles.baseFab, { backgroundColor: colorSet.container }]}
             onPress={onPressFab}
             color={colorSet.content}
+            label={label}
+            theme={customTheme}
           />
         </Animated.View>
+        {actions && actions.length > 0 && (
         <Animated.View style={{ opacity: closeFabAnim, position: 'absolute', top: 0, right: 0 }}>
           <Fab
             icon="close"
@@ -173,6 +199,7 @@ export const FAB = ({
             color={colorSet.content}
           />
         </Animated.View>
+        )}
       </View>
     </View>
   );
