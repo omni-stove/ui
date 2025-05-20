@@ -1,12 +1,12 @@
 'use client'
-import { forwardRef, useState, ComponentRef, useEffect } from 'react';
+import { forwardRef, useState, ComponentRef, useEffect, useRef } from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle, TextStyle } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, interpolate } from 'react-native-reanimated';
 import { IconSource } from 'react-native-paper/lib/typescript/components/Icon';
-import { TouchableRipple, Text, Icon, Badge, useTheme, MD3Theme } from 'react-native-paper';
+import { TouchableRipple, Text, Icon, Badge, useTheme, MD3Theme, Modal, Portal } from 'react-native-paper';
 import { FAB, IconButton } from 'react-native-paper'; // Use FAB and IconButton from react-native-paper
 
-type Layout = 'standard' | 'modal'
+type Variant = 'standard' | 'modal'
 
 export type NavigationRailItem = {
   key: string
@@ -22,18 +22,19 @@ export type NavigationRailItem = {
 }
 
 type Props = {
-  layout?: Layout
+  variant?: Variant
   items: NavigationRailItem[]
   selectedItemKey: string
-  onMenuPress?: () => void
+  onMenuPress?: () => void // Called when internal menu button is pressed
   fabIcon?: IconSource
   fabLabel?: string
   onFabPress?: () => void
-  initialStatus?: Status // Add initialStatus prop
-  // Style props removed as per feedback
+  initialStatus?: Status
+  initialModalOpen?: boolean; // For modal variant: initial open state
+  onDismiss?: () => void; // For modal variant: when modal is dismissed
 }
 
-type Status = 'collapsed' | 'expanded' // Will be used for expressive layout
+type Status = 'collapsed' | 'expanded'
 
 export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>((
   {
@@ -43,34 +44,57 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>((
     fabIcon,
     fabLabel,
     onFabPress,
-    initialStatus = 'collapsed', // Default to 'collapsed'
-    // layout, // layout prop is not used yet
+    initialStatus = 'collapsed',
+    variant = 'standard',
+    initialModalOpen = false,
+    onDismiss,
   }: Props, ref) => {
   const theme = useTheme<MD3Theme>();
-  const [status, setStatus] = useState<Status>(initialStatus);
+  const [status, setStatus] = useState<Status>(variant === 'modal' ? 'expanded' : initialStatus);
+  // Internal state for modal visibility, controlled by the component itself
+  const [isModalOpen, setIsModalOpen] = useState(variant === 'modal' ? initialModalOpen : false);
 
-  const toggleStatus = () => {
+  // Toggle for the rail's own expanded/collapsed status (for standard variant)
+  const toggleRailStatus = () => {
     setStatus(prev => prev === 'collapsed' ? 'expanded' : 'collapsed');
   };
 
+  // Toggle for the modal visibility (triggered by the fixed top-left button)
+  const toggleModalVisibility = () => {
+    if (variant === 'modal') {
+      setIsModalOpen(prev => !prev);
+    }
+  };
+
   const styles = StyleSheet.create({
-    container: { // This will be wrapped by Animated.View, so remove animated properties
+    fixedGlobalMenuButton: {
+      position: 'absolute',
+      top: 8, // Align with railContent's paddingTop
+      left: 16, // Align with railContent's menuButtonContainer's paddingHorizontal when expanded
+      zIndex: 1002, // Ensure it's above Modal
+      backgroundColor: 'transparent',
+      borderRadius: theme.roundness * 4,
+    },
+    container: {
       backgroundColor: theme.colors.surface,
       paddingTop: 8,
       paddingBottom: 8,
       height: '100%',
       overflow: 'hidden', // Important for width animation
+      // borderTopRightRadius: theme.roundness * 4, // Removed: Radius only for modal
+      // borderBottomRightRadius: theme.roundness * 4, // Removed: Radius only for modal
     },
-    menuButtonContainer: {
+    menuButtonContainer: { // For standard variant
       marginBottom: 36,
       width: '100%',
-      alignItems: status === 'expanded' ? 'flex-start' : 'center',
-      paddingHorizontal: status === 'expanded' ? 16 : 0, // Add padding in expanded mode to align with items
+      alignItems: status === 'expanded' ? 'flex-start' : 'center', // Align based on status
+      paddingHorizontal: status === 'expanded' ? 16 : 0, // Add padding in expanded mode
     },
     fabContainer: {
       alignItems: status === 'expanded' ? 'flex-start' : 'center', // Align main FAB based on status
       width: '100%',
       paddingHorizontal: status === 'expanded' ? 16 : 0, // Add padding for expanded main FAB
+      marginBottom: 24, // Add margin bottom to separate FAB from items
     },
     // Styles for Collapsed items
     itemContainer: {
@@ -134,7 +158,19 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>((
       top: 8, // Position from the top edge of the FAB
       // right: 12, // Removed right positioning
       left: 44, // Position from the left edge of the FAB, aiming for icon's top-right. Adjust as needed.
-    }
+    },
+    modalContentContainer: { // Style for the content inside the modal
+      backgroundColor: theme.colors.surface,
+      // padding: 20, // Example padding, adjust as needed
+      // borderRadius: theme.roundness * 2, // Example border radius
+      // margin: 20, // Example margin to not touch screen edges
+      height: '100%', // Make the rail take full height of the modal
+      // width: 'auto', // Let the rail's animated width define its width
+      maxWidth: 360, // Consistent with the rail's max width
+      borderTopRightRadius: theme.roundness * 4, // Add border radius only to the right side for modal too
+      borderBottomRightRadius: theme.roundness * 4, // Add border radius only to the right side for modal too
+      overflow: 'hidden', // Ensure content respects the modal's border radius
+    },
   });
 
   // Icon is 24x24, iconContainer is 56x32 (for collapsed). Icon is centered.
@@ -196,39 +232,58 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>((
     };
   };
 
-  const handleMenuPress = () => {
-    toggleStatus();
-    if (onMenuPress) {
-      onMenuPress();
+  // Handler for the internal menu button (inside railContent)
+  const handleInternalMenuPress = () => {
+    if (variant === 'modal') {
+      // In modal variant, internal menu button ONLY closes the modal
+      setIsModalOpen(false);
+      if (onMenuPress) {
+        onMenuPress(); // Propagate event if needed
+      }
+    } else {
+      // Standard behavior: toggle rail status
+      toggleRailStatus();
+      if (onMenuPress) {
+        onMenuPress();
+      }
     }
   };
 
-  const animatedWidth = useSharedValue(status === 'collapsed' ? 80 : 220); // Expanded width is 220
-  const animatedAlignment = useSharedValue(status === 'collapsed' ? 0 : 1); // 0 for center, 1 for flex-start
+  const animatedWidth = useSharedValue(status === 'expanded' ? 220 : 80);
+  const animatedAlignment = useSharedValue(status === 'expanded' ? 1 : 0);
+
+  const ANIMATION_DURATION = 280;
 
   useEffect(() => {
-    animatedWidth.value = withTiming(status === 'collapsed' ? 80 : 220, { duration: 300 });
-    animatedAlignment.value = withTiming(status === 'collapsed' ? 0 : 1, { duration: 300 });
+    animatedWidth.value = withTiming(status === 'expanded' ? 220 : 80, { duration: ANIMATION_DURATION });
+    animatedAlignment.value = withTiming(status === 'expanded' ? 1 : 0, { duration: ANIMATION_DURATION });
   }, [status, animatedWidth, animatedAlignment]);
+
+  // REMOVED: Effect that managed rail 'status' based on modal's actual visibility.
+  // The rail's status is now independent of the modal's open/close state
+  // and is only controlled by handleInternalMenuPress (toggleRailStatus).
 
   const animatedContainerStyle = useAnimatedStyle(() => {
     return {
-      width: animatedWidth.value,
+      width: status === 'expanded' ? 'auto' : animatedWidth.value,
+      minWidth: status === 'expanded' ? 220 : 80,
+      maxWidth: 360,
       alignItems: animatedAlignment.value === 0 ? 'center' : 'flex-start',
     };
   });
 
-  return (
-    <Animated.View style={[styles.container, animatedContainerStyle, {maxWidth: 360}]} ref={ref}>
-      {/* Use a real menu icon that can change based on state */}
+  const railContent = (
+    <Animated.View style={[styles.container, animatedContainerStyle]} ref={ref}>
+      {/* Internal Menu button */}
       <View style={styles.menuButtonContainer}>
         <IconButton
-          icon={status === 'expanded' ? 'menu-open' : 'menu'} // Use 'menu-open' for expanded state
-          onPress={handleMenuPress}
+          icon={status === 'expanded' ? 'menu-open' : 'menu'}
+          onPress={handleInternalMenuPress}
           size={24}
+          accessibilityLabel={status === 'expanded' ? "Collapse rail" : "Expand rail"}
         />
       </View>
-      { onFabPress && fabIcon && (
+      {onFabPress && fabIcon && (
         <View style={styles.fabContainer}>
           <FAB
             icon={fabIcon}
@@ -336,6 +391,50 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>((
       })}
     </Animated.View>
   );
+
+  if (variant === 'modal') {
+    return (
+      <>
+        {/* Button to toggle modal visibility, only visible when modal is closed */}
+        {variant === 'modal' && !isModalOpen && (
+          <Portal>
+            <IconButton
+              icon={'menu'}
+              onPress={toggleModalVisibility}
+              style={styles.fixedGlobalMenuButton}
+              size={24}
+              accessibilityLabel={"Open navigation modal"}
+            />
+          </Portal>
+        )}
+
+        {/* The Modal itself, containing the railContent */}
+        {variant === 'modal' && ( // Modal and its content only relevant for modal variant
+          <Portal>
+          <Modal
+            visible={isModalOpen} // Controlled by internal state
+            onDismiss={() => {
+              setIsModalOpen(false);
+              if (onDismiss) { // Call external onDismiss if provided
+                onDismiss();
+              }
+            }}
+            contentContainerStyle={styles.modalContentContainer}
+            style={{ alignItems: 'flex-start' }}
+          >
+            {railContent}
+          </Modal>
+          </Portal>
+        )}
+      </>
+    );
+  }
+
+  // Standard variant
+  return railContent; // This should only be returned if not modal, or handled above.
+                      // The current structure means if variant is not modal, it returns railContent.
+                      // If variant is modal, it returns the modal structure (or null if not isModalOpen and no toggle button).
+                      // This seems okay. The top-level return railContent is for standard.
 });
 
 NavigationRail.displayName = 'NavigationRail';

@@ -3,29 +3,24 @@ import { action } from '@storybook/addon-actions';
 import { NavigationRail as Component, NavigationRailItem } from '.'; // NavigationRailItem をインポート
 import { getCanvas } from "../libs/storybook";
 import { expect } from "@storybook/test";
-import { View } from 'react-native'; // View をインポートしてラッパーとして使用
+import { View } from 'react-native'; // View is used by other stories, keep for now or check all usages.
+// useState and other specific imports for ModalVariant's previous render are removed if no longer needed globally.
+// import { useState } from 'react';
+// import { Button } from '../Button';
+// import { IconButton, useTheme } from 'react-native-paper';
+// import { MD3Theme } from 'react-native-paper';
 
 const meta: Meta<typeof Component> = {
   component: Component,
-  // title: 'UI/NavigationRail', // Removed as per feedback
-  decorators: [
-    // Storyを中央に配置したり、背景色をつけたりするためのDecorator
-    (Story) => (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#f0f0f0', padding: 20 }}>
-        <View style={{ height: '80%', width: 260, backgroundColor: 'white' }}>
-          {/* NavigationRailが縦長なので、ある程度の高さを持つコンテナでラップ */}
-          <Story />
-        </View>
-      </View>
-    ),
-  ],
   argTypes: {
-    // itemsの各プロパティをコントロールできるように設定も可能だけど、まずは基本的なものを
     selectedItemKey: { control: 'text' },
     fabIcon: { control: 'text' },
     fabLabel: { control: 'text' },
     initialStatus: { control: 'radio', options: ['collapsed', 'expanded'] },
-    // layout: { control: 'radio', options: ['standard', 'modal'] }, // 将来的に
+    variant: { control: 'radio', options: ['standard', 'modal'] },
+    initialModalOpen: { control: 'boolean', description: 'Initial open state for modal variant' },
+    onDismiss: { action: 'dismissed' }, // For modal variant
+    onMenuPress: { action: 'menuPressed' }, // For modal variant (when internal menu button closes modal)
   },
 };
 
@@ -107,4 +102,20 @@ export const Behavior: Story = {
     // 例: canvas.getByText('Favorites').click();
     // expect(action('onPress-favorites')).toHaveBeenCalled();
   },
+};
+
+export const ModalVariant: Story = {
+  args: {
+    // Explicitly define args for ModalVariant
+    items: defaultItems,
+    selectedItemKey: 'home',
+    fabIcon: 'pencil', // Optional: show FAB in modal rail
+    fabLabel: 'Create',  // Optional
+    onFabPress: action('onFabPress-modal'), // Optional
+    variant: 'modal',
+    initialModalOpen: false, // Default to closed for the story
+    // onDismiss action is defined in argTypes
+    // onMenuPress action is defined in argTypes
+  },
+  render: (args) => <Component {...args} />,
 };
