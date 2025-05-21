@@ -26,3 +26,17 @@ export const Behavior: Story = {
     expect(canvas).toBeTruthy();
   },
 };
+
+export const Text: Story = {
+  args: {
+    label: "KT",
+  },
+  render: (args) => <Component {...args} />,
+};
+
+export const Image: Story = {
+  args: {
+    source: "https://cataas.com/cat",
+  },
+  render: (args) => <Component {...args} />,
+};
