@@ -41,6 +41,22 @@ jobs:
           registry-url: 'https://npm.pkg.github.com/'
       - name: Install dependencies
         run: npm ci
+      - name: Set CalVer
+        run: |
+          DATE=$(date +'%Y.%m')
+          # Fetch all tags from remote to get the latest release count
+          git fetch --tags
+          # List tags for the current month, count them, and increment for the new release
+          # Tags are expected in the format YYYY.MM.X
+          LAST_RELEASE_COUNT=$(git tag --list "${DATE}.*" | awk -F. '{print $3}' | sort -nr | head -n1)
+          if [ -z "$LAST_RELEASE_COUNT" ]; then
+            RELEASE_COUNT=1
+          else
+            RELEASE_COUNT=$((LAST_RELEASE_COUNT + 1))
+          fi
+          NEW_VERSION="${DATE}.${RELEASE_COUNT}"
+          echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
+          npm version $NEW_VERSION --no-git-tag-version
       - name: Build
         run: npm run build # 公開前にもビルドを実行
       - name: Publish to GitHub Packages
