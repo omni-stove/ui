@@ -9,9 +9,9 @@ interface ThemeProviderProps extends PropsWithChildren {
 
 export const UIProvider = ({
   children,
-  keyColor = "#6750A4",
+  keyColor: _keyColor = "#6750A4",
 }: ThemeProviderProps) => {
-  const colorScheme = useColorScheme();
+  const _colorScheme = useColorScheme();
 
   return (
     <SafeAreaProvider>

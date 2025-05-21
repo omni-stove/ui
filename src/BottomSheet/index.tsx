@@ -1,6 +1,7 @@
 import BottomSheetOriginal, {
   BottomSheetBackdrop,
   type BottomSheetProps,
+  type BottomSheetBackdropProps,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import type React from "react";
@@ -96,7 +97,7 @@ export const BottomSheet = forwardRef<BottomSheetRef, Props>(
     }));
 
     const renderBackdrop = useCallback(
-      (props: any) => (
+      (props: BottomSheetBackdropProps) => (
         <BottomSheetBackdrop
           {...props}
           disappearsOnIndex={-1}

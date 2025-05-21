@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { Pressable, StyleSheet, View, Animated } from "react-native";
+import { Animated, Pressable, StyleSheet, View } from "react-native";
 import { FAB as Fab, Text, useTheme } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { Icon } from "../Icon";
@@ -127,26 +127,26 @@ export const FAB = ({
         },
       },
     }),
-    [theme, fabSizeStyle.labelFontSize]
+    [theme, fabSizeStyle.labelFontSize],
   );
 
   return (
-    <View style={[
-      styles.wrapper,
-    ]}>
+    <View style={[styles.wrapper]}>
       {actions && open && (
         <View style={styles.actions}>
           {actions.map((action, index) => (
             <Animated.View
-              key={index}
+              key={`${action.label}-${index}`}
               style={{
                 opacity: scaleAnim,
                 transform: [
                   { scale: scaleAnim },
-                  { translateX: scaleAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [50, 0],
-                  })}
+                  {
+                    translateX: scaleAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [50, 0],
+                    }),
+                  },
                 ],
               }}
             >
@@ -186,19 +186,26 @@ export const FAB = ({
           />
         </Animated.View>
         {actions && actions.length > 0 && (
-        <Animated.View style={{ opacity: closeFabAnim, position: 'absolute', top: 0, right: 0 }}>
-          <Fab
-            icon="close"
-            customSize={56}
-            style={[
-              styles.baseFab,
-              { backgroundColor: colorSet.container },
-              styles.circularFab,
-            ]}
-            onPress={toggleOpen}
-            color={colorSet.content}
-          />
-        </Animated.View>
+          <Animated.View
+            style={{
+              opacity: closeFabAnim,
+              position: "absolute",
+              top: 0,
+              right: 0,
+            }}
+          >
+            <Fab
+              icon="close"
+              customSize={56}
+              style={[
+                styles.baseFab,
+                { backgroundColor: colorSet.container },
+                styles.circularFab,
+              ]}
+              onPress={toggleOpen}
+              color={colorSet.content}
+            />
+          </Animated.View>
         )}
       </View>
     </View>
@@ -242,6 +249,6 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   fabContainer: {
-    position: 'relative',
+    position: "relative",
   },
 });

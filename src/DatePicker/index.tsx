@@ -17,6 +17,15 @@ export type DatePickerValue<T extends DatePickerType> = T extends "single"
   ? Date | undefined
   : Date[] | undefined;
 
+// Helper type to extract the onConfirm params type from the library's props
+type ConfirmParamsType<T extends DatePickerType> = T extends "single"
+  ? Parameters<NonNullable<DatePickerModalSingleProps["onConfirm"]>>[0]
+  : T extends "range"
+    ? Parameters<NonNullable<DatePickerModalRangeProps["onConfirm"]>>[0]
+    : T extends "multiple"
+      ? Parameters<NonNullable<DatePickerModalMultiProps["onConfirm"]>>[0]
+      : never;
+
 export type Props<T extends DatePickerType> = {
   /**
    * The type of date picker.
@@ -136,20 +145,25 @@ export const DatePicker = <T extends DatePickerType>({
 
   const onDismiss = useCallback(() => {
     setOpen(false);
-  }, [setOpen]);
+  }, []);
 
-  const handleConfirm = (params: any) => {
+  const handleConfirm = (params: ConfirmParamsType<T>) => {
     setOpen(false);
     let newValue: DatePickerValue<T>;
     if (type === "single") {
-      newValue = params.date as DatePickerValue<T>;
+      // params is { date: Date } in this case due to ConfirmParamsType
+      newValue = (params as { date: Date }).date as DatePickerValue<T>;
     } else if (type === "range") {
-      newValue = [params.startDate, params.endDate].filter(
+      // params is { startDate?: Date, endDate?: Date }
+      const rangeParams = params as { startDate?: Date; endDate?: Date };
+      newValue = [rangeParams.startDate, rangeParams.endDate].filter(
         Boolean,
       ) as DatePickerValue<T>;
+    } else if (type === "multiple") {
+      // params is { dates: Date[] }
+      newValue = (params as { dates: Date[] }).dates as DatePickerValue<T>;
     } else {
-      // type === "multiple"
-      newValue = params.dates as DatePickerValue<T>;
+      newValue = undefined;
     }
     if (controlledValue === undefined) {
       setInternalValue(newValue);

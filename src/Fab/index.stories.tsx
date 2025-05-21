@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import type { ComponentProps } from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { MD3LightTheme, PaperProvider } from "react-native-paper";
 import { FAB as Component } from ".";
 
@@ -32,7 +32,11 @@ const baseArgs: Required<Pick<OurComponentProps, "icon" | "color">> = {
 const commonActions = [
   { icon: "timer", label: "Action 1", onPress: () => console.log("Action 1") },
   { icon: "camera", label: "Action 2", onPress: () => console.log("Action 2") },
-  { icon: "timer", label: "TOOOOOO LONG Action 3", onPress: () => console.log("Action 3") },
+  {
+    icon: "timer",
+    label: "TOOOOOO LONG Action 3",
+    onPress: () => console.log("Action 3"),
+  },
 ];
 
 export const Default: BaseStory = {
@@ -93,7 +97,6 @@ export const WithActionsTertiary: BaseStory = {
     onPress: () => console.log("Tertiary FAB with actions pressed"),
   },
 };
-
 
 export const ExtendedFabDefaultSize: BaseStory = {
   name: "Extended FAB (Default Size)",

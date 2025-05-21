@@ -1,13 +1,19 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect } from "@storybook/test";
-import { View, Text, StyleSheet } from "react-native";
-import {  IconButton as Component } from ".";
+import type { ComponentProps } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { IconButton as Component } from ".";
 import { getCanvas } from "../libs/storybook";
-import { ComponentProps } from "react";
 
 const meta: Meta<typeof Component> = {
   component: Component,
-  decorators: [(Story) => <View style={{ padding: 16 }}><Story /></View>],
+  decorators: [
+    (Story) => (
+      <View style={{ padding: 16 }}>
+        <Story />
+      </View>
+    ),
+  ],
   argTypes: {
     icon: { control: "text" },
     variant: {
@@ -28,8 +34,18 @@ export default meta;
 
 type Story = StoryObj<typeof Component>;
 
-const sizes: ComponentProps<typeof Component>["size"][] = ["extra-small", "small", "medium", "large", "extra-large"];
-const widthTypes: ComponentProps<typeof Component>["widthType"][] = ["default", "narrow", "wide"];
+const sizes: ComponentProps<typeof Component>["size"][] = [
+  "extra-small",
+  "small",
+  "medium",
+  "large",
+  "extra-large",
+];
+const widthTypes: ComponentProps<typeof Component>["widthType"][] = [
+  "default",
+  "narrow",
+  "wide",
+];
 
 const commonArgs: Partial<ComponentProps<typeof Component>> = {
   icon: "pencil",
@@ -60,7 +76,12 @@ export const AllSizesAndWidths: Story = {
   ),
 };
 
-const variants: ComponentProps<typeof Component>["variant"][] = ["filled", "tonal", "outlined", "standard"];
+const variants: ComponentProps<typeof Component>["variant"][] = [
+  "filled",
+  "tonal",
+  "outlined",
+  "standard",
+];
 
 export const AllVariants: Story = {
   args: {
@@ -84,7 +105,6 @@ export const AllVariants: Story = {
     </View>
   ),
 };
-
 
 export const Behavior: Story = {
   args: {
@@ -113,9 +133,14 @@ export const ToggledStates: Story = {
   render: (args) => (
     <View style={styles.variantContainer}>
       {variants.map((variant) => (
-        <View key={`${variant}-toggle`} style={{ flexDirection: 'column', alignItems: 'center', margin: 8 }}>
+        <View
+          key={`${variant}-toggle`}
+          style={{ flexDirection: "column", alignItems: "center", margin: 8 }}
+        >
           <Text style={styles.variantLabel}>{variant}</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
+          <View
+            style={{ flexDirection: "row", alignItems: "center", marginTop: 8 }}
+          >
             <View style={styles.variantCell}>
               <Component
                 {...args}
@@ -175,5 +200,5 @@ const styles = StyleSheet.create({
     marginTop: 8,
     textAlign: "center",
     fontSize: 12,
-  }
+  },
 });

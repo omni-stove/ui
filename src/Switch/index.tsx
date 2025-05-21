@@ -32,11 +32,15 @@ export const Switch = ({
   const [active, setActive] = useState(selected);
   const [isPressed, setIsPressed] = useState(false);
 
+  const onSwitchPress = useCallback(() => {
+    onPress != null ? onPress() : null;
+  }, [onPress]);
+
   // callbackFunction の宣言をここに関数呼び出しより前に移動
-  const callbackFunction = () => {
+  const callbackFunction = useCallback(() => {
     onSwitchPress();
     setIsPressed(false);
-  };
+  }, [onSwitchPress]);
 
   //#region
   const pan = Gesture.Pan()
@@ -269,62 +273,62 @@ export const Switch = ({
   //   setIsPressed(false);
   // };
 
-  const changeSwitch = (withCallback: boolean) => {
-    if (active) {
-      Animated.timing(handleHeight, {
-        toValue: 16,
-        duration: 100,
-        useNativeDriver: false,
-      }).start();
-      Animated.timing(handleWidth, {
-        toValue: 16,
-        duration: 100,
-        useNativeDriver: false,
-      }).start();
-      Animated.timing(position, {
-        toValue: -10,
-        duration: 250,
-        useNativeDriver: false,
-      }).start(
-        withCallback
-          ? (finished) => {
-              if (finished) {
-                callbackFunction(); // runOnJS は不要
+  const changeSwitch = useCallback(
+    (withCallback: boolean) => {
+      if (active) {
+        Animated.timing(handleHeight, {
+          toValue: 16,
+          duration: 100,
+          useNativeDriver: false,
+        }).start();
+        Animated.timing(handleWidth, {
+          toValue: 16,
+          duration: 100,
+          useNativeDriver: false,
+        }).start();
+        Animated.timing(position, {
+          toValue: -10,
+          duration: 250,
+          useNativeDriver: false,
+        }).start(
+          withCallback
+            ? (finished) => {
+                if (finished) {
+                  callbackFunction(); // runOnJS は不要
+                }
               }
-            }
-          : undefined,
-      );
-      setActive(false);
-    } else {
-      Animated.timing(handleHeight, {
-        toValue: 24,
-        duration: 100,
-        useNativeDriver: false,
-      }).start();
-      Animated.timing(handleWidth, {
-        toValue: 24,
-        duration: 100,
-        useNativeDriver: false,
-      }).start();
-      Animated.timing(position, {
-        toValue: 10,
-        duration: 250,
-        useNativeDriver: false,
-      }).start(
-        withCallback
-          ? (finished) => {
-              if (finished) {
-                callbackFunction(); // runOnJS は不要
+            : undefined,
+        );
+        setActive(false);
+      } else {
+        Animated.timing(handleHeight, {
+          toValue: 24,
+          duration: 100,
+          useNativeDriver: false,
+        }).start();
+        Animated.timing(handleWidth, {
+          toValue: 24,
+          duration: 100,
+          useNativeDriver: false,
+        }).start();
+        Animated.timing(position, {
+          toValue: 10,
+          duration: 250,
+          useNativeDriver: false,
+        }).start(
+          withCallback
+            ? (finished) => {
+                if (finished) {
+                  callbackFunction(); // runOnJS は不要
+                }
               }
-            }
-          : undefined,
-      );
-      setActive(true);
-    }
-  };
-  const onSwitchPress = () => {
-    onPress != null ? onPress() : null;
-  };
+            : undefined,
+        );
+        setActive(true);
+      }
+    },
+    [active, handleHeight, handleWidth, position, callbackFunction],
+  );
 
   const init = useCallback(() => {
     if (active !== selected) {
