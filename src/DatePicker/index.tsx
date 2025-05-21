@@ -1,23 +1,19 @@
 import { useCallback, useEffect, useState } from "react";
 import { TouchableOpacity, View } from "react-native";
-import { TextInput } from "react-native-paper";
 import {
   DatePickerModal,
   type DatePickerModalMultiProps,
   type DatePickerModalRangeProps,
   type DatePickerModalSingleProps,
 } from "react-native-paper-dates";
-import { HelperText } from "../HelperText";
 import { TextField } from "../TextField";
 
 export type DatePickerType = "single" | "range" | "multiple";
 
-// Make this type exported so it can be used directly when needed
 export type DatePickerValue<T extends DatePickerType> = T extends "single"
   ? Date | undefined
   : Date[] | undefined;
 
-// Helper type to extract the onConfirm params type from the library's props
 type ConfirmParamsType<T extends DatePickerType> = T extends "single"
   ? Parameters<NonNullable<DatePickerModalSingleProps["onConfirm"]>>[0]
   : T extends "range"
@@ -51,9 +47,9 @@ export type Props<T extends DatePickerType> = {
    */
   label?: string;
   /**
-   * Description text displayed below the text field.
+   * Supporting text displayed below the text field.
    */
-  description?: string;
+  supportingText?: string; // description から supportingText に変更
   /**
    * Variant of the text field.
    * @default 'filled'
@@ -107,8 +103,6 @@ export type Props<T extends DatePickerType> = {
    * @default 'End date' or localized equivalent
    */
   endLabel?: string;
-  // selectMultipleLabel, selectDateLabel, selectRangeLabel は react-native-paper-dates の DatePickerModalProps に直接存在しないため削除
-  // これらのラベルはライブラリがロケールに基づいて内部的に処理するか、別の方法でカスタマイズする必要があるかもしれません。
 };
 
 export const DatePicker = <T extends DatePickerType>({
@@ -117,14 +111,14 @@ export const DatePicker = <T extends DatePickerType>({
   defaultValue,
   onChange,
   label,
-  description,
+  supportingText, // description から supportingText に変更
   textFieldVariant = "filled",
   isDisabled = false,
   errorMessage,
   required = false,
   validRange,
   locale = "ja",
-  saveLabel, // Default will be handled by react-native-paper-dates based on locale
+  saveLabel,
   cancelLabel,
   startLabel,
   endLabel,
@@ -133,7 +127,6 @@ export const DatePicker = <T extends DatePickerType>({
   const [internalValue, setInternalValue] =
     useState<DatePickerValue<T>>(defaultValue);
 
-  // Update internalValue if controlledValue changes
   useEffect(() => {
     if (controlledValue !== undefined) {
       setInternalValue(controlledValue);
@@ -151,16 +144,13 @@ export const DatePicker = <T extends DatePickerType>({
     setOpen(false);
     let newValue: DatePickerValue<T>;
     if (type === "single") {
-      // params is { date: Date } in this case due to ConfirmParamsType
       newValue = (params as { date: Date }).date as DatePickerValue<T>;
     } else if (type === "range") {
-      // params is { startDate?: Date, endDate?: Date }
       const rangeParams = params as { startDate?: Date; endDate?: Date };
       newValue = [rangeParams.startDate, rangeParams.endDate].filter(
         Boolean,
       ) as DatePickerValue<T>;
     } else if (type === "multiple") {
-      // params is { dates: Date[] }
       newValue = (params as { dates: Date[] }).dates as DatePickerValue<T>;
     } else {
       newValue = undefined;
@@ -201,7 +191,6 @@ export const DatePicker = <T extends DatePickerType>({
           .join(", ");
       }
     } catch (e) {
-      // Handle potential error with toLocaleDateString if locale is not supported or date is invalid
       console.error("Error formatting date:", e);
       return "Invalid Date";
     }
@@ -230,7 +219,6 @@ export const DatePicker = <T extends DatePickerType>({
       mode: "single",
       date: currentValue as Date | undefined,
       onConfirm: handleConfirm as DatePickerModalSingleProps["onConfirm"],
-      // selectDateLabel, // Removed
     };
   } else if (type === "range") {
     const [startDate, endDate] = (currentValue as Date[] | undefined) || [];
@@ -242,16 +230,13 @@ export const DatePicker = <T extends DatePickerType>({
       onConfirm: handleConfirm as DatePickerModalRangeProps["onConfirm"],
       startLabel,
       endLabel,
-      // selectRangeLabel, // Removed
     };
   } else {
-    // multiple
     modalProps = {
       ...commonModalProps,
       mode: "multiple",
       dates: currentValue as Date[] | undefined,
       onConfirm: handleConfirm as DatePickerModalMultiProps["onConfirm"],
-      // selectMultipleLabel, // Removed
     };
   }
 
@@ -264,28 +249,28 @@ export const DatePicker = <T extends DatePickerType>({
       >
         <View pointerEvents="none">
           <TextField
-            left={<TextInput.Icon icon="calendar" />}
+            startAdornment={{ type: "icon", value: "calendar" }}
             label={textFieldLabel}
             value={getFormattedDate()}
-            mode={textFieldVariant === "outlined" ? "outlined" : "flat"}
-            editable={false} // Important: TextField should not be directly editable
+            variant={textFieldVariant}
+            readOnly
             disabled={isDisabled}
-            error={!!errorMessage}
-            // You might want to add a calendar icon as a right adornment
-            // right={<TextField.Icon icon="calendar" onPress={() => !isDisabled && setOpen(true)} />}
+            errorMessage={errorMessage}
+            supportingText={supportingText} // TextField に supportingText を渡す
           />
         </View>
       </TouchableOpacity>
-      {description && !errorMessage && (
-        <HelperText type="info" visible={!!description}>
-          {description}
+      {/* TextField 側で HelperText を表示するので、DatePicker 側では不要になる */}
+      {/* {supportingText && !errorMessage && (
+        <HelperText type="info" visible={!!supportingText}>
+          {supportingText}
         </HelperText>
       )}
-      {errorMessage && (
+      {errorMessage && ( // エラーメッセージは TextField 側で表示される
         <HelperText type="error" visible={!!errorMessage}>
           {errorMessage}
         </HelperText>
-      )}
+      )} */}
       <DatePickerModal {...modalProps} />
     </View>
   );

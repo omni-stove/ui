@@ -4,13 +4,11 @@
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "license": "MIT",  "publishConfig": {
+  "license": "MIT",
+  "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
-  "files": [
-    "dist",
-    "README.md"
-  ],
+  "files": ["dist", "README.md"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/codynog/rn-ui.git"

@@ -1,12 +1,10 @@
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
-import type { ComponentProps } from "react"; // ComponentProps をインポート
+import type { ComponentProps } from "react";
 import { TouchableOpacity } from "react-native";
-import { TextInput, type TextInputProps } from "react-native-paper";
-import { TimePickerModal } from "react-native-paper-dates"; // TimePickerModal のみインポート
+import { TimePickerModal } from "react-native-paper-dates";
 import { TextField } from "../TextField";
 
-// 時間を HH:mm 形式にフォーマットするヘルパー関数
 const formatTime = (
   hours: number,
   minutes: number,
@@ -20,25 +18,23 @@ const formatTime = (
   return `${String(h).padStart(2, "0")}:${String(minutes).padStart(2, "0")} ${ampm}`;
 };
 
-// TimePickerModalProps の代わりに ComponentProps<typeof TimePickerModal> を使用
 type TimePickerModalActualProps = ComponentProps<typeof TimePickerModal>;
 
-// CustomTimePickerModalProps の型定義を修正
 type CustomTimePickerModalProps = Omit<
-  TimePickerModalActualProps, // ここを修正
+  TimePickerModalActualProps,
   "visible" | "onDismiss" | "onConfirm" | "hours" | "minutes"
 >;
 
-// 新しい TimePicker の Props
-type Props = Omit<TextInputProps, "value" | "onChange" | "editable"> &
-  CustomTimePickerModalProps & {
-    value?: Date;
-    onChange?: (date?: Date) => void;
-    initialHours?: number;
-    initialMinutes?: number;
-    use24HourClock?: boolean;
-    variant?: "outlined" | "filled";
-  };
+type Props = CustomTimePickerModalProps & {
+  value?: Date;
+  onChange?: (date?: Date) => void;
+  label?: string;
+  initialHours?: number;
+  initialMinutes?: number;
+  use24HourClock?: boolean;
+  variant?: "outlined" | "filled";
+  disabled?: boolean;
+};
 
 export const TimePicker: React.FC<Props> = ({
   value,
@@ -51,7 +47,7 @@ export const TimePicker: React.FC<Props> = ({
   animationType,
   inputFontSize,
   variant,
-  ...restTextInputProps
+  disabled,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [displayTime, setDisplayTime] = useState<string>("");
@@ -110,15 +106,14 @@ export const TimePicker: React.FC<Props> = ({
 
   return (
     <>
-      <TouchableOpacity onPress={showModal}>
+      <TouchableOpacity onPress={showModal} disabled={disabled}>
         <TextField
-          {...restTextInputProps}
-          left={<TextInput.Icon icon="clock" />}
-          mode={variant === "outlined" ? "outlined" : "flat"}
+          startAdornment={{ type: "icon", value: "clock" }}
+          variant={variant}
           label={label}
           value={displayTime}
-          editable={false}
-          onPressIn={showModal}
+          readOnly={true}
+          disabled={disabled}
         />
       </TouchableOpacity>
       <TimePickerModal
