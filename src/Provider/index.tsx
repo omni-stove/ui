@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "react";
-import { useColorScheme } from "react-native";
+// import { useColorScheme } from "react-native"; // Unused import
 import { PaperProvider } from "react-native-paper";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
@@ -9,9 +9,9 @@ interface ThemeProviderProps extends PropsWithChildren {
 
 export const UIProvider = ({
   children,
-  keyColor: _keyColor = "#6750A4",
+  keyColor: _keyColor = "#6750A4", // TODO: This prop is not currently used
 }: ThemeProviderProps) => {
-  const _colorScheme = useColorScheme();
+  // const _colorScheme = useColorScheme(); // Unused variable
 
   return (
     <SafeAreaProvider>

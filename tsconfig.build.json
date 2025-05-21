@@ -1,0 +1,51 @@
+{
+  "compilerOptions": {
+    // --- 基本的な型チェックとJS生成オプション ---
+    "strict": true,
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "jsx": "react-jsx", // "react" から "react-jsx" に変更
+    "lib": ["esnext", "dom"],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "isolatedModules": true,
+    "moduleSuffixes": [".ios", ".native", ".android", ""],
+
+    // --- ビルド専用設定 ---
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "rootDir": "./src",
+    "noEmit": false,
+
+    // --- コード品質オプション (react-native-paperから参考に) ---
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "example",
+    "docs",
+    "**/*.stories.tsx",
+    "**/*.story.tsx",
+    "**/*.test.tsx",
+    "**/*.spec.tsx",
+    "**/__tests__",
+    "**/__mocks__",
+    "App.tsx",
+    "babel.config.js",
+    "metro.config.js",
+    "plopfile.cjs"
+  ]
+}

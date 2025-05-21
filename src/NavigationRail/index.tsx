@@ -222,13 +222,13 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
       let calculatedRight: number;
       let badgeWidth: number | undefined = undefined;
       let badgeHeight: number | undefined = undefined;
-      let _borderRadius: number | undefined = undefined;
+      // let _borderRadius: number | undefined = undefined; // Unused variable
 
       if (badge.size === "small") {
         RNPBadgeSize = RNPBadgeSizeConfig.small;
         badgeHeight = 6;
         badgeWidth = 6;
-        _borderRadius = 3;
+        // _borderRadius = 3; // Unused assignment
 
         // Simplified positioning for visibility
         calculatedTop = 0; // Position at the top of the icon container
@@ -236,7 +236,7 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
       } else {
         RNPBadgeSize = RNPBadgeSizeConfig.largeSingleDigit;
         badgeHeight = 16;
-        _borderRadius = 8;
+        // _borderRadius = 8; // Unused assignment
 
         if (badge.label && badge.label.length > 1) {
           badgeWidth = RNPBadgeSizeConfig.largeMultiCharWidth;

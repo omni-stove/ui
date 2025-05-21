@@ -54,8 +54,10 @@ const getVisualContainerDimensions = (
           return { width: 28, height: 32 };
         case "wide":
           return { width: 40, height: 32 };
+        default:
+          return { width: 32, height: 32 }; // Default for extra-small
       }
-      break;
+    // break; // Unreachable
     case "small": // B
       switch (widthType) {
         case "default":
@@ -64,8 +66,10 @@ const getVisualContainerDimensions = (
           return { width: 32, height: 40 };
         case "wide":
           return { width: 52, height: 40 };
+        default:
+          return { width: 40, height: 40 }; // Default for small
       }
-      break;
+    // break; // Unreachable
     case "medium": // C
       switch (widthType) {
         case "default":
@@ -74,8 +78,10 @@ const getVisualContainerDimensions = (
           return { width: 48, height: 56 };
         case "wide":
           return { width: 72, height: 56 };
+        default:
+          return { width: 56, height: 56 }; // Default for medium
       }
-      break;
+    // break; // Unreachable
     case "large": // D
       switch (widthType) {
         case "default":
@@ -84,8 +90,10 @@ const getVisualContainerDimensions = (
           return { width: 64, height: 96 };
         case "wide":
           return { width: 128, height: 96 };
+        default:
+          return { width: 96, height: 96 }; // Default for large
       }
-      break;
+    // break; // Unreachable
     case "extra-large": // E
       switch (widthType) {
         case "default":
@@ -94,8 +102,10 @@ const getVisualContainerDimensions = (
           return { width: 104, height: 136 };
         case "wide":
           return { width: 184, height: 136 };
+        default:
+          return { width: 136, height: 136 }; // Default for extra-large
       }
-      break;
+    // break; // Unreachable
     default: // Default to 'small' 'default'
       return { width: 40, height: 40 };
   }
