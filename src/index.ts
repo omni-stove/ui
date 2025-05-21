@@ -35,3 +35,4 @@ export * from "./Tabs";
 export * from "./BottomSheet";
 export * from "./DatePicker";
 export * from "./TimePicker";
+export * from "./Provider";
