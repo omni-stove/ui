@@ -24,6 +24,7 @@ jobs:
           node-version: '24' # 既存の設定を流用
           cache: 'npm'
           registry-url: 'https://npm.pkg.github.com/' # 公開先レジストリ
+          scope: '@codynog'
 
       - name: Install dependencies
         run: npm ci
