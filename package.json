@@ -113,6 +113,5 @@
       "react-docgen-typescript": "2.2.2",
       "react-native-web": "^0.20.0"
     }
-  },
-  "private": true
+  }
 }
