@@ -34,7 +34,6 @@ const meta: Meta<Props<DatePickerType>> = {
     },
     onChange: { action: "onChange" },
     label: { control: "text" },
-    description: { control: "text" },
     textFieldVariant: {
       control: { type: "radio" },
       options: ["filled", "outlined"],
@@ -61,7 +60,6 @@ const meta: Meta<Props<DatePickerType>> = {
     required: false,
     isDisabled: false,
     textFieldVariant: "filled",
-    description: "",
     errorMessage: "",
     // validRange, saveLabel, etc., can be added here if a common default is desired
   },
@@ -92,7 +90,6 @@ export const Single: StoryObj<Props<"single">> =
   InteractiveDatePickerTemplate<"single">({
     type: "single",
     label: "Single Date",
-    description: "Select one date.",
     defaultValue: undefined, // Start with no date selected
   });
 
@@ -100,7 +97,6 @@ export const Range: StoryObj<Props<"range">> =
   InteractiveDatePickerTemplate<"range">({
     type: "range",
     label: "Date Range",
-    description: "Select a start and end date.",
     defaultValue: [
       new Date(),
       new Date(new Date().setDate(new Date().getDate() + 7)),
@@ -111,7 +107,6 @@ export const Multiple: StoryObj<Props<"multiple">> =
   InteractiveDatePickerTemplate<"multiple">({
     type: "multiple",
     label: "Multiple Dates",
-    description: "Select several dates.",
     defaultValue: [
       new Date(),
       new Date(new Date().setDate(new Date().getDate() + 3)),
