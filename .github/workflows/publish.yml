@@ -2,64 +2,94 @@ name: Publish Package
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ] # mainブランチへのPRでもチェックは走らせたいよね
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
-  build-and-test:
+  build-tag-publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Tag pushのため
+      packages: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4 # v2からv4に更新、fetch-depth: 0 はタグ取得に必要
+        with:
+          fetch-depth: 0
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '24' # 既存の設定を流用
           cache: 'npm'
-      - name: Install dependencies
-        run: npm ci
-      - name: Check formatting and lint
-        run: npm run format
-      - name: Build
-        run: npm run build
-      # - name: Test
-      #   run: npm test # テストコマンドをここに記述
+          registry-url: 'https://npm.pkg.github.com/' # 公開先レジストリ
 
-  publish-gpr:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    permissions: # GitHub Packages への書き込み権限が必要
-      contents: read
-      packages: write
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node.js for GPR publish
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-          registry-url: 'https://npm.pkg.github.com/'
       - name: Install dependencies
         run: npm ci
-      - name: Set CalVer
+
+      - name: Build package
+        run: npm run build
+
+      - name: Generate CalVer
+        id: calver
         run: |
-          DATE=$(date +'%Y.%m')
-          # Fetch all tags from remote to get the latest release count
+          year=$(date +'%Y')
+          month=$(date +'%m') # POSIX準拠の%-mではなく%mを使用
+          
+          current_date="${year}.${month}"
+          echo "Current date: ${current_date}"
+          
+          # Fetch all tags from remote to ensure we have the latest state
           git fetch --tags
-          # List tags for the current month, count them, and increment for the new release
-          # Tags are expected in the format YYYY.MM.X
-          LAST_RELEASE_COUNT=$(git tag --list "${DATE}.*" | awk -F. '{print $3}' | sort -nr | head -n1)
-          if [ -z "$LAST_RELEASE_COUNT" ]; then
-            RELEASE_COUNT=1
+          
+          # List tags for the current month (without 'v' prefix), get the release number, sort, and find the highest
+          release_count=$(git tag --list "${current_date}.*" | awk -F. '{print $3}' | sort -nr | head -n1)
+          
+          if [ -z "$release_count" ]; then
+            next_release=1
           else
-            RELEASE_COUNT=$((LAST_RELEASE_COUNT + 1))
+            next_release=$((release_count + 1))
           fi
-          NEW_VERSION="${DATE}.${RELEASE_COUNT}"
-          echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
-          npm version $NEW_VERSION --no-git-tag-version
-      - name: Build
-        run: npm run build # 公開前にもビルドを実行
-      - name: Publish to GitHub Packages
+          echo "Next release number: ${next_release}"
+          
+          version="${current_date}.${next_release}"
+          echo "version=${version}" >> $GITHUB_OUTPUT
+          echo "Generated version: ${version}"
+
+      - name: Update package.json version
+        run: |
+          # jqを使ってpackage.jsonのversionを更新
+          # versionフィールドが存在しない場合も考慮（通常は存在するはず）
+          if jq -e '.version' package.json > /dev/null 2>&1; then
+            jq --arg version "${{ steps.calver.outputs.version }}" '.version = $version' package.json > package.json.tmp
+          else
+            jq --arg version "${{ steps.calver.outputs.version }}" '. + {version: $version}' package.json > package.json.tmp
+          fi
+          mv package.json.tmp package.json
+          echo "Updated package.json:"
+          cat package.json
+
+      - name: Publish package to GitHub Packages
         run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # GITHUB_TOKEN と NPM_CONFIG_REGISTRY は setup-node で設定されるため通常は不要だが、明示的に記述する例もある
+
+      - name: Create and push Git tag
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          echo "Creating tag: ${{ steps.calver.outputs.version }}"
+          # 'v'プレフィックスなしでタグを作成
+          if ! git tag -a "${{ steps.calver.outputs.version }}" -m "Release ${{ steps.calver.outputs.version }}"; then
+            echo "Failed to create tag"
+            exit 1
+          fi
+          
+          echo "Pushing tag: ${{ steps.calver.outputs.version }}"
+          if ! git push origin "${{ steps.calver.outputs.version }}"; then
+            echo "Failed to push tag"
+            exit 1
+          fi
