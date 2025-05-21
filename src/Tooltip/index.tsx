@@ -1,5 +1,6 @@
 import {
   type ReactElement,
+  type RefObject,
   cloneElement,
   isValidElement,
   useRef,
@@ -145,7 +146,7 @@ const RichTooltip = ({
     tooltip: {},
     measured: false,
   });
-  const childrenRef = useRef<View>(null);
+  const childrenRef = useRef<View | null>(null);
 
   const handleOnLayout = ({ nativeEvent: { layout } }: LayoutChangeEvent) => {
     if (childrenRef.current) {
@@ -209,7 +210,10 @@ const RichTooltip = ({
         </Portal>
       )}
       {isValidElement(children)
-        ? cloneElement(children as ReactElement<any>, { ref: childrenRef })
+        ? cloneElement(
+            children as ReactElement<{ ref?: RefObject<View | null> }>,
+            { ref: childrenRef },
+          )
         : children}
     </>
   );
