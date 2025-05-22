@@ -2,9 +2,6 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "jsx": "react-jsx",
-    "declaration": true,
-    "rootDir": "./src"
-  },
-  "include": ["src/**/*"]
+    "jsx": "react-jsx"
+  }
 }
