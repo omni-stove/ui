@@ -244,6 +244,129 @@ const table = useReactTable({
 >
 ```
 
+### 9. 高度なフィルタ機能
+
+- カラムごとの詳細フィルタ
+- Chip + RichTooltip UI
+- 複数フィルタタイプ対応
+
+#### フィルタタイプ
+
+- **text**: テキスト検索（部分一致、完全一致、前方一致、後方一致）
+- **number**: 数値範囲（最小値〜最大値）
+- **date**: 日付（単一日付）
+- **dateRange**: 日付範囲（開始日〜終了日）
+- **select**: 選択肢から選ぶ（単一選択）
+- **multiSelect**: 複数選択
+- **boolean**: true/false/all
+- **contains**: 配列に特定の値が含まれるか
+- **custom**: カスタムフィルタ関数
+
+#### フィルタ設定
+
+```typescript
+type FilterType = 'text' | 'number' | 'date' | 'dateRange' | 'select' | 'multiSelect' | 'boolean' | 'contains' | 'custom';
+
+type FilterConfig<T> = {
+  type: FilterType;
+  label: string;
+  options?: { label: string; value: any }[]; // select/multiSelect用
+  customFilter?: (value: any, filterValue: any) => boolean; // custom用
+  placeholder?: string;
+  min?: number; // number用
+  max?: number; // number用
+};
+
+type ColumnFilterConfig<T extends DataWithId> = {
+  [K in keyof T]?: FilterConfig<T[K]>;
+};
+
+type FilterValue = {
+  type: FilterType;
+  value: any;
+  operator?: 'equals' | 'contains' | 'startsWith' | 'endsWith' | 'gt' | 'gte' | 'lt' | 'lte' | 'between';
+};
+
+type EnhancedColumnFilter<T extends DataWithId> = {
+  id: keyof T;
+  filter: FilterValue;
+};
+```
+
+#### フィルタUI構成
+
+```
+[フィルタチップ1] [フィルタチップ2] [+ フィルタ追加]
+```
+
+- **FilterChip**: フィルタ条件を表示するチップ
+- **FilterTooltip**: RichTooltipでフィルタ設定UI表示
+- **FilterBar**: フィルタバー全体の管理
+
+#### 使用例
+
+```typescript
+const filterConfig: ColumnFilterConfig<User> = {
+  name: { 
+    type: 'text', 
+    label: '名前', 
+    placeholder: '名前を入力...' 
+  },
+  age: { 
+    type: 'number', 
+    label: '年齢', 
+    min: 0, 
+    max: 100 
+  },
+  createdAt: { 
+    type: 'dateRange', 
+    label: '作成日' 
+  },
+  status: { 
+    type: 'select', 
+    label: 'ステータス',
+    options: [
+      { label: 'アクティブ', value: 'active' },
+      { label: '非アクティブ', value: 'inactive' }
+    ]
+  },
+  tags: {
+    type: 'contains',
+    label: 'タグ',
+    placeholder: 'タグを入力...'
+  }
+};
+
+<EnhancedDataTable
+  data={users}
+  columns={columns}
+  filterConfig={filterConfig}
+  columnFilters={filters}
+  onColumnFiltersChange={setFilters}
+  enableFiltering={true}
+/>
+```
+
+#### フィルタコンポーネント構成
+
+```
+Table/
+├── components/
+│   ├── FilterChip.tsx          // フィルタチップ
+│   ├── FilterTooltip.tsx       // フィルタ設定UI
+│   ├── filters/
+│   │   ├── TextFilter.tsx      // テキストフィルタ
+│   │   ├── NumberFilter.tsx    // 数値フィルタ
+│   │   ├── DateFilter.tsx      // 日付フィルタ
+│   │   ├── DateRangeFilter.tsx // 日付範囲フィルタ
+│   │   ├── SelectFilter.tsx    // 選択フィルタ
+│   │   ├── MultiSelectFilter.tsx // 複数選択フィルタ
+│   │   ├── BooleanFilter.tsx   // ブール値フィルタ
+│   │   ├── ContainsFilter.tsx  // 配列包含フィルタ
+│   │   └── index.ts
+│   └── FilterBar.tsx           // フィルタバー全体
+```
+
 ## データフロー
 
 ```

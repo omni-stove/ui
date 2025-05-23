@@ -39,3 +39,4 @@ export * from "./DatePicker";
 export * from "./TimePicker";
 export * from "./Provider";
 export * from "./Grid";
+export * from "./Table";
