@@ -1,19 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import type { ComponentProps } from "react";
 import { View } from "react-native";
-import { MD3LightTheme, PaperProvider } from "react-native-paper";
 import { FAB as Component } from ".";
 
 const meta: Meta<typeof Component> = {
   component: Component,
   decorators: [
     (Story) => (
-      <PaperProvider theme={MD3LightTheme}>
-        {/* Ensure the View takes full screen to allow FAB to position correctly */}
-        <View style={{ flex: 1 }}>
-          <Story />
-        </View>
-      </PaperProvider>
+      <View style={{ flex: 1, height: "100%" }}>
+        <Story />
+      </View>
     ),
   ],
 };

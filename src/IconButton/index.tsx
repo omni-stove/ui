@@ -1,6 +1,6 @@
 import { Pressable, type StyleProp, type ViewStyle } from "react-native";
-import { Icon, TouchableRipple, useTheme } from "react-native-paper";
-import type { MD3Theme } from "react-native-paper";
+import { Icon, TouchableRipple } from "react-native-paper";
+import { useTheme } from "../../hooks";
 
 // Types based on M3 documentation
 type Size = "extra-small" | "small" | "medium" | "large" | "extra-large";
@@ -158,7 +158,7 @@ export const IconButton = ({
   style,
   testID,
 }: Props) => {
-  const theme = useTheme<MD3Theme>();
+  const theme = useTheme();
   const iconSize = getM3IconSize(size);
   const visualDimensions = getVisualContainerDimensions(size, widthType);
   const borderRadius = getCornerRadius(shape, size, selected);
@@ -197,13 +197,14 @@ export const IconButton = ({
   let backgroundColor: string | undefined = "transparent"; // Default for standard
 
   if (disabled) {
-    iconColor = theme.colors.onSurfaceDisabled;
+    // disabled状態では既存のカラーを使用
+    iconColor = theme.colors.outline; // onSurfaceDisabledの代用
     backgroundColor =
       variant === "filled" || variant === "tonal"
-        ? theme.colors.surfaceDisabled
+        ? theme.colors.surfaceVariant // surfaceDisabledの代用
         : "transparent";
     if (variant === "outlined") {
-      containerStyle.borderColor = theme.colors.onSurfaceDisabled; // Or a more specific disabled outline
+      containerStyle.borderColor = theme.colors.outline; // disabled outline
       containerStyle.borderWidth = 1;
     }
   } else {
@@ -215,7 +216,7 @@ export const IconButton = ({
           iconColor = theme.colors.onPrimary;
         } else if (selected === false) {
           // Unselected Toggle: SurfaceContainerHighest container, Primary icon
-          backgroundColor = theme.colors.surfaceVariant; // Approx for SurfaceContainerHighest
+          backgroundColor = theme.colors.surfaceContainerHighest; // 拡張されたM3カラーを使用
           iconColor = theme.colors.primary;
         } else {
           // Default (not a toggle): Primary container, OnPrimary icon
@@ -230,7 +231,7 @@ export const IconButton = ({
           iconColor = theme.colors.onSecondaryContainer;
         } else if (selected === false) {
           // Unselected Toggle: SurfaceContainerHighest container, OnSurfaceVariant icon
-          backgroundColor = theme.colors.surfaceVariant; // Approx for SurfaceContainerHighest
+          backgroundColor = theme.colors.surfaceContainerHighest; // 拡張されたM3カラーを使用
           iconColor = theme.colors.onSurfaceVariant;
         } else {
           // Default (not a toggle): SecondaryContainer container, OnSecondaryContainer icon

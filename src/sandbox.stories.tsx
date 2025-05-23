@@ -70,7 +70,7 @@ export const UserProfileApp: Story = {
                 </View>
               </View>
             </View>
-            <Button mode="contained" style={styles.editButton}>
+            <Button variant="filled" style={styles.editButton}>
               プロフィールを編集
             </Button>
           </Surface>

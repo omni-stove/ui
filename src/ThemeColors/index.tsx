@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { useTheme } from "react-native-paper";
+import { useTheme } from "../../hooks";
 
 export const ThemeColors = () => {
   const theme = useTheme();
@@ -9,7 +9,12 @@ export const ThemeColors = () => {
   }));
 
   return (
-    <ScrollView style={styles.scrollViewContainer}>
+    <ScrollView
+      style={[
+        styles.scrollViewContainer,
+        { backgroundColor: theme.colors.surface },
+      ]}
+    >
       <View style={styles.container}>
         {colors.map(({ name, color }) => {
           const isStringColor = typeof color === "string";
@@ -18,10 +23,24 @@ export const ThemeColors = () => {
           return (
             <View key={name} style={styles.colorRow}>
               <View
-                style={[styles.colorPreview, { backgroundColor: displayColor }]}
+                style={[
+                  styles.colorPreview,
+                  {
+                    backgroundColor: displayColor,
+                    borderColor: theme.colors.outline,
+                  },
+                ]}
               />
-              <Text style={styles.colorName}>{name}</Text>
-              <Text style={styles.colorValue}>{colorValueText}</Text>
+              <Text
+                style={[styles.colorName, { color: theme.colors.onSurface }]}
+              >
+                {name}
+              </Text>
+              <Text
+                style={[styles.colorValue, { color: theme.colors.onSurface }]}
+              >
+                {colorValueText}
+              </Text>
             </View>
           );
         })}
@@ -48,7 +67,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginRight: 8,
     borderWidth: 1,
-    borderColor: "#ccc",
   },
   colorName: {
     flex: 1,
@@ -56,6 +74,5 @@ const styles = StyleSheet.create({
   },
   colorValue: {
     fontSize: 16,
-    color: "#555",
   },
 });

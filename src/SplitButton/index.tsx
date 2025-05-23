@@ -7,8 +7,9 @@ import {
   useState,
 } from "react";
 import { Animated, Text, View } from "react-native"; // findNodeHandle を削除
-import { Icon, Menu, TouchableRipple, useTheme } from "react-native-paper";
+import { Icon, Menu, TouchableRipple } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
+import { useTheme } from "../../hooks";
 
 type Size = "xs" | "s" | "m" | "l" | "xl";
 type Variant = "filled" | "outlined" | "elevated" | "tonal";
@@ -138,12 +139,12 @@ export const SplitButton = forwardRef<ComponentRef<typeof View>, Props>(
         dropdownText: theme.colors.onSurfaceVariant,
       },
       elevated: {
-        backgroundColor: theme.colors.primary,
+        backgroundColor: theme.colors.surfaceContainerLow,
         borderWidth: 0,
         borderColor: "transparent",
-        textColor: theme.colors.onPrimary,
-        dropdownBg: theme.colors.primary,
-        dropdownText: theme.colors.onPrimary,
+        textColor: theme.colors.primary,
+        dropdownBg: theme.colors.surfaceContainerLow,
+        dropdownText: theme.colors.primary,
         elevation: 2,
       },
       tonal: {

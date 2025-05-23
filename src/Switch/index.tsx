@@ -5,8 +5,9 @@ import {
   GestureDetector,
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
-import { Icon, useTheme } from "react-native-paper";
+import { Icon } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
+import { useTheme } from "../../hooks";
 
 type SwitchProps = {
   selected: boolean;
@@ -415,12 +416,3 @@ export const Switch = ({
     </View>
   );
 };
-// const styles = StyleSheet.create({ // styles は上に移動した
-//   stateOuter: {
-//     justifyContent: "center",
-//     height: 32,
-//     width: 52,
-//     alignItems: "center",
-//     position: "absolute",
-//   },
-// });

@@ -3,7 +3,7 @@ import type { Preview } from "@storybook/react";
 import React from "react";
 import { UIProvider } from "../src/Provider";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { SafeAreaView, useColorScheme } from "react-native";
+import { SafeAreaView, ScrollView, useColorScheme } from "react-native";
 import { MD3LightTheme, MD3DarkTheme } from "react-native-paper";
 
 const ThemeAwareDecorator = (Story: any, context: any) => {
@@ -14,7 +14,9 @@ const ThemeAwareDecorator = (Story: any, context: any) => {
 		<SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
 			<GestureHandlerRootView style={{ flex: 1 }}>
 				<UIProvider>
-					<Story />
+					<ScrollView style={{ flex: 1 }}>
+						<Story />
+					</ScrollView>
 				</UIProvider>
 			</GestureHandlerRootView>
 		</SafeAreaView>

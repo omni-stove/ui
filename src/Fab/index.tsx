@@ -1,7 +1,9 @@
 import { useCallback, useMemo, useState } from "react";
 import { Animated, Pressable, StyleSheet, View } from "react-native";
-import { FAB as Fab, Text, useTheme } from "react-native-paper";
+import { FAB as Fab, Text } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTheme } from "../../hooks";
 import { Icon } from "../Icon";
 
 type Color = "primary" | "secondary" | "tertiary";
@@ -30,6 +32,7 @@ export const FAB = ({
   label,
 }: Props) => {
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
   const [open, setOpen] = useState(false);
   const scaleAnim = useMemo(() => new Animated.Value(0), []);
   const mainFabAnim = useMemo(() => new Animated.Value(1), []);
@@ -116,107 +119,109 @@ export const FAB = ({
     };
   }, [size]);
 
-  const customTheme = useMemo(
+  const wrapperStyle = useMemo(
     () => ({
-      ...theme,
-      fonts: {
-        ...theme.fonts,
-        labelLarge: {
-          ...theme.fonts.labelLarge,
-          fontSize: fabSizeStyle.labelFontSize,
-        },
-      },
+      ...styles.wrapper,
+      bottom: Math.max(16, insets.bottom + 16),
+      right: Math.max(16, insets.right + 16),
     }),
-    [theme, fabSizeStyle.labelFontSize],
+    [insets],
   );
 
   return (
-    <View style={[styles.wrapper]}>
-      {actions && open && (
-        <View style={styles.actions}>
-          {actions.map((action, index) => (
-            <Animated.View
-              key={`${action.label}-${index}`}
-              style={{
-                opacity: scaleAnim,
-                transform: [
-                  { scale: scaleAnim },
-                  {
-                    translateX: scaleAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [50, 0],
-                    }),
-                  },
-                ],
-              }}
-            >
-              <Pressable
-                onPress={() => {
-                  action.onPress();
-                  toggleOpen();
-                }}
+    <View style={[styles.fullScreen]} pointerEvents="box-none">
+      <View style={[wrapperStyle]}>
+        {actions && open && (
+          <View style={styles.actions}>
+            {actions.map((action, index) => (
+              <Animated.View
+                key={`${action.label}-${index}`}
                 style={{
-                  ...styles.action,
-                  backgroundColor: colorSet.actionContainer,
+                  opacity: scaleAnim,
+                  transform: [
+                    { scale: scaleAnim },
+                    {
+                      translateX: scaleAnim.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [50, 0],
+                      }),
+                    },
+                  ],
                 }}
               >
-                <Icon
-                  source={action.icon}
-                  size={24}
-                  color={colorSet.onActionContainer}
-                />
-                <Text style={{ color: colorSet.onActionContainer }}>
-                  {action.label}
-                </Text>
-              </Pressable>
-            </Animated.View>
-          ))}
-        </View>
-      )}
-      <View style={styles.fabContainer}>
-        <Animated.View style={{ opacity: mainFabAnim }}>
-          <Fab
-            icon={icon}
-            customSize={fabSizeStyle.customSize}
-            style={[styles.baseFab, { backgroundColor: colorSet.container }]}
-            onPress={onPressFab}
-            color={colorSet.content}
-            label={label}
-            theme={customTheme}
-          />
-        </Animated.View>
-        {actions && actions.length > 0 && (
-          <Animated.View
-            style={{
-              opacity: closeFabAnim,
-              position: "absolute",
-              top: 0,
-              right: 0,
-            }}
-          >
+                <Pressable
+                  onPress={() => {
+                    action.onPress();
+                    toggleOpen();
+                  }}
+                  style={{
+                    ...styles.action,
+                    backgroundColor: colorSet.actionContainer,
+                  }}
+                >
+                  <Icon
+                    source={action.icon}
+                    size={24}
+                    color={colorSet.onActionContainer}
+                  />
+                  <Text style={{ color: colorSet.onActionContainer }}>
+                    {action.label}
+                  </Text>
+                </Pressable>
+              </Animated.View>
+            ))}
+          </View>
+        )}
+        <View style={styles.fabContainer}>
+          <Animated.View style={{ opacity: mainFabAnim }}>
             <Fab
-              icon="close"
-              customSize={56}
-              style={[
-                styles.baseFab,
-                { backgroundColor: colorSet.container },
-                styles.circularFab,
-              ]}
-              onPress={toggleOpen}
+              icon={icon}
+              customSize={fabSizeStyle.customSize}
+              style={[styles.baseFab, { backgroundColor: colorSet.container }]}
+              onPress={onPressFab}
               color={colorSet.content}
+              label={label}
             />
           </Animated.View>
-        )}
+          {actions && actions.length > 0 && (
+            <Animated.View
+              style={{
+                opacity: closeFabAnim,
+                position: "absolute",
+                top: 0,
+                right: 0,
+              }}
+            >
+              <Fab
+                icon="close"
+                customSize={56}
+                style={[
+                  styles.baseFab,
+                  { backgroundColor: colorSet.container },
+                  styles.circularFab,
+                ]}
+                onPress={toggleOpen}
+                color={colorSet.content}
+              />
+            </Animated.View>
+          )}
+        </View>
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  fullScreen: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1000,
+  },
   wrapper: {
     position: "absolute",
-    bottom: 16,
-    right: 16,
     alignItems: "flex-end",
   },
   actions: {
