@@ -10,10 +10,7 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
-  "files": [
-    "dist",
-    "README.md"
-  ],
+  "files": ["dist", "README.md"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/codynog/rn-ui.git"
@@ -37,7 +34,8 @@
     "storybook:android": "cross-env EXPO_PUBLIC_STORYBOOK_ENABLED='true' expo start --android",
     "plop": "plop",
     "format": "biome check --write .",
-    "build": "bob build"
+    "build": "bob build",
+    "build-check": "tsc --noEmit"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^5.1.2",

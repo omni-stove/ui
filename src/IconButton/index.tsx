@@ -1,6 +1,6 @@
 import { Pressable, type StyleProp, type ViewStyle } from "react-native";
 import { Icon, TouchableRipple } from "react-native-paper";
-import { useTheme } from "../../hooks";
+import { useTheme } from "../hooks";
 
 // Types based on M3 documentation
 type Size = "extra-small" | "small" | "medium" | "large" | "extra-large";

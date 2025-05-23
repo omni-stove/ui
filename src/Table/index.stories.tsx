@@ -3,13 +3,8 @@ import { useState } from "react";
 import { View } from "react-native";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Text } from "react-native-paper";
-import { Table } from "./index";
-import type {
-  DataWithId,
-  RowDragEndParams,
-  EnhancedSortingState,
-  EnhancedVisibilityState,
-} from "./types";
+import { Table } from ".";
+import type { DataWithId, RowDragEndParams } from "./types";
 import type { PaginationState, ColumnDef } from "@tanstack/react-table";
 
 // サンプルデータの型定義
@@ -108,7 +103,7 @@ const sampleUsers: User[] = [
 // カラム定義
 const columnHelper = createColumnHelper<User>();
 
-const columns = [
+const columns: ColumnDef<DataWithId, unknown>[] = [
   columnHelper.accessor("name", {
     header: "名前",
     cell: (info) => <Text>{info.getValue()}</Text>,
@@ -134,7 +129,7 @@ const columns = [
     cell: (info) => <Text>{info.getValue()}</Text>,
     id: "createdAt",
   }),
-] as ColumnDef<User, unknown>[];
+] as ColumnDef<DataWithId, unknown>[];
 
 const meta: Meta<typeof Table> = {
   component: Table,
@@ -156,7 +151,7 @@ type Story = StoryObj<typeof Table>;
 // デフォルト（基本的なテーブル）
 export const Default: Story = {
   render: () => {
-    const [sorting, setSorting] = useState<EnhancedSortingState<User>>([]);
+    const [sorting, setSorting] = useState<{ id: "id"; desc: boolean }[]>([]);
     const [pagination, setPagination] = useState<PaginationState>({
       pageIndex: 0,
       pageSize: 5,
@@ -164,14 +159,12 @@ export const Default: Story = {
 
     return (
       <Table
-        data={sampleUsers}
+        data={sampleUsers as DataWithId[]}
         columns={columns}
         sorting={sorting}
         pagination={pagination}
         onSortingChange={setSorting}
         onPaginationChange={setPagination}
-        enableSorting={true}
-        enablePagination={true}
         striped={true}
       />
     );
@@ -181,7 +174,7 @@ export const Default: Story = {
 // 空のデータ
 export const Empty: Story = {
   render: () => {
-    const [sorting, setSorting] = useState<EnhancedSortingState<User>>([]);
+    const [sorting, setSorting] = useState<{ id: "id"; desc: boolean }[]>([]);
     const [pagination, setPagination] = useState<PaginationState>({
       pageIndex: 0,
       pageSize: 5,
@@ -195,8 +188,6 @@ export const Empty: Story = {
         pagination={pagination}
         onSortingChange={setSorting}
         onPaginationChange={setPagination}
-        enableSorting={true}
-        enablePagination={true}
         striped={true}
       />
     );
@@ -206,7 +197,7 @@ export const Empty: Story = {
 // ローディング状態
 export const Loading: Story = {
   render: () => {
-    const [sorting, setSorting] = useState<EnhancedSortingState<User>>([]);
+    const [sorting, setSorting] = useState<{ id: "id"; desc: boolean }[]>([]);
     const [pagination, setPagination] = useState<PaginationState>({
       pageIndex: 0,
       pageSize: 5,
@@ -214,14 +205,12 @@ export const Loading: Story = {
 
     return (
       <Table
-        data={sampleUsers}
+        data={sampleUsers as DataWithId[]}
         columns={columns}
         sorting={sorting}
         pagination={pagination}
         onSortingChange={setSorting}
         onPaginationChange={setPagination}
-        enableSorting={true}
-        enablePagination={true}
         striped={true}
         loading={true}
       />
@@ -232,14 +221,14 @@ export const Loading: Story = {
 // 全機能付き
 export const AllFeatures: Story = {
   render: () => {
-    const [sorting, setSorting] = useState<EnhancedSortingState<User>>([]);
+    const [sorting, setSorting] = useState<{ id: "id"; desc: boolean }[]>([]);
     const [pagination, setPagination] = useState<PaginationState>({
       pageIndex: 0,
       pageSize: 5,
     });
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
     const [columnVisibility, setColumnVisibility] = useState<
-      EnhancedVisibilityState<User>
+      Partial<Record<"id", boolean>>
     >({});
     const [filteredData, setFilteredData] = useState(sampleUsers);
     const [searchQuery, setSearchQuery] = useState("");
@@ -285,7 +274,7 @@ export const AllFeatures: Story = {
           {hiddenColumns.length > 0 ? hiddenColumns.join(", ") : "なし"}
         </Text>
         <Table
-          data={filteredData}
+          data={filteredData as DataWithId[]}
           columns={columns}
           sorting={sorting}
           pagination={pagination}
@@ -297,9 +286,6 @@ export const AllFeatures: Story = {
           onColumnVisibilityChange={setColumnVisibility}
           onSearch={handleSearch}
           globalFilterPlaceholder="名前、メール、部署で検索..."
-          enableSorting={true}
-          enablePagination={true}
-          enableRowSelection={true}
           striped={true}
         />
       </View>
@@ -311,7 +297,7 @@ export const AllFeatures: Story = {
 export const WithDragAndDrop: Story = {
   render: () => {
     const [data, setData] = useState(sampleUsers);
-    const [sorting, setSorting] = useState<EnhancedSortingState<User>>([]);
+    const [sorting, setSorting] = useState<{ id: "id"; desc: boolean }[]>([]);
     const [pagination, setPagination] = useState<PaginationState>({
       pageIndex: 0,
       pageSize: 5,
@@ -342,15 +328,12 @@ export const WithDragAndDrop: Story = {
           行をドラッグして並び替えができます
         </Text>
         <Table
-          data={data}
+          data={data as DataWithId[]}
           columns={columns}
           sorting={sorting}
           pagination={pagination}
           onSortingChange={setSorting}
           onPaginationChange={setPagination}
-          enableSorting={true}
-          enablePagination={true}
-          enableRowDrag={true}
           onRowDragEnd={handleRowDragEnd}
           striped={true}
         />

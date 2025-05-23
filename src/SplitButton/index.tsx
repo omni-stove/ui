@@ -9,7 +9,7 @@ import {
 import { Animated, Text, View } from "react-native"; // findNodeHandle を削除
 import { Icon, Menu, TouchableRipple } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
-import { useTheme } from "../../hooks";
+import { useTheme } from "../hooks";
 
 type Size = "xs" | "s" | "m" | "l" | "xl";
 type Variant = "filled" | "outlined" | "elevated" | "tonal";

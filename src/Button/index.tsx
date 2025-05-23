@@ -1,24 +1,29 @@
 import { memo, type ReactNode } from "react";
 import type { StyleProp, TextStyle, ViewStyle } from "react-native";
 import { Text, View } from "react-native";
-import { TouchableRipple } from "react-native-paper";
-import { useTheme } from "../../hooks";
+import { Icon, TouchableRipple } from "react-native-paper";
+import { useTheme } from "../hooks";
 
 // M3 Button variants and sizes
 type Variant = "filled" | "tonal" | "outlined" | "text" | "elevated";
 type Size = "extra-small" | "small" | "medium" | "large" | "extra-large";
 
-type Props = {
+type BaseProps = {
   variant?: Variant;
   size?: Size;
   style?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
   disabled?: boolean;
   onPress?: () => void;
-  children: ReactNode;
   testID?: string;
   accessibilityLabel?: string;
 };
+
+type Props = BaseProps &
+  (
+    | { children: ReactNode; icon?: string }
+    | { children?: ReactNode; icon: string }
+  );
 
 // M3 Button size specifications based on the provided image
 const getButtonDimensions = (size: Size) => {
@@ -28,36 +33,42 @@ const getButtonDimensions = (size: Size) => {
         height: 32,
         paddingHorizontal: 12,
         fontSize: 14,
+        iconSize: 16,
       };
     case "small": // 2 (existing default)
       return {
         height: 40,
         paddingHorizontal: 16,
         fontSize: 14,
+        iconSize: 18,
       };
     case "medium": // 3
       return {
         height: 56,
         paddingHorizontal: 24,
         fontSize: 16,
+        iconSize: 20,
       };
     case "large": // 4
       return {
         height: 96,
         paddingHorizontal: 48,
         fontSize: 24,
+        iconSize: 28,
       };
     case "extra-large": // 5
       return {
         height: 136,
         paddingHorizontal: 64,
         fontSize: 32,
+        iconSize: 36,
       };
     default:
       return {
         height: 40,
         paddingHorizontal: 16,
         fontSize: 14,
+        iconSize: 18,
       };
   }
 };
@@ -71,6 +82,7 @@ export const Button = memo(
     disabled = false,
     onPress,
     children,
+    icon,
     testID,
     accessibilityLabel,
   }: Props) => {
@@ -136,6 +148,15 @@ export const Button = memo(
         borderWidth: variant === "outlined" ? 1 : 0,
         borderColor: colors.borderColor,
         opacity: disabled ? 0.38 : 1,
+        // M3 elevated button elevation (level1)
+        ...(variant === "elevated" &&
+          !disabled && {
+            elevation: 1,
+            shadowColor: theme.colors.shadow,
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.2,
+            shadowRadius: 1.41,
+          }),
       },
       style,
     ];
@@ -152,11 +173,29 @@ export const Button = memo(
       labelStyle,
     ];
 
-    // リップルカラー
-    const rippleColor =
-      variant === "filled" || variant === "tonal"
-        ? theme.colors.onPrimary
-        : theme.colors.primary;
+    // リップルカラー（M3仕様に基づく）
+    const getRippleColor = () => {
+      if (disabled) {
+        return theme.colors.outline;
+      }
+
+      switch (variant) {
+        case "filled":
+          return theme.colors.onPrimary;
+        case "tonal":
+          return theme.colors.onSecondaryContainer;
+        case "outlined":
+          return theme.colors.primary;
+        case "text":
+          return theme.colors.primary;
+        case "elevated":
+          return theme.colors.primary;
+        default:
+          return theme.colors.onPrimary;
+      }
+    };
+
+    const rippleColor = getRippleColor();
 
     return (
       <TouchableRipple
@@ -171,9 +210,22 @@ export const Button = memo(
         accessibilityState={{ disabled }}
       >
         <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: icon && children ? 8 : 0,
+          }}
         >
-          <Text style={textStyle}>{children}</Text>
+          {icon && (
+            <Icon
+              source={icon}
+              size={dimensions.iconSize}
+              color={colors.textColor}
+            />
+          )}
+          {children && <Text style={textStyle}>{children}</Text>}
         </View>
       </TouchableRipple>
     );

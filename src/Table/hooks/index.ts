@@ -6,7 +6,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
 } from "@tanstack/react-table";
-import { useTheme } from "../../../hooks";
+import { useTheme } from "../../hooks";
 import {
   convertFromEnhancedSorting,
   convertFromEnhancedColumnFilters,

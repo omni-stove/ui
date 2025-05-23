@@ -3,7 +3,7 @@ import { Animated, Pressable, StyleSheet, View } from "react-native";
 import { FAB as Fab, Text } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useTheme } from "../../hooks";
+import { useTheme } from "../hooks";
 import { Icon } from "../Icon";
 
 type Color = "primary" | "secondary" | "tertiary";

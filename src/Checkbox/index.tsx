@@ -5,8 +5,8 @@ import {
   Checkbox as PaperCheckbox,
   Text,
   TouchableRipple,
-  useTheme,
 } from "react-native-paper";
+import { useTheme } from "../hooks";
 
 type CheckedState = boolean | "indeterminate";
 

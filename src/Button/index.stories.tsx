@@ -18,6 +18,9 @@ const meta: Meta<typeof Component> = {
     disabled: {
       control: { type: "boolean" },
     },
+    icon: {
+      control: { type: "text" },
+    },
   },
 };
 
@@ -60,7 +63,7 @@ export const AllVariants: Story = {
 };
 
 export const AllSizes: Story = {
-  args: { ...args, variant: "elevated" },
+  args: { ...args },
   render: (args) => (
     <View style={{ gap: 16, padding: 16, alignItems: "flex-start" }}>
       <Component {...args} size="extra-small">
@@ -139,6 +142,65 @@ export const Disabled: Story = {
       </Component>
       <Component {...args} variant="elevated">
         Elevated Disabled
+      </Component>
+    </View>
+  ),
+};
+
+export const WithIcons: Story = {
+  args,
+  render: (args) => (
+    <View style={{ gap: 16, padding: 16 }}>
+      <Component {...args} icon="plus" variant="filled">
+        Add Item
+      </Component>
+      <Component {...args} icon="download" variant="tonal">
+        Download
+      </Component>
+      <Component {...args} icon="heart" variant="outlined">
+        Like
+      </Component>
+      <Component {...args} icon="share" variant="text">
+        Share
+      </Component>
+      <Component {...args} icon="star" variant="elevated">
+        Favorite
+      </Component>
+    </View>
+  ),
+};
+
+export const IconOnly: Story = {
+  args: { ...args, children: "" },
+  render: (args) => (
+    <View style={{ gap: 16, padding: 16, flexDirection: "row" }}>
+      <Component {...args} icon="plus" variant="filled" />
+      <Component {...args} icon="download" variant="tonal" />
+      <Component {...args} icon="heart" variant="outlined" />
+      <Component {...args} icon="share" variant="text" />
+      <Component {...args} icon="star" variant="elevated" />
+    </View>
+  ),
+};
+
+export const IconSizes: Story = {
+  args: { ...args, icon: "star" },
+  render: (args) => (
+    <View style={{ gap: 16, padding: 16, alignItems: "flex-start" }}>
+      <Component {...args} size="extra-small">
+        Extra Small
+      </Component>
+      <Component {...args} size="small">
+        Small
+      </Component>
+      <Component {...args} size="medium">
+        Medium
+      </Component>
+      <Component {...args} size="large">
+        Large
+      </Component>
+      <Component {...args} size="extra-large">
+        Extra Large
       </Component>
     </View>
   ),

@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { useTheme } from "../../hooks";
+import { useTheme } from "../hooks";
 
 export const ThemeColors = () => {
   const theme = useTheme();
