@@ -10,14 +10,14 @@ if (arg === "build") {
   packageJson.main = "dist/commonjs/index.js";
   fs.writeFileSync(
     packageJsonPath,
-    JSON.stringify(packageJson, null, 2) + "\n",
+    `${JSON.stringify(packageJson, null, 2)}\n`,
   );
   console.log("Successfully set main field in package.json for build.");
 } else if (arg === "storybook") {
   packageJson.main = "node_modules/expo/AppEntry.js";
   fs.writeFileSync(
     packageJsonPath,
-    JSON.stringify(packageJson, null, 2) + "\n",
+    `${JSON.stringify(packageJson, null, 2)}\n`,
   );
   console.log("Successfully set main field in package.json for Storybook.");
 } else {

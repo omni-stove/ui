@@ -37,3 +37,4 @@ export * from "./BottomSheet";
 export * from "./DatePicker";
 export * from "./TimePicker";
 export * from "./Provider";
+export * from "./Grid";

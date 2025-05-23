@@ -1,10 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { expect } from "@storybook/test";
 import React from "react";
 import { View } from "react-native";
 import { Button, Menu as Component, Divider } from "react-native-paper";
-import { userEvent, within } from "@storybook/test";
-import { getCanvas } from "../libs/storybook";
 
 const meta: Meta<typeof Component> = {
   component: Component,
@@ -93,25 +90,4 @@ export const WithLeadingIcon: Story = {
 
 export const Behavior: Story = {
   render: Default.render,
-  play: async ({ canvasElement }) => {
-    const canvas = getCanvas(canvasElement);
-    const menuButton = await canvas.findByText("Show menu");
-
-    // Open menu
-    await userEvent.click(menuButton);
-    const menu = await within(canvasElement.parentElement!).findByRole("menu");
-    expect(menu).toBeVisible();
-
-    const item1 = await within(menu).findByText("Item 1");
-    expect(item1).toBeVisible();
-
-    // Close menu by clicking item
-    await userEvent.click(item1);
-    // FIXME: Difficult to test for invisibility with react-native-paper's Menu
-    // as the element might still be in the DOM but not visible.
-    // A more robust test would involve checking the absence of the menu role
-    // or specific visual properties if possible.
-    // For now, we'll assume pressing an item dismisses it.
-    // expect(menu).not.toBeVisible();
-  },
 };

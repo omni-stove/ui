@@ -1,9 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { expect } from '@storybook/test';
-import { useState } from 'react';
-import { View } from 'react-native';
-import { Select as Component } from '.';
-import { getCanvas } from '../libs/storybook';
+import type { Meta, StoryObj } from "@storybook/react";
+import { expect } from "@storybook/test";
+import { useState } from "react";
+import { View } from "react-native";
+import { Select as Component } from ".";
+import { getCanvas } from "../libs/storybook";
 
 const meta: Meta<typeof Component> = {
   component: Component,
@@ -20,12 +20,12 @@ export default meta;
 
 type Story = StoryObj<typeof Component>;
 
-const commonArgs: Story['args'] = {
+const commonArgs: Story["args"] = {
   options: [
-    { label: 'Option 1', value: '1' },
-    { label: 'Option 2', value: '2' },
-    { label: 'Option 3', value: '3' },
-    { label: 'Very Long Option Label Example', value: '4' },
+    { label: "Option 1", value: "1" },
+    { label: "Option 2", value: "2" },
+    { label: "Option 3", value: "3" },
+    { label: "Very Long Option Label Example", value: "4" },
   ],
 };
 
@@ -35,14 +35,24 @@ export const Default: Story = {
   },
   render: (args) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [valueFilled, setValueFilled] = useState<string | number>('1');
+    const [valueFilled, setValueFilled] = useState<string | number>("1");
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [valueOutlined, setValueOutlined] = useState<string | number>('1');
+    const [valueOutlined, setValueOutlined] = useState<string | number>("1");
 
     return (
       <View style={{ gap: 32 }}>
-        <Component {...args} variant="filled" value={valueFilled} onChange={setValueFilled} />
-        <Component {...args} variant="outlined" value={valueOutlined} onChange={setValueOutlined} />
+        <Component
+          {...args}
+          variant="filled"
+          value={valueFilled}
+          onChange={setValueFilled}
+        />
+        <Component
+          {...args}
+          variant="outlined"
+          value={valueOutlined}
+          onChange={setValueOutlined}
+        />
       </View>
     );
   },
@@ -55,7 +65,7 @@ export const Behavior: Story = {
   },
   render: (args) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [value, setValue] = useState<string | number>('1');
+    const [value, setValue] = useState<string | number>("1");
     return <Component {...args} value={value} onChange={setValue} />;
   },
   play: async ({ canvasElement }) => {

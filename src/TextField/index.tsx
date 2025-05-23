@@ -1,4 +1,3 @@
-import type { ComponentRef } from "react";
 import { forwardRef } from "react";
 import type {
   KeyboardTypeOptions,
@@ -8,8 +7,8 @@ import type {
   TextInputSubmitEditingEventData,
   ViewStyle,
 } from "react-native"; // NativeSyntheticEvent, TextInputSubmitEditingEventData をインポート
-import { HelperText, TextInput } from "react-native-paper";
 import type { TextInput as RNTextInput } from "react-native";
+import { HelperText, TextInput } from "react-native-paper";
 
 type TextFieldVariant = "filled" | "outlined";
 type Props = {
@@ -73,33 +72,37 @@ type Props = {
 /**
  * TextField コンポーネント
  */
-export const TextField = forwardRef<RNTextInput, Props>( // Propsのみを指定
-  ({
-    label,
-    errorMessage,
-    multiline = false,
-    maxLines,
-    variant = "filled",
-    startAdornment,
-    endAdornment,
-    required = false,
-    onChangeText,
-    supportingText,
-    style,
-    value,
-    disabled,
-    readOnly, // editable から readOnly に変更
-    secureTextEntry,
-    keyboardType,
-    autoCapitalize,
-    autoCorrect,
-    returnKeyType,
-    maxLength,
-    onSubmitEditing,
-    onFocus,
-    onBlur,
-    onPress, // onPress プロパティを受け取る
-  }, ref) => {
+export const TextField = forwardRef<RNTextInput, Props>(
+  // Propsのみを指定
+  (
+    {
+      label,
+      errorMessage,
+      multiline = false,
+      maxLines,
+      variant = "filled",
+      startAdornment,
+      endAdornment,
+      required = false,
+      onChangeText,
+      supportingText,
+      style,
+      value,
+      disabled,
+      readOnly, // editable から readOnly に変更
+      secureTextEntry,
+      keyboardType,
+      autoCapitalize,
+      autoCorrect,
+      returnKeyType,
+      maxLength,
+      onSubmitEditing,
+      onFocus,
+      onBlur,
+      onPress, // onPress プロパティを受け取る
+    },
+    ref,
+  ) => {
     const hasError = !!errorMessage;
     const showHelperText =
       hasError || !!supportingText || (!!maxLength && value !== undefined);
