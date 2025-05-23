@@ -7,6 +7,7 @@ export * from "./BottomNavigation";
 export * from "./Button";
 export * from "./Card";
 export * from "./Checkbox";
+export * from "./CheckboxList";
 export * from "./Chip";
 export * from "./DataTable";
 export * from "./Dialog";

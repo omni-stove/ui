@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { View, ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import {
   Appbar,
   Avatar,
@@ -425,8 +425,8 @@ export const DashboardApp: Story = {
         <ScrollView style={styles.content}>
           {/* 統計カード - レスポンシブGrid */}
           <Grid variant="standard" spacing="comfortable">
-            {stats.map((stat, index) => (
-              <GridItem key={index} span={6}>
+            {stats.map((stat) => (
+              <GridItem key={JSON.stringify(stat)} span={6}>
                 <Card style={styles.statCard}>
                   <Card.Content>
                     <Text variant="bodySmall" style={styles.statLabel}>

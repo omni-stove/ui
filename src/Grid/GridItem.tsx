@@ -1,6 +1,6 @@
 import { View } from "react-native";
-import { getSpacingValue } from "./utils";
 import type { GridItemProps } from "./types";
+import { getSpacingValue } from "./utils";
 
 type GridItemPropsExtended = GridItemProps & {
   columns?: number;

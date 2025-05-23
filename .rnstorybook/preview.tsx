@@ -3,29 +3,38 @@ import type { Preview } from "@storybook/react";
 import React from "react";
 import { UIProvider } from "../src/Provider";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native";
+import { SafeAreaView, useColorScheme } from "react-native";
+import { MD3LightTheme, MD3DarkTheme } from "react-native-paper";
+
+const ThemeAwareDecorator = (Story: any, context: any) => {
+	const colorScheme = useColorScheme();
+	const theme = colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme;
+	
+	return (
+		<SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
+			<GestureHandlerRootView style={{ flex: 1 }}>
+				<UIProvider>
+					<Story />
+				</UIProvider>
+			</GestureHandlerRootView>
+		</SafeAreaView>
+	);
+};
 
 const preview: Preview = {
 	decorators: [
 		withBackgrounds,
-		(Story) => (
-			<SafeAreaView style={{ flex: 1 }}>
-				<GestureHandlerRootView style={{ flex: 1 }}>
-					<UIProvider>
-						<Story />
-					</UIProvider>
-				</GestureHandlerRootView>
-			</SafeAreaView>
-		),
+		ThemeAwareDecorator,
 	],
 
 	parameters: {
 		backgrounds: {
-			default: "plain",
+			default: "auto",
 			values: [
-				{ name: "plain", value: "white" },
-				{ name: "warm", value: "hotpink" },
-				{ name: "cool", value: "deepskyblue" },
+				{ name: "auto", value: "transparent" }, // システムテーマに従う
+				{ name: "light", value: MD3LightTheme.colors.background },
+				{ name: "dark", value: MD3DarkTheme.colors.background },
+				{ name: "surface", value: MD3LightTheme.colors.surface },
 			],
 		},
 		actions: { argTypesRegex: "^on[A-Z].*" },
