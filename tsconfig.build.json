@@ -1,11 +1,10 @@
 {
   "compilerOptions": {
-    // --- 基本的な型チェックとJS生成オプション ---
     "strict": true,
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
-    "jsx": "react-jsx", // "react" から "react-jsx" に変更
+    "jsx": "react-jsx",
     "lib": ["esnext", "dom"],
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -15,15 +14,11 @@
     "allowJs": true,
     "isolatedModules": true,
     "moduleSuffixes": [".ios", ".native", ".android", ""],
-
-    // --- ビルド専用設定 ---
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
     "rootDir": "./src",
     "noEmit": false,
-
-    // --- コード品質オプション (react-native-paperから参考に) ---
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "noFallthroughCasesInSwitch": true,

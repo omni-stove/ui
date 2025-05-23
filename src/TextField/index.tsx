@@ -1,3 +1,5 @@
+import type { ComponentRef } from "react";
+import { forwardRef } from "react";
 import type {
   KeyboardTypeOptions,
   NativeSyntheticEvent,
@@ -7,6 +9,7 @@ import type {
   ViewStyle,
 } from "react-native"; // NativeSyntheticEvent, TextInputSubmitEditingEventData をインポート
 import { HelperText, TextInput } from "react-native-paper";
+import type { TextInput as RNTextInput } from "react-native";
 
 type TextFieldVariant = "filled" | "outlined";
 type Props = {
@@ -64,101 +67,107 @@ type Props = {
   onFocus?: () => void;
   onBlur?: () => void;
   maxLength?: number;
+  onPress?: () => void; // onPress プロパティを明示的に追加
 };
 
 /**
  * TextField コンポーネント
  */
-export const TextField = ({
-  label,
-  errorMessage,
-  multiline = false,
-  maxLines,
-  variant = "filled",
-  startAdornment,
-  endAdornment,
-  required = false,
-  onChangeText,
-  supportingText,
-  style,
-  value,
-  disabled,
-  readOnly, // editable から readOnly に変更
-  secureTextEntry,
-  keyboardType,
-  autoCapitalize,
-  autoCorrect,
-  returnKeyType,
-  maxLength,
-  onSubmitEditing,
-  onFocus,
-  onBlur,
-}: Props) => {
-  const hasError = !!errorMessage;
-  const showHelperText =
-    hasError || !!supportingText || (!!maxLength && value !== undefined);
+export const TextField = forwardRef<RNTextInput, Props>( // Propsのみを指定
+  ({
+    label,
+    errorMessage,
+    multiline = false,
+    maxLines,
+    variant = "filled",
+    startAdornment,
+    endAdornment,
+    required = false,
+    onChangeText,
+    supportingText,
+    style,
+    value,
+    disabled,
+    readOnly, // editable から readOnly に変更
+    secureTextEntry,
+    keyboardType,
+    autoCapitalize,
+    autoCorrect,
+    returnKeyType,
+    maxLength,
+    onSubmitEditing,
+    onFocus,
+    onBlur,
+    onPress, // onPress プロパティを受け取る
+  }, ref) => {
+    const hasError = !!errorMessage;
+    const showHelperText =
+      hasError || !!supportingText || (!!maxLength && value !== undefined);
 
-  // react-native-paper の TextInputProps['mode'] に合わせる
-  const paperVariant = variant === "filled" ? "flat" : variant;
+    // react-native-paper の TextInputProps['mode'] に合わせる
+    const paperVariant = variant === "filled" ? "flat" : variant;
 
-  const textFieldLabel = required && label ? `${label}*` : label;
+    const textFieldLabel = required && label ? `${label}*` : label;
 
-  return (
-    <>
-      <TextInput
-        label={textFieldLabel}
-        mode={paperVariant}
-        multiline={multiline}
-        numberOfLines={multiline ? maxLines : undefined}
-        left={
-          startAdornment &&
-          (startAdornment.type === "icon" ? (
-            <TextInput.Icon icon={startAdornment.value} />
-          ) : (
-            <TextInput.Affix text={startAdornment.value} />
-          ))
-        }
-        right={
-          endAdornment &&
-          (endAdornment.type === "icon" ? (
-            <TextInput.Icon icon={endAdornment.value} />
-          ) : (
-            <TextInput.Affix text={endAdornment.value} />
-          ))
-        }
-        error={hasError}
-        onChangeText={onChangeText}
-        style={style}
-        value={value}
-        disabled={disabled}
-        editable={readOnly === undefined ? undefined : !readOnly} // readOnly を editable に変換
-        secureTextEntry={secureTextEntry}
-        keyboardType={keyboardType}
-        maxLength={maxLength} // maxLength を TextInput に渡す
-        autoCapitalize={autoCapitalize}
-        autoCorrect={autoCorrect}
-        returnKeyType={returnKeyType}
-        onSubmitEditing={onSubmitEditing}
-        onFocus={onFocus}
-        onBlur={onBlur}
-      />
-      {showHelperText && (
-        <HelperText
-          type={hasError ? "error" : "info"}
-          visible={showHelperText}
-          style={
-            maxLength && value !== undefined && !hasError
-              ? { textAlign: "right" }
-              : undefined
+    return (
+      <>
+        <TextInput
+          ref={ref}
+          label={textFieldLabel}
+          mode={paperVariant}
+          multiline={multiline}
+          numberOfLines={multiline ? maxLines : undefined}
+          left={
+            startAdornment &&
+            (startAdornment.type === "icon" ? (
+              <TextInput.Icon icon={startAdornment.value} />
+            ) : (
+              <TextInput.Affix text={startAdornment.value} />
+            ))
           }
-        >
-          {hasError
-            ? errorMessage
-            : maxLength && value !== undefined
-              ? `${value.length} / ${maxLength}`
-              : supportingText}
-        </HelperText>
-      )}
-    </>
-  );
-};
+          right={
+            endAdornment &&
+            (endAdornment.type === "icon" ? (
+              <TextInput.Icon icon={endAdornment.value} />
+            ) : (
+              <TextInput.Affix text={endAdornment.value} />
+            ))
+          }
+          error={hasError}
+          onChangeText={onChangeText}
+          style={style}
+          value={value}
+          disabled={disabled}
+          editable={readOnly === undefined ? undefined : !readOnly} // readOnly を editable に変換
+          secureTextEntry={secureTextEntry}
+          keyboardType={keyboardType}
+          maxLength={maxLength} // maxLength を TextInput に渡す
+          autoCapitalize={autoCapitalize}
+          autoCorrect={autoCorrect}
+          returnKeyType={returnKeyType}
+          onSubmitEditing={onSubmitEditing}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          onPress={onPress}
+        />
+        {showHelperText && (
+          <HelperText
+            type={hasError ? "error" : "info"}
+            visible={showHelperText}
+            style={
+              maxLength && value !== undefined && !hasError
+                ? { textAlign: "right" }
+                : undefined
+            }
+          >
+            {hasError
+              ? errorMessage
+              : maxLength && value !== undefined
+                ? `${value.length} / ${maxLength}`
+                : supportingText}
+          </HelperText>
+        )}
+      </>
+    );
+  },
+);

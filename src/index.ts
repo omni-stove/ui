@@ -23,6 +23,7 @@ export * from "./ProgressBar";
 export * from "./RadioButton";
 export * from "./Searchbar";
 export * from "./SegmentedButtons";
+export * from "./Select";
 export * from "./Snackbar";
 export * from "./Surface";
 export * from "./Switch";
