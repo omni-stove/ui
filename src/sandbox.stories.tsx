@@ -587,7 +587,6 @@ export const DashboardApp: Story = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
   },
   content: {
     flex: 1,

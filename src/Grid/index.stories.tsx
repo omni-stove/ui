@@ -159,97 +159,30 @@ export const ResponsiveDemo: Story = {
 };
 
 // Standard Grid Layout Stories
-export const StandardGrid12Column: Story = {
-  args: {
-    ...args,
-    variant: "standard",
-    columns: 12,
-    spacing: "comfortable",
-  },
-  render: (args) => (
-    <Component {...args}>
-      <GridItem span={12} columns={12} spacing="comfortable">
-        <Card style={{ backgroundColor: "#e3f2fd" }}>
-          <Card.Content style={{ padding: 16 }}>
-            <Text variant="titleMedium">Full Width (12/12)</Text>
-          </Card.Content>
-        </Card>
-      </GridItem>
-      <GridItem span={6} columns={12} spacing="comfortable">
-        <Card style={{ backgroundColor: "#f3e5f5" }}>
-          <Card.Content style={{ padding: 16 }}>
-            <Text variant="titleMedium">Half Width (6/12)</Text>
-          </Card.Content>
-        </Card>
-      </GridItem>
-      <GridItem span={6} columns={12} spacing="comfortable">
-        <Card style={{ backgroundColor: "#e8f5e8" }}>
-          <Card.Content style={{ padding: 16 }}>
-            <Text variant="titleMedium">Half Width (6/12)</Text>
-          </Card.Content>
-        </Card>
-      </GridItem>
-      <GridItem span={4} columns={12} spacing="comfortable">
-        <Card style={{ backgroundColor: "#fff3e0" }}>
-          <Card.Content style={{ padding: 16 }}>
-            <Text variant="titleMedium">Third (4/12)</Text>
-          </Card.Content>
-        </Card>
-      </GridItem>
-      <GridItem span={4} columns={12} spacing="comfortable">
-        <Card style={{ backgroundColor: "#fce4ec" }}>
-          <Card.Content style={{ padding: 16 }}>
-            <Text variant="titleMedium">Third (4/12)</Text>
-          </Card.Content>
-        </Card>
-      </GridItem>
-      <GridItem span={4} columns={12} spacing="comfortable">
-        <Card style={{ backgroundColor: "#e0f2f1" }}>
-          <Card.Content style={{ padding: 16 }}>
-            <Text variant="titleMedium">Third (4/12)</Text>
-          </Card.Content>
-        </Card>
-      </GridItem>
-      <GridItem span={3} columns={12} spacing="comfortable">
-        <Card style={{ backgroundColor: "#f1f8e9" }}>
-          <Card.Content style={{ padding: 16 }}>
-            <Text variant="titleMedium">Quarter (3/12)</Text>
-          </Card.Content>
-        </Card>
-      </GridItem>
-      <GridItem span={9} columns={12} spacing="comfortable">
-        <Card style={{ backgroundColor: "#e8eaf6" }}>
-          <Card.Content style={{ padding: 16 }}>
-            <Text variant="titleMedium">Three Quarters (9/12)</Text>
-          </Card.Content>
-        </Card>
-      </GridItem>
-    </Component>
-  ),
-};
-
 export const StandardGridResponsive: Story = {
   args: {
     ...args,
     variant: "standard",
-    columns: 12,
     spacing: "comfortable",
   },
   render: (args) => (
     <View>
       <Text style={{ padding: 16, fontSize: 16, fontWeight: "bold" }}>
-        Material Design 3 - 12カラムシステム
+        Material Design 3 - レスポンシブグリッドシステム
+      </Text>
+      <Text style={{ padding: 16, fontSize: 14, color: "#666" }}>
+        画面サイズを変更して動作を確認してください
       </Text>
       <Component {...args}>
-        <GridItem span={12} columns={12} spacing="comfortable">
+        <GridItem span={12} spacing="comfortable">
           <Card style={{ backgroundColor: "#ffcdd2" }}>
             <Card.Content style={{ padding: 16 }}>
               <Text variant="titleMedium">Header (12/12)</Text>
-              <Text variant="bodySmall">フルワイズヘッダー</Text>
+              <Text variant="bodySmall">フルワイズヘッダー - 常に100%</Text>
             </Card.Content>
           </Card>
         </GridItem>
-        <GridItem span={8} columns={12} spacing="comfortable">
+        <GridItem span={8} spacing="comfortable">
           <Card style={{ backgroundColor: "#c8e6c9" }}>
             <Card.Content style={{ padding: 16 }}>
               <Text variant="titleMedium">Main Content (8/12)</Text>
@@ -257,7 +190,7 @@ export const StandardGridResponsive: Story = {
             </Card.Content>
           </Card>
         </GridItem>
-        <GridItem span={4} columns={12} spacing="comfortable">
+        <GridItem span={4} spacing="comfortable">
           <Card style={{ backgroundColor: "#bbdefb" }}>
             <Card.Content style={{ padding: 16 }}>
               <Text variant="titleMedium">Sidebar (4/12)</Text>
@@ -265,17 +198,51 @@ export const StandardGridResponsive: Story = {
             </Card.Content>
           </Card>
         </GridItem>
-        <GridItem span={6} columns={12} spacing="comfortable">
+        <GridItem span={6} spacing="comfortable">
           <Card style={{ backgroundColor: "#dcedc8" }}>
             <Card.Content style={{ padding: 16 }}>
               <Text variant="titleMedium">Feature 1 (6/12)</Text>
+              <Text variant="bodySmall">50%幅</Text>
             </Card.Content>
           </Card>
         </GridItem>
-        <GridItem span={6} columns={12} spacing="comfortable">
+        <GridItem span={6} spacing="comfortable">
           <Card style={{ backgroundColor: "#ffe0b2" }}>
             <Card.Content style={{ padding: 16 }}>
               <Text variant="titleMedium">Feature 2 (6/12)</Text>
+              <Text variant="bodySmall">50%幅</Text>
+            </Card.Content>
+          </Card>
+        </GridItem>
+        <GridItem span={3} spacing="comfortable">
+          <Card style={{ backgroundColor: "#f8bbd9" }}>
+            <Card.Content style={{ padding: 16 }}>
+              <Text variant="titleMedium">Card 1 (3/12)</Text>
+              <Text variant="bodySmall">25%幅</Text>
+            </Card.Content>
+          </Card>
+        </GridItem>
+        <GridItem span={3} spacing="comfortable">
+          <Card style={{ backgroundColor: "#e1bee7" }}>
+            <Card.Content style={{ padding: 16 }}>
+              <Text variant="titleMedium">Card 2 (3/12)</Text>
+              <Text variant="bodySmall">25%幅</Text>
+            </Card.Content>
+          </Card>
+        </GridItem>
+        <GridItem span={3} spacing="comfortable">
+          <Card style={{ backgroundColor: "#c5cae9" }}>
+            <Card.Content style={{ padding: 16 }}>
+              <Text variant="titleMedium">Card 3 (3/12)</Text>
+              <Text variant="bodySmall">25%幅</Text>
+            </Card.Content>
+          </Card>
+        </GridItem>
+        <GridItem span={3} spacing="comfortable">
+          <Card style={{ backgroundColor: "#b2dfdb" }}>
+            <Card.Content style={{ padding: 16 }}>
+              <Text variant="titleMedium">Card 4 (3/12)</Text>
+              <Text variant="bodySmall">25%幅</Text>
             </Card.Content>
           </Card>
         </GridItem>

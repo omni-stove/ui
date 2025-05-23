@@ -1,22 +1,26 @@
 import { View } from "react-native";
+import { useMaxColumns } from "./hooks";
 import type { GridItemProps } from "./types";
 import { getSpacingValue } from "./utils";
 
 type GridItemPropsExtended = GridItemProps & {
-  columns?: number;
   spacing?: number | "compact" | "comfortable" | "spacious";
 };
 
 export const GridItem = ({
   children,
   span = 1,
-  columns = 12,
   spacing = "comfortable",
   style,
   ...props
 }: GridItemPropsExtended) => {
+  const currentColumns = useMaxColumns();
   const spacingValue = getSpacingValue(spacing);
-  const widthPercentage = (span / columns) * 100;
+
+  // 親要素の幅から取得したカラム数に基づいて幅を計算
+  // spanが現在のカラム数を超える場合は100%幅にする
+  const actualSpan = Math.min(span, currentColumns);
+  const widthPercentage = (actualSpan / currentColumns) * 100;
 
   return (
     <View

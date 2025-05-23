@@ -66,11 +66,22 @@ export const calculateMasonryLayout = (
 
 /**
  * Material Design 3のブレークポイントに基づいてカラム数を決定
+ * 12カラムシステムを基準とした適切なカラム数を返す
  */
 export const getResponsiveColumns = (width: number): number => {
   // Material Design 3 breakpoints
-  if (width < 600) return 2; // Mobile
-  if (width < 840) return 3; // Tablet
-  if (width < 1240) return 4; // Desktop
-  return 5; // Large Desktop
+  if (width < 600) return 4; // Mobile: 4カラム
+  if (width < 840) return 8; // Tablet: 8カラム
+  return 12; // Desktop & Large Desktop: 12カラム
+};
+
+/**
+ * Material Design 3のブレークポイントに基づいて最大カラム数を決定
+ * GridItemで使用する基準カラム数
+ */
+export const getMaxColumns = (width: number): number => {
+  // Material Design 3 breakpoints
+  if (width < 600) return 4; // Mobile: 4カラム
+  if (width < 840) return 8; // Tablet: 8カラム
+  return 12; // Desktop & Large Desktop: 12カラム
 };
