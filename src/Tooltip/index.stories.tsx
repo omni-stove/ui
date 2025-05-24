@@ -34,7 +34,9 @@ export const Rich: Story = {
   args: {
     variant: "rich",
     supportingText: "This is the supporting text for the rich tooltip.",
-    children: <Button icon="tooltip-text-outline">Rich Tooltip</Button>,
+    children: (
+      <Button icon="tooltip-text-outline">Rich Tooltip (Tap me!)</Button>
+    ),
     subhead: "Optional Subhead",
     actions: [
       {
@@ -46,9 +48,7 @@ export const Rich: Story = {
         onPress: () => console.log("Action 2 pressed"),
       },
     ],
-    // For story display, make it visible initially.
-    // In actual use, visibility would be controlled by interaction.
-    visible: true,
+    // Remove visible: true to enable tap interaction
   },
 };
 
@@ -58,7 +58,7 @@ export const RichWithIconAsChild: Story = {
     supportingText: "This tooltip is for an icon.",
     children: <Icon source="information" size={24} />,
     subhead: "Icon Tooltip",
-    visible: true,
+    // Remove visible: true to enable tap interaction
   },
 };
 
