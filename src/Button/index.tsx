@@ -1,4 +1,4 @@
-import { memo, type ReactNode } from "react";
+import { forwardRef, type ReactNode, type Ref } from "react";
 import type { StyleProp, TextStyle, ViewStyle } from "react-native";
 import { Text, View } from "react-native";
 import { Icon, TouchableRipple } from "react-native-paper";
@@ -73,19 +73,22 @@ const getButtonDimensions = (size: Size) => {
   }
 };
 
-export const Button = memo(
-  ({
-    variant = "filled",
-    size = "small",
-    style,
-    labelStyle,
-    disabled = false,
-    onPress,
-    children,
-    icon,
-    testID,
-    accessibilityLabel,
-  }: Props) => {
+export const Button = forwardRef(
+  (
+    {
+      variant = "filled",
+      size = "small",
+      style,
+      labelStyle,
+      disabled = false,
+      onPress,
+      children,
+      icon,
+      testID,
+      accessibilityLabel,
+    }: Props,
+    ref: Ref<View>,
+  ) => {
     const theme = useTheme();
     const dimensions = getButtonDimensions(size);
 
@@ -199,6 +202,7 @@ export const Button = memo(
 
     return (
       <TouchableRipple
+        ref={ref}
         onPress={onPress}
         disabled={disabled}
         style={buttonStyle}

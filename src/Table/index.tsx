@@ -5,6 +5,7 @@ import { View } from "react-native";
 import { Checkbox } from "../Checkbox";
 import { IconButton } from "../IconButton";
 import type { EnhancedDataTableProps, DataWithId } from "./types";
+import type { DragPosition } from "./utils/dragUtils"; // Add this import
 import { useTable } from "./hooks";
 import { createTableStyles } from "./styles";
 import { useDragDrop } from "./hooks/useDragDrop";
@@ -230,7 +231,9 @@ export const Table = forwardRef(
                 }
                 isDragEnabled={isRowDragEnabled}
                 animationConfig={animationConfig}
-                onDragStart={(id, position) => startDrag(id, "row", position)}
+                onDragStart={(id: string, position: DragPosition) =>
+                  startDrag(id, "row", position)
+                }
                 onDragUpdate={updateDrag}
                 onDragEnd={endDrag}
                 style={[
