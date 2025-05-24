@@ -40,3 +40,4 @@ export * from "./TimePicker";
 export * from "./Provider";
 export * from "./Grid";
 export * from "./Table";
+export * from "./Toolbar";

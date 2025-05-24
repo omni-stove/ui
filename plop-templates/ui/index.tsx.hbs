@@ -1,10 +1,11 @@
-import { forwardRef, ElementRef } from 'react';
-import { {{pascalCase name}} as RNP{{pascalCase name}}, {{pascalCase name}}Props } from 'react-native-paper';
+import { forwardRef } from 'react';
+import { Text } from 'react-native';
 
-type Props = {{pascalCase name}}Props & {
+// biome-ignore lint:
+type Props = {
   // Add any additional props here
 };
 
-export const {{pascalCase name}} = forwardRef<ElementRef<typeof RNP{{pascalCase name}}>, Props>((props, ref) => {
-  return <RNP{{pascalCase name}} {...props} ref={ref} />;
+export const {{pascalCase name}} = forwardRef<Text, Props>((props, ref) => {
+  return <Text {...props} ref={ref} />;
 });
