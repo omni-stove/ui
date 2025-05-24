@@ -1,5 +1,6 @@
 export * from "./ActivityIndicator";
 export * from "./Appbar";
+export * from "./AppLayout";
 export * from "./Avatar";
 export * from "./Badge";
 export * from "./Banner";

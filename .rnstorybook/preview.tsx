@@ -14,9 +14,7 @@ const ThemeAwareDecorator = (Story: any, context: any) => {
 		<SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
 			<GestureHandlerRootView style={{ flex: 1 }}>
 				<UIProvider>
-					<ScrollView style={{ flex: 1 }}>
-						<Story />
-					</ScrollView>
+					<Story />
 				</UIProvider>
 			</GestureHandlerRootView>
 		</SafeAreaView>
