@@ -57,7 +57,6 @@ const CheckboxCore = ({
 }) => {
   const theme = useTheme();
 
-  // indeterminate状態の場合は独自実装
   if (checked === "indeterminate") {
     return (
       <TouchableRipple
@@ -104,7 +103,6 @@ const CheckboxCore = ({
     );
   }
 
-  // checked/unchecked状態はPaperのCheckboxを使用
   return (
     <PaperCheckbox
       status={checked ? "checked" : "unchecked"}
@@ -142,7 +140,6 @@ export const Checkbox = ({
   const handlePress = useCallback(() => {
     if (disabled || !onChangeCheck) return;
 
-    // デフォルトの状態遷移: false → true → false
     if (checked === false) {
       onChangeCheck(true);
       return;
@@ -156,7 +153,6 @@ export const Checkbox = ({
     }
   }, [checked, onChangeCheck, disabled]);
 
-  // labelがある場合は横並びで表示
   if (label) {
     return (
       <Pressable

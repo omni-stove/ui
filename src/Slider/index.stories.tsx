@@ -183,7 +183,6 @@ export const Behavior: Story = {
     const canvas = getCanvas(canvasElement);
     expect(canvas).toBeTruthy();
 
-    // Test that slider is rendered
     const slider = canvas.getByTestId("slider");
     expect(slider).toBeTruthy();
   },

@@ -72,7 +72,7 @@ const CustomThumb = ({
     <View
       style={{
         width: 4,
-        height: isSliding ? 40 : 30, // Change height during sliding - default 30px
+        height: isSliding ? 40 : 30,
         borderRadius: 2,
         backgroundColor: isDisabled
           ? theme.colors.onSurface
@@ -158,7 +158,6 @@ export const Slider = forwardRef<View, Props>(
       minValue = 0,
       maxValue = 100,
       step = 1,
-      // mode = "continuous", // TODO: Implement centered mode
       variant = "number",
       isDisabled = false,
       orientation = "horizontal",
@@ -170,7 +169,6 @@ export const Slider = forwardRef<View, Props>(
     const theme = useTheme();
     const [isSliding, setIsSliding] = useState(false);
 
-    // Handle single value slider
     const handleSingleValueChange = useCallback(
       (newValue: number) => {
         if (variant === "number") {
@@ -188,26 +186,24 @@ export const Slider = forwardRef<View, Props>(
       setIsSliding(false);
     }, []);
 
-    // Get slider colors based on M3 theme
     const getSliderColors = () => {
       if (isDisabled) {
         return {
           minimumTrackTintColor: theme.colors.onSurface,
           maximumTrackTintColor: theme.colors.surfaceVariant,
-          thumbTintColor: "transparent", // Hide default thumb
+          thumbTintColor: "transparent",
         };
       }
 
       return {
         minimumTrackTintColor: theme.colors.primary,
         maximumTrackTintColor: theme.colors.surfaceVariant,
-        thumbTintColor: "transparent", // Hide default thumb
+        thumbTintColor: "transparent",
       };
     };
 
     const colors = getSliderColors();
 
-    // Calculate value for centered mode
     const getSliderValue = () => {
       if (Array.isArray(value)) {
         return value[0] || minValue;
@@ -226,13 +222,13 @@ export const Slider = forwardRef<View, Props>(
         color: theme.colors.onSurface,
       },
       sliderContainer: {
-        height: 60, // Increased height for value indicator
+        height: 60,
         justifyContent: "center",
         position: "relative",
       },
       slider: {
-        height: 20, // Increased trail height to 20px for better visibility
-        borderRadius: 10, // Add border radius to make it rounded
+        height: 20,
+        borderRadius: 10,
         ...(orientation === "vertical" && {
           width: 20,
           height: 200,
@@ -250,7 +246,6 @@ export const Slider = forwardRef<View, Props>(
       },
     });
 
-    // Calculate thumb position
     const thumbPosition =
       ((sliderValue - minValue) / (maxValue - minValue)) * 100;
 
@@ -270,7 +265,6 @@ export const Slider = forwardRef<View, Props>(
             style={[
               styles.slider,
               {
-                // Hide default thumb completely
                 overflow: "hidden",
               },
             ]}
@@ -294,7 +288,7 @@ export const Slider = forwardRef<View, Props>(
               style={{
                 position: "absolute",
                 left: `${thumbPosition}%`,
-                transform: [{ translateX: -2 }], // Center the thumb
+                transform: [{ translateX: -2 }],
               }}
             >
               <View

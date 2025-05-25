@@ -141,14 +141,6 @@ export const WithMaxLength: Story = {
 export const Behavior: Story = {
   play: async ({ canvasElement }) => {
     const canvas = getCanvas(canvasElement);
-    // 基本的なレンダリングの確認
-    expect(canvas.getByText("Label")).toBeTruthy(); // Default Story の Label
-
-    // TODO: より具体的なインタラクションテストを追加
-    // 例:
-    // const input = canvas.getByLabelText("Field with MaxLength"); // WithMaxLength story の場合
-    // await userEvent.type(input, "Hello world too long");
-    // expect(input).toHaveValue("Hello worl"); // maxLength で切り捨てられる
-    // expect(canvas.getByText("10 / 10")).toBeTruthy(); // カウンター表示の確認
+    expect(canvas.getByText("Label")).toBeTruthy();
   },
 };

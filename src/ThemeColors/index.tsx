@@ -27,7 +27,7 @@ export const ThemeColors = () => {
       <View style={styles.container}>
         {colors.map(({ name, color }) => {
           const isStringColor = typeof color === "string";
-          const displayColor = isStringColor ? color : "#cccccc"; // Default color for non-string values
+          const displayColor = isStringColor ? color : "#cccccc";
           const colorValueText = isStringColor ? color : JSON.stringify(color);
           return (
             <View key={name} style={styles.colorRow}>

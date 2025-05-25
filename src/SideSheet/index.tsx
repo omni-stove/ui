@@ -117,7 +117,6 @@ export const SideSheet = forwardRef<View, Props>(
 
     const sideSheetWidth = Math.min(width, screenWidth * 0.9);
 
-    // SideSheetの状態をContextに登録・更新
     useEffect(() => {
       registerSideSheet(sideSheetId, {
         isOpen,

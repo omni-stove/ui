@@ -24,7 +24,6 @@ type DragHandleProps = {
   disabled?: boolean;
   onPress?: () => void;
   testID?: string;
-  // ドラッグ関連のプロパティを追加
   rowId?: string;
   onDragStart?: (id: string, position: DragPosition) => void;
   onDragUpdate?: (position: DragPosition) => void;
@@ -59,7 +58,6 @@ export const DragHandle = ({
   const iconSize = size === "small" ? 16 : size === "large" ? 28 : 20;
   const containerSize = size === "small" ? 32 : size === "large" ? 48 : 40;
 
-  // アニメーションスタイル
   const animatedStyle = useAnimatedStyle(() => {
     if (!animationConfig || !isDragging) {
       return {};
@@ -75,7 +73,6 @@ export const DragHandle = ({
     };
   });
 
-  // ドラッグジェスチャーを作成
   const panGesture = Gesture.Pan()
     .onStart((event) => {
       if (disabled || !rowId || !onDragStart) return;
@@ -132,14 +129,12 @@ export const DragHandle = ({
     </Animated.View>
   );
 
-  // ドラッグ機能が有効な場合はGestureDetectorでラップ
   if (!disabled && rowId && onDragStart) {
     return (
       <GestureDetector gesture={panGesture}>{handleContent}</GestureDetector>
     );
   }
 
-  // ドラッグ機能が無効でonPressがある場合はTouchableOpacityでラップ
   if (onPress && !disabled) {
     return (
       <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
@@ -148,7 +143,6 @@ export const DragHandle = ({
     );
   }
 
-  // それ以外は通常のビューを返す
   return handleContent;
 };
 

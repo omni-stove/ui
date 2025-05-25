@@ -67,12 +67,12 @@ export const TimePicker = ({
   initialHours = 12,
   initialMinutes = 0,
   use24HourClock = false,
-  locale = "en", // Added to Props JSDoc
-  animationType, // Added to Props JSDoc
-  inputFontSize, // Added to Props JSDoc
+  locale = "en",
+  animationType,
+  inputFontSize,
   variant,
   disabled,
-  ...rest // Pass through other CustomTimePickerModalProps
+  ...rest
 }: Props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [displayTime, setDisplayTime] = useState<string>("");
@@ -151,7 +151,7 @@ export const TimePicker = ({
         locale={locale}
         animationType={animationType}
         inputFontSize={inputFontSize}
-        {...rest} // Apply rest of the props here
+        {...rest}
       />
     </>
   );

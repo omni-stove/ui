@@ -1,15 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { View } from "react-native";
-import { TimePicker as Component } from "."; // ローカルの TimePicker を使うように修正
-// Button は TimePicker 内部で TextField を使うので、ここでは不要になるかも
+import { TimePicker as Component } from ".";
 
 const meta: Meta<typeof Component> = {
   component: Component,
   args: {
-    label: "Select Time", // TextField のラベル
-    // value や onChange は各 Story で管理する
-    // initialHours, initialMinutes, use24HourClock は必要に応じて Story で設定
+    label: "Select Time",
   },
   decorators: [
     (Story) => (
@@ -49,10 +46,9 @@ export const Default: Story = {
 
 export const WithInitialTime: Story = {
   render: (args) => {
-    // 初期値を Date オブジェクトで設定
     const initialDate = new Date();
-    initialDate.setHours(args.initialHours ?? 10); // args から取得、なければデフォルト
-    initialDate.setMinutes(args.initialMinutes ?? 0); // args から取得、なければデフォルト
+    initialDate.setHours(args.initialHours ?? 10);
+    initialDate.setMinutes(args.initialMinutes ?? 0);
     initialDate.setSeconds(0);
     initialDate.setMilliseconds(0);
 
@@ -120,6 +116,6 @@ export const CustomLocale: Story = {
   },
   args: {
     label: "時間を選択 (ja)",
-    locale: "ja", // 日本語ロケール
+    locale: "ja",
   },
 };

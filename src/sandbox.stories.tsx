@@ -35,7 +35,6 @@ export default meta;
 
 type Story = StoryObj;
 
-// ユーザープロフィール画面のようなアプリケーション例
 export const UserProfileApp: Story = {
   render: () => {
     const [notificationsEnabled, setNotificationsEnabled] = useState(true);
@@ -156,7 +155,6 @@ export const UserProfileApp: Story = {
   },
 };
 
-// ショッピングアプリのようなアプリケーション例
 export const ShoppingApp: Story = {
   render: () => {
     const [cartCount, setCartCount] = useState(0);
@@ -251,7 +249,6 @@ export const ShoppingApp: Story = {
   },
 };
 
-// タスク管理アプリのようなアプリケーション例
 export const TaskManagerApp: Story = {
   render: () => {
     const [tasks, setTasks] = useState([
@@ -399,7 +396,6 @@ export const TaskManagerApp: Story = {
   },
 };
 
-// ダッシュボードアプリのようなGrid Layout例
 export const DashboardApp: Story = {
   render: () => {
     const [stats] = useState([
@@ -680,7 +676,6 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     marginLeft: 8,
   },
-  // Dashboard styles
   statCard: {
     marginBottom: 8,
   },

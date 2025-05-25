@@ -1,29 +1,25 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { userEvent, within } from "@storybook/test";
-import { useCallback, useMemo, useRef } from "react"; // Added useMemo and useCallback
-import { Button as ReactNativeButton, Text, View } from "react-native"; // Import React Native Button
+import { useCallback, useMemo, useRef } from "react";
+import { Button as ReactNativeButton, Text, View } from "react-native";
 import { type BottomSheetRef, BottomSheet as Component } from ".";
-import { Button as CustomButton } from "../Button"; // Renamed to avoid conflict
+import { Button as CustomButton } from "../Button";
 
 const meta: Meta<typeof Component> = {
   component: Component,
   args: {
-    // Default args for all stories
     content: (
       <View style={{ padding: 16 }}>
         <Text>This is the content of the bottom sheet!</Text>
         <Text>You can put anything you want here.</Text>
       </View>
     ),
-    // children will be defined in each story's render function or args
   },
 };
 
 export default meta;
 
 type Story = StoryObj<typeof Component>;
-
-// Removed BottomSheetChildren type as it's no longer needed with the new approach
 
 export const Default: Story = {
   render: (args) => {
@@ -39,10 +35,6 @@ export const Default: Story = {
       </View>
     );
   },
-  // Args for this specific story, if different from meta.args
-  // args: {
-  //   // title: "Default Story Title", // Example of overriding meta args
-  // },
 };
 
 export const Behavior: Story = {
@@ -64,17 +56,11 @@ export const Behavior: Story = {
       name: /Open BottomSheet/i,
     });
     await userEvent.click(button);
-    // TODO: Add assertion for bottom sheet visibility after it opens
-    // For example, check if the title "Awesome BottomSheet" is visible
-    // await expect(canvas.findByText("Awesome BottomSheet")).toBeVisible();
-    //
-    // Need to figure out how to properly wait for the BottomSheetModal to be present
-    // and how to query elements within it using testing-library.
   },
 };
 
-import GorhomBottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet"; // Import Gorhom's BottomSheet
-import { GestureHandlerRootView } from "react-native-gesture-handler"; // Import GestureHandlerRootView
+import GorhomBottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export const DynamicSnapPointsDirect: Story = {
   render: () => {
@@ -113,16 +99,15 @@ export const DynamicSnapPointsDirect: Story = {
             ref={sheetRef}
             snapPoints={snapPoints}
             onChange={handleSheetChange}
-            // enableDynamicSizing={false} // As per example, though not strictly needed for fixed snapPoints
-            handleIndicatorStyle={{ backgroundColor: "grey" }} // M3 Handle
-            backgroundStyle={{ borderRadius: 28, backgroundColor: "white" }} // M3 Style
+            handleIndicatorStyle={{ backgroundColor: "grey" }}
+            backgroundStyle={{ borderRadius: 28, backgroundColor: "white" }}
             style={{
               shadowColor: "#000",
               shadowOffset: { width: 0, height: -3 },
               shadowOpacity: 0.1,
               shadowRadius: 3,
               elevation: 20,
-            }} // M3 Shadow
+            }}
           >
             <BottomSheetView
               style={{ flex: 1, padding: 24, alignItems: "center" }}
@@ -135,8 +120,6 @@ export const DynamicSnapPointsDirect: Story = {
       </GestureHandlerRootView>
     );
   },
-  args: {
-    // No args needed from Component as we are using GorhomBottomSheet directly
-  },
-  name: "Dynamic Snap Points (Direct @gorhom/bottom-sheet)", // Renaming story for clarity
+  args: {},
+  name: "Dynamic Snap Points (Direct @gorhom/bottom-sheet)",
 };

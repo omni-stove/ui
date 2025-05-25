@@ -58,25 +58,24 @@ type Props = {
   widthType?: WidthType;
   onPress?: () => void;
   disabled?: boolean;
-  selected?: boolean; // For toggle buttons
+  selected?: boolean;
   accessibilityLabel?: string;
-  style?: StyleProp<ViewStyle>; // Custom style for the TouchableRipple container
+  style?: StyleProp<ViewStyle>;
   testID?: string;
 };
 
 const getM3IconSize = (size: Size): number => {
-  // Based on the "Icon" column in the first image provided by the user
   switch (size) {
     case "extra-small":
-      return 20; // A
+      return 20;
     case "small":
-      return 24; // B
+      return 24;
     case "medium":
-      return 24; // C
+      return 24;
     case "large":
-      return 32; // D
+      return 32;
     case "extra-large":
-      return 40; // E
+      return 40;
     default:
       return 24;
   }
@@ -86,9 +85,8 @@ const getVisualContainerDimensions = (
   size: Size,
   widthType: WidthType,
 ): { width: number; height: number } => {
-  // Based on the "Default width", "Narrow width", "Wide width" columns for the visual button container
   switch (size) {
-    case "extra-small": // A
+    case "extra-small":
       switch (widthType) {
         case "default":
           return { width: 32, height: 32 };
@@ -97,10 +95,9 @@ const getVisualContainerDimensions = (
         case "wide":
           return { width: 40, height: 32 };
         default:
-          return { width: 32, height: 32 }; // Default for extra-small
+          return { width: 32, height: 32 };
       }
-    // break; // Unreachable
-    case "small": // B
+    case "small":
       switch (widthType) {
         case "default":
           return { width: 40, height: 40 };
@@ -109,10 +106,9 @@ const getVisualContainerDimensions = (
         case "wide":
           return { width: 52, height: 40 };
         default:
-          return { width: 40, height: 40 }; // Default for small
+          return { width: 40, height: 40 };
       }
-    // break; // Unreachable
-    case "medium": // C
+    case "medium":
       switch (widthType) {
         case "default":
           return { width: 56, height: 56 };
@@ -121,10 +117,9 @@ const getVisualContainerDimensions = (
         case "wide":
           return { width: 72, height: 56 };
         default:
-          return { width: 56, height: 56 }; // Default for medium
+          return { width: 56, height: 56 };
       }
-    // break; // Unreachable
-    case "large": // D
+    case "large":
       switch (widthType) {
         case "default":
           return { width: 96, height: 96 };
@@ -133,10 +128,9 @@ const getVisualContainerDimensions = (
         case "wide":
           return { width: 128, height: 96 };
         default:
-          return { width: 96, height: 96 }; // Default for large
+          return { width: 96, height: 96 };
       }
-    // break; // Unreachable
-    case "extra-large": // E
+    case "extra-large":
       switch (widthType) {
         case "default":
           return { width: 136, height: 136 };
@@ -145,32 +139,24 @@ const getVisualContainerDimensions = (
         case "wide":
           return { width: 184, height: 136 };
         default:
-          return { width: 136, height: 136 }; // Default for extra-large
+          return { width: 136, height: 136 };
       }
-    // break; // Unreachable
-    default: // Default to 'small' 'default'
+    default:
       return { width: 40, height: 40 };
   }
 };
 
-// M3 Corner radius values based on documentation (XS, S, M, L, XL)
-// A. Round button: Full
-// B. Square button: 12dp, 12dp, 16dp, 28dp, 28dp
-// C. Pressed state: 8dp, 8dp, 12dp, 16dp, 16dp (Not directly handled here, ripple handles press)
 const getCornerRadius = (
   shape: Shape,
   size: Size,
   selected?: boolean,
 ): number => {
-  const fullRoundness = 1000; // A large number for full roundness
-
-  // If selected is true, always use square shape for toggle
+  const fullRoundness = 1000;
   const actualShape = selected ? "square" : shape;
 
   if (actualShape === "round") {
     return fullRoundness;
   }
-  // Square
   switch (size) {
     case "extra-small":
       return 12;
@@ -215,10 +201,6 @@ export const IconButton = ({
   const visualDimensions = getVisualContainerDimensions(size, widthType);
   const borderRadius = getCornerRadius(shape, size, selected);
 
-  // Target size handling (minimum 48x48 for accessibility)
-  // The second image from user shows target sizes.
-  // For XS (A) and S (B), the target is 48x48 regardless of visual widthType.
-  // For M, L, XL, the visual size is already >= 48.
   const targetSize = 48;
   const touchableStyle: StyleProp<ViewStyle> = {
     width: Math.max(
@@ -242,69 +224,59 @@ export const IconButton = ({
     borderRadius,
     justifyContent: "center",
     alignItems: "center",
-    overflow: "hidden", // Important for ripple and shape
+    overflow: "hidden",
   };
 
-  let iconColor: string = theme.colors.primary; // Default
-  let backgroundColor: string | undefined = "transparent"; // Default for standard
+  let iconColor: string = theme.colors.primary;
+  let backgroundColor: string | undefined = "transparent";
 
   if (disabled) {
-    // disabled状態では既存のカラーを使用
-    iconColor = theme.colors.outline; // onSurfaceDisabledの代用
+    iconColor = theme.colors.outline;
     backgroundColor =
       variant === "filled" || variant === "tonal"
-        ? theme.colors.surfaceVariant // surfaceDisabledの代用
+        ? theme.colors.surfaceVariant
         : "transparent";
     if (variant === "outlined") {
-      containerStyle.borderColor = theme.colors.outline; // disabled outline
+      containerStyle.borderColor = theme.colors.outline;
       containerStyle.borderWidth = 1;
     }
   } else {
     switch (variant) {
       case "filled":
         if (selected === true) {
-          // Selected Toggle: Primary container, OnPrimary icon
           backgroundColor = theme.colors.primary;
           iconColor = theme.colors.onPrimary;
         } else if (selected === false) {
-          // Unselected Toggle: SurfaceContainerHighest container, Primary icon
-          backgroundColor = theme.colors.surfaceContainerHighest; // 拡張されたM3カラーを使用
+          backgroundColor = theme.colors.surfaceContainerHighest;
           iconColor = theme.colors.primary;
         } else {
-          // Default (not a toggle): Primary container, OnPrimary icon
           backgroundColor = theme.colors.primary;
           iconColor = theme.colors.onPrimary;
         }
         break;
       case "tonal":
         if (selected === true) {
-          // Selected Toggle: SecondaryContainer container, OnSecondaryContainer icon
           backgroundColor = theme.colors.secondaryContainer;
           iconColor = theme.colors.onSecondaryContainer;
         } else if (selected === false) {
-          // Unselected Toggle: SurfaceContainerHighest container, OnSurfaceVariant icon
-          backgroundColor = theme.colors.surfaceContainerHighest; // 拡張されたM3カラーを使用
+          backgroundColor = theme.colors.surfaceContainerHighest;
           iconColor = theme.colors.onSurfaceVariant;
         } else {
-          // Default (not a toggle): SecondaryContainer container, OnSecondaryContainer icon
           backgroundColor = theme.colors.secondaryContainer;
           iconColor = theme.colors.onSecondaryContainer;
         }
         break;
       case "outlined":
         if (selected === true) {
-          // Selected Toggle: InverseSurface container, InverseOnSurface icon (no border)
           backgroundColor = theme.colors.inverseSurface;
           iconColor = theme.colors.inverseOnSurface;
-          containerStyle.borderWidth = 0; // Remove border for selected outlined
+          containerStyle.borderWidth = 0;
         } else if (selected === false) {
-          // Unselected Toggle: Transparent container, OutlineVariant border, OnSurfaceVariant icon
           iconColor = theme.colors.onSurfaceVariant;
           containerStyle.borderColor = theme.colors.outlineVariant;
           containerStyle.borderWidth = 1;
           backgroundColor = "transparent";
         } else {
-          // Default (not a toggle): Transparent container, OutlineVariant border, OnSurfaceVariant icon
           iconColor = theme.colors.onSurfaceVariant;
           containerStyle.borderColor = theme.colors.outlineVariant;
           containerStyle.borderWidth = 1;
@@ -313,47 +285,39 @@ export const IconButton = ({
         break;
       case "standard":
         if (selected === true) {
-          // Selected Toggle: Transparent container, Primary icon
           iconColor = theme.colors.primary;
         } else if (selected === false) {
-          // Unselected Toggle: Transparent container, OnSurfaceVariant icon
           iconColor = theme.colors.onSurfaceVariant;
         } else {
-          // Default (not a toggle): Transparent container, OnSurfaceVariant icon
           iconColor = theme.colors.onSurfaceVariant;
         }
-        backgroundColor = "transparent"; // Standard is always transparent background
+        backgroundColor = "transparent";
         break;
     }
   }
   containerStyle.backgroundColor = backgroundColor;
-
-  // Ripple should be contained within the visual button part
-  const rippleBorderless = shape === "round"; // Make ripple round for round shapes
+  const rippleBorderless = shape === "round";
 
   return (
     <Pressable
-      // onPress is now handled by the TouchableRipple to ensure ripple effect
-      disabled={disabled} // disabled state is still managed by Pressable for the whole area
+      disabled={disabled}
       accessibilityLabel={accessibilityLabel}
       accessibilityRole="button"
       accessibilityState={{ disabled, selected }}
-      style={[touchableStyle, style]} // This is the outer touchable area ensuring target size
+      style={[touchableStyle, style]}
       testID={testID}
-      // Pressable itself doesn't need to handle the press for ripple,
-      // but it defines the touchable area.
     >
       {() => (
         <TouchableRipple
-          onPress={onPress} // onPress is now on TouchableRipple
-          style={containerStyle} // This is the visual button part
+          onPress={onPress}
+          style={containerStyle}
           rippleColor={
             variant === "filled" || variant === "tonal"
               ? theme.colors.onPrimary
               : theme.colors.primary
           }
           borderless={rippleBorderless}
-          disabled={disabled} // disabled prop for TouchableRipple
+          disabled={disabled}
         >
           <Icon source={icon} size={iconSize} color={iconColor} />
         </TouchableRipple>

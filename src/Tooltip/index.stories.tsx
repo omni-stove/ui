@@ -48,7 +48,6 @@ export const Rich: Story = {
         onPress: () => console.log("Action 2 pressed"),
       },
     ],
-    // Remove visible: true to enable tap interaction
   },
 };
 
@@ -58,7 +57,6 @@ export const RichWithIconAsChild: Story = {
     supportingText: "This tooltip is for an icon.",
     children: <Icon source="information" size={24} />,
     subhead: "Icon Tooltip",
-    // Remove visible: true to enable tap interaction
   },
 };
 
@@ -70,9 +68,6 @@ export const Behavior: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = getCanvas(canvasElement);
-    // TODO: Add interaction tests for both plain and rich variants
-    // For plain: check hover/press to show/hide
-    // For rich: check visibility prop and positioning
     expect(canvas).toBeTruthy();
   },
 };

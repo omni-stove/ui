@@ -86,8 +86,8 @@ const variants: ComponentProps<typeof Component>["variant"][] = [
 export const AllVariants: Story = {
   args: {
     ...commonArgs,
-    size: "small", // Use a representative size
-    widthType: "default", // Use a representative width type
+    size: "small",
+    widthType: "default",
     shape: "round",
   },
   render: (args) => (
@@ -116,19 +116,16 @@ export const Behavior: Story = {
   render: (args) => <Component {...args} />,
   play: async ({ canvasElement }) => {
     const canvas = getCanvas(canvasElement);
-    // Example: Test if the button is pressable
     const button = canvas.getByRole("button");
     expect(button).toBeTruthy();
-    // More specific tests can be added here
   },
 };
 
 export const ToggledStates: Story = {
   args: {
     ...commonArgs,
-    icon: "check", // Using 'check' to better visualize toggled state
+    icon: "check",
     size: "medium",
-    // shape is now determined by the component based on 'selected' state for toggles
   },
   render: (args) => (
     <View style={styles.variantContainer}>
@@ -169,19 +166,19 @@ export const ToggledStates: Story = {
 const styles = StyleSheet.create({
   gridContainer: {
     flexDirection: "column",
-    gap: 24, // Gap between rows of sizes
+    gap: 24,
   },
   gridRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 24, // Gap between width types for the same size
-    flexWrap: "wrap", // Allow wrapping if too many items
+    gap: 24,
+    flexWrap: "wrap",
   },
   gridCell: {
     padding: 8,
     justifyContent: "center",
     alignItems: "center",
-    minWidth: 140, // Ensure enough space for largest button in a row
+    minWidth: 140,
     minHeight: 140,
   },
   variantContainer: {

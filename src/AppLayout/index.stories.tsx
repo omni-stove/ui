@@ -23,7 +23,6 @@ const meta: Meta<typeof AppLayout> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// Sample content component
 const SampleContent = ({ title = "Sample Content" }: { title?: string }) => (
   <View
     style={{
@@ -40,7 +39,6 @@ const SampleContent = ({ title = "Sample Content" }: { title?: string }) => (
   </View>
 );
 
-// Sample scrollable content
 const ScrollableContent = () => (
   <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
     {Array.from({ length: 20 }, (_, i) => {

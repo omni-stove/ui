@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { Animated, Text, View } from "react-native"; // findNodeHandle を削除
+import { Animated, Text, View } from "react-native";
 import { Icon, Menu, TouchableRipple } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { useTheme } from "../hooks";
@@ -71,7 +71,6 @@ export const SplitButton = forwardRef<ComponentRef<typeof View>, Props>(
     const [visible, setVisible] = useState(false);
     const theme = useTheme();
     const rotation = useRef(new Animated.Value(0)).current;
-    // anchorRef と menuPosition を削除
 
     useEffect(() => {
       Animated.timing(rotation, {
@@ -200,8 +199,6 @@ export const SplitButton = forwardRef<ComponentRef<typeof View>, Props>(
     };
     const vStyle = variantStyles[variant];
 
-    // handleDropdownPress を削除
-
     return (
       <View ref={ref} style={{ flexDirection: "row", alignItems: "center" }}>
         {/* メインボタン */}
@@ -251,8 +248,7 @@ export const SplitButton = forwardRef<ComponentRef<typeof View>, Props>(
           onDismiss={() => setVisible(false)}
           anchor={
             <TouchableRipple
-              // ref={anchorRef} を削除
-              onPress={() => setVisible(true)} // handleDropdownPress から元に戻す
+              onPress={() => setVisible(true)}
               style={{
                 justifyContent: "center",
                 alignItems: "center",
@@ -304,7 +300,7 @@ export const SplitButton = forwardRef<ComponentRef<typeof View>, Props>(
               </Animated.View>
             </TouchableRipple>
           }
-          style={{ marginLeft: -sizeStyles[size].dropdownWidth }} // Menu の style を元に戻す
+          style={{ marginLeft: -sizeStyles[size].dropdownWidth }}
         >
           {actions.map((action) => (
             <Menu.Item

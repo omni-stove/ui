@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Animated, Pressable, StyleSheet, View } from "react-native"; // Animated を react-native から import
+import { Animated, Pressable, StyleSheet, View } from "react-native";
 import {
   Gesture,
   GestureDetector,
@@ -22,8 +22,8 @@ type SwitchProps = {
   selected: boolean;
   onPress: () => void;
   fluid?: boolean;
-  switchOnIcon?: IconSource; // IconSource from 'react-native-paper/lib/typescript/components/Icon'
-  switchOffIcon?: IconSource; // IconSource from 'react-native-paper/lib/typescript/components/Icon'
+  switchOnIcon?: IconSource;
+  switchOffIcon?: IconSource;
   disabled?: boolean;
 };
 
@@ -44,7 +44,6 @@ export const Switch = ({
   disabled,
 }: SwitchProps) => {
   const theme = useTheme();
-  // useSharedValue を new Animated.Value() に置き換え
   const position = useState(new Animated.Value(selected ? 10 : -10))[0];
   const handleHeight = useState(new Animated.Value(selected ? 24 : 16))[0];
   const handleWidth = useState(new Animated.Value(selected ? 24 : 16))[0];
@@ -55,13 +54,11 @@ export const Switch = ({
     onPress != null ? onPress() : null;
   }, [onPress]);
 
-  // callbackFunction の宣言をここに関数呼び出しより前に移動
   const callbackFunction = useCallback(() => {
     onSwitchPress();
     setIsPressed(false);
   }, [onSwitchPress]);
 
-  //#region
   const pan = Gesture.Pan()
     .activateAfterLongPress(100)
     .onTouchesUp(() => setIsPressed(false))
@@ -80,20 +77,11 @@ export const Switch = ({
         useNativeDriver: false,
       }).start();
     })
-    .onChange(() => {
-      // position._value の代わりに、setValue を使うので、ここでは何もしないか、
-      // もしジェスチャー中にリアルタイムで追従させたいなら Animated.event を使う必要がある。
-      // 今回は onEnd で最終位置を決めるので、onChange での position の直接更新は削除。
-      // ただし、ジェスチャーの移動量をどこかで保持する必要があるかもしれない。
-      // 一旦、onEnd での処理に任せる。
-    })
+    .onChange(() => {})
     .onEnd((event) => {
-      // event を受け取るように変更
       setIsPressed(false);
-      // position の現在の値を取得するために stopAnimation を使う
       position.stopAnimation((currentPositionValue) => {
-        const finalPosition = currentPositionValue + event.translationX / 10; // ジェスチャーの移動量を加味
-
+        const finalPosition = currentPositionValue + event.translationX / 10;
         if (finalPosition > 0) {
           Animated.timing(position, {
             toValue: 10,
@@ -110,13 +98,11 @@ export const Switch = ({
             duration: 160,
             useNativeDriver: false,
           }).start(({ finished }) => {
-            // finished の型を明示
             if (finished && !active) {
               callbackFunction();
             }
           });
         } else {
-          // 0以下の場合
           Animated.timing(position, {
             toValue: -10,
             duration: 250,
@@ -132,7 +118,6 @@ export const Switch = ({
             duration: 160,
             useNativeDriver: false,
           }).start(({ finished }) => {
-            // finished の型を明示
             if (finished && active) {
               callbackFunction();
             }
@@ -140,58 +125,41 @@ export const Switch = ({
         }
       });
     });
-  //#endregion
 
-  // スタイル定義を StyleSheet.create にまとめる
   const styles = StyleSheet.create({
     handleStyle: {
-      // transform: [{ translateX: position }], // StyleSheet内では直接Animated.Valueをtransformに使えないことがある
-      // height: handleHeight,
-      // width: handleWidth,
       marginVertical: "auto",
       minHeight: switchOffIcon ? 24 : 16,
       minWidth: switchOffIcon ? 24 : 16,
-      // backgroundColor: position.interpolate(...) // StyleSheet内では直接interpolateを使えない
       borderRadius: 20,
       justifyContent: "center",
       alignItems: "center",
-      // opacity: disabled ? (active ? 1 : 0.36) : 1,
     },
     trackStyle: {
       alignItems: "center",
-      // backgroundColor: position.interpolate(...)
-      // borderColor: position.interpolate(...)
       borderWidth: 2,
       borderRadius: 16,
       justifyContent: "center",
       height: 32,
       width: 52,
-      // opacity: disabled ? 0.12 : 1,
     },
     handleOutlineStyle: {
       height: 40,
       width: 40,
       borderRadius: 20,
       position: "absolute",
-      // transform: [{ translateX: position }],
-      // backgroundColor: !isPressed ? "transparent" : position.interpolate(...)
       alignItems: "center",
       opacity: 0.18,
       justifyContent: "center",
     },
     iconOnStyle: {
-      // opacity: position.interpolate(...)
       overflow: "hidden",
-      // transform: [ ... ]
     },
     iconOffStyle: {
       position: "absolute",
-      // opacity: position.interpolate(...)
       overflow: "hidden",
-      // transform: [ ... ]
     },
     stateOuter: {
-      // 元々あったstyles.stateOuterもここに含める
       justifyContent: "center",
       height: 32,
       width: 52,
@@ -200,7 +168,6 @@ export const Switch = ({
     },
   });
 
-  // Animated.View に渡すスタイルは、StyleSheet.createの外で動的に生成する必要があるものを組み合わせる
   const getHandleAnimatedStyle = () => ({
     ...styles.handleStyle,
     transform: [{ translateX: position }],
@@ -287,11 +254,6 @@ export const Switch = ({
     ],
   });
 
-  // const callbackFunction = () => { // 上に移動したのでここは削除
-  //   onSwitchPress();
-  //   setIsPressed(false);
-  // };
-
   const changeSwitch = useCallback(
     (withCallback: boolean) => {
       if (active) {
@@ -313,7 +275,7 @@ export const Switch = ({
           withCallback
             ? (finished) => {
                 if (finished) {
-                  callbackFunction(); // runOnJS は不要
+                  callbackFunction();
                 }
               }
             : undefined,
@@ -338,7 +300,7 @@ export const Switch = ({
           withCallback
             ? (finished) => {
                 if (finished) {
-                  callbackFunction(); // runOnJS は不要
+                  callbackFunction();
                 }
               }
             : undefined,
@@ -379,7 +341,6 @@ export const Switch = ({
             <Pressable
               disabled={disabled}
               style={{
-                // Pressable の style は静的なので StyleSheet.create に移しても良い
                 justifyContent: "center",
                 height: 32,
                 width: 52,

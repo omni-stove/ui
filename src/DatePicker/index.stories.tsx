@@ -7,9 +7,8 @@ import {
   type DatePickerType,
   type DatePickerValue,
   type Props,
-} from "./index"; // DatePickerValue もインポート
+} from "./index";
 
-// Storybookの基本設定
 const meta: Meta<Props<DatePickerType>> = {
   component: DatePicker,
   decorators: [
@@ -53,7 +52,6 @@ const meta: Meta<Props<DatePickerType>> = {
     endLabel: { control: "text" },
   },
   args: {
-    // Default args for all stories unless overridden
     label: "Choose Date",
     onChange: action("onChange"),
     locale: "ja",
@@ -61,24 +59,20 @@ const meta: Meta<Props<DatePickerType>> = {
     isDisabled: false,
     textFieldVariant: "filled",
     errorMessage: "",
-    // validRange, saveLabel, etc., can be added here if a common default is desired
   },
 };
 
 export default meta;
 
-// Interactive story template using a generic type
 const InteractiveDatePickerTemplate = <T extends DatePickerType>(
   initialArgs: Props<T>,
 ): StoryObj<Props<T>> => ({
   render: (args) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const [value, setValue] = useState<DatePickerValue<T>>(args.defaultValue);
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const handleChange = useCallback((newValue: DatePickerValue<T>) => {
       setValue(newValue);
-      action("onChange")(newValue); // Log to Storybook actions
+      action("onChange")(newValue);
     }, []);
 
     return <DatePicker {...args} value={value} onChange={handleChange} />;
@@ -90,7 +84,7 @@ export const Single: StoryObj<Props<"single">> =
   InteractiveDatePickerTemplate<"single">({
     type: "single",
     label: "Single Date",
-    defaultValue: undefined, // Start with no date selected
+    defaultValue: undefined,
   });
 
 export const Range: StoryObj<Props<"range">> =

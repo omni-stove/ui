@@ -6,7 +6,7 @@ import type {
   StyleProp,
   TextInputSubmitEditingEventData,
   ViewStyle,
-} from "react-native"; // NativeSyntheticEvent, TextInputSubmitEditingEventData をインポート
+} from "react-native";
 import type { TextInput as RNTextInput } from "react-native";
 import { HelperText, TextInput } from "react-native-paper";
 
@@ -40,7 +40,7 @@ type Props = {
    * ラッパーコンポーネントで使用
    * @default 'filled'
    */
-  variant?: TextFieldVariant; // export しない TextFieldVariant を使用
+  variant?: TextFieldVariant;
   /**
    * 入力フィールドの前に表示する要素 (アイコンまたはテキスト)
    */
@@ -59,19 +59,19 @@ type Props = {
   style?: StyleProp<ViewStyle>;
   value?: string;
   disabled?: boolean;
-  readOnly?: boolean; // editable から readOnly に変更
+  readOnly?: boolean;
   secureTextEntry?: boolean;
-  keyboardType?: KeyboardTypeOptions; // KeyboardTypeOptions に変更
+  keyboardType?: KeyboardTypeOptions;
   autoCapitalize?: "none" | "sentences" | "words" | "characters";
   autoCorrect?: boolean;
-  returnKeyType?: ReturnKeyTypeOptions; // ReturnKeyTypeOptions に変更
+  returnKeyType?: ReturnKeyTypeOptions;
   onSubmitEditing?: (
     e: NativeSyntheticEvent<TextInputSubmitEditingEventData>,
-  ) => void; // 型を変更
+  ) => void;
   onFocus?: () => void;
   onBlur?: () => void;
   maxLength?: number;
-  onPress?: () => void; // onPress プロパティを明示的に追加
+  onPress?: () => void;
 };
 
 /**
@@ -86,7 +86,6 @@ type Props = {
  * @see {@link HelperText}
  */
 export const TextField = forwardRef<RNTextInput, Props>(
-  // Propsのみを指定
   (
     {
       label,
@@ -102,7 +101,7 @@ export const TextField = forwardRef<RNTextInput, Props>(
       style,
       value,
       disabled,
-      readOnly, // editable から readOnly に変更
+      readOnly,
       secureTextEntry,
       keyboardType,
       autoCapitalize,
@@ -112,7 +111,7 @@ export const TextField = forwardRef<RNTextInput, Props>(
       onSubmitEditing,
       onFocus,
       onBlur,
-      onPress, // onPress プロパティを受け取る
+      onPress,
     },
     ref,
   ) => {
@@ -120,7 +119,6 @@ export const TextField = forwardRef<RNTextInput, Props>(
     const showHelperText =
       hasError || !!supportingText || (!!maxLength && value !== undefined);
 
-    // react-native-paper の TextInputProps['mode'] に合わせる
     const paperVariant = variant === "filled" ? "flat" : variant;
 
     const textFieldLabel = required && label ? `${label}*` : label;
@@ -154,10 +152,10 @@ export const TextField = forwardRef<RNTextInput, Props>(
           style={style}
           value={value}
           disabled={disabled}
-          editable={readOnly === undefined ? undefined : !readOnly} // readOnly を editable に変換
+          editable={readOnly === undefined ? undefined : !readOnly}
           secureTextEntry={secureTextEntry}
           keyboardType={keyboardType}
-          maxLength={maxLength} // maxLength を TextInput に渡す
+          maxLength={maxLength}
           autoCapitalize={autoCapitalize}
           autoCorrect={autoCorrect}
           returnKeyType={returnKeyType}

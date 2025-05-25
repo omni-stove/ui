@@ -83,13 +83,12 @@ type Props = {
   };
 };
 
-// M3 Toolbar size specifications (updated to match M3 guidelines)
 const getToolbarDimensions = (size: Size) => {
   switch (size) {
     case "small":
       return {
         height: 64,
-        titleSize: 22, // M3 Title Large
+        titleSize: 22,
         titleLineHeight: 28,
         paddingHorizontal: 16,
         fontWeight: "400" as const,
@@ -97,9 +96,9 @@ const getToolbarDimensions = (size: Size) => {
     case "medium":
       return {
         height: 112,
-        titleSize: 24, // M3 Headline Small
+        titleSize: 24,
         titleLineHeight: 32,
-        subtitleSize: 14, // M3 Body Medium
+        subtitleSize: 14,
         subtitleLineHeight: 20,
         paddingHorizontal: 16,
         fontWeight: "400" as const,
@@ -107,9 +106,9 @@ const getToolbarDimensions = (size: Size) => {
     case "large":
       return {
         height: 152,
-        titleSize: 28, // M3 Headline Medium
+        titleSize: 28,
         titleLineHeight: 36,
-        subtitleSize: 14, // M3 Body Medium
+        subtitleSize: 14,
         subtitleLineHeight: 20,
         paddingHorizontal: 16,
         fontWeight: "400" as const,
@@ -153,10 +152,9 @@ export const Toolbar = forwardRef<View, Props>(
     const theme = useTheme();
     const dimensions = getToolbarDimensions(size);
 
-    // M3 color tokens
     const colors = {
       surface: theme.colors.surface,
-      surfaceContainer: theme.colors.surfaceVariant, // M3 uses surface-container for floating
+      surfaceContainer: theme.colors.surfaceVariant,
       onSurface: theme.colors.onSurface,
       onSurfaceVariant: theme.colors.onSurfaceVariant,
       primary: theme.colors.primary,
@@ -164,7 +162,6 @@ export const Toolbar = forwardRef<View, Props>(
       shadow: theme.colors.shadow,
     };
 
-    // M3 Elevation tokens
     const elevationStyles = {
       level0: {
         elevation: 0,
@@ -186,7 +183,6 @@ export const Toolbar = forwardRef<View, Props>(
       },
     };
 
-    // Floating variant specific styles
     const floatingStyles =
       variant === "floating"
         ? {
@@ -198,24 +194,21 @@ export const Toolbar = forwardRef<View, Props>(
           }
         : {};
 
-    // Container style
     const containerStyle: StyleProp<ViewStyle> = [
       {
         height: dimensions.height,
-        backgroundColor: colors.surfaceContainer, // M3 Toolbar uses surface-container for both variants
+        backgroundColor: colors.surfaceContainer,
         paddingHorizontal: dimensions.paddingHorizontal,
         paddingTop:
           Platform.OS === "android" && variant === "docked"
             ? StatusBar.currentHeight
             : 0,
         justifyContent: size === "large" ? "flex-end" : "center",
-        // Docked variant gets subtle elevation
         ...(variant === "docked" && elevationStyles.level1),
       },
       floatingStyles,
     ];
 
-    // Action button style - M3 spec: 48dp touch target
     const actionButtonStyle = {
       width: 48,
       height: 48,
@@ -224,18 +217,16 @@ export const Toolbar = forwardRef<View, Props>(
       alignItems: "center" as const,
     };
 
-    // FAB style - M3 spec: 56dp for standard FAB
     const fabStyle = {
       width: 56,
       height: 56,
-      borderRadius: 16, // M3 FAB uses 16dp corner radius
+      borderRadius: 16,
       backgroundColor: colors.primary,
       justifyContent: "center" as const,
       alignItems: "center" as const,
-      ...elevationStyles.level3, // FAB has elevation level 3
+      ...elevationStyles.level3,
     };
 
-    // Navigation button
     const renderNavigationButton = () => {
       if (!navigationIcon) return null;
 
@@ -253,7 +244,6 @@ export const Toolbar = forwardRef<View, Props>(
       );
     };
 
-    // Action buttons
     const renderActions = () => {
       if (actions.length === 0) return null;
 
@@ -277,7 +267,6 @@ export const Toolbar = forwardRef<View, Props>(
       );
     };
 
-    // FAB button - M3 spec: positioned on the right side
     const renderFab = () => {
       if (!fab) return null;
 
@@ -298,14 +287,13 @@ export const Toolbar = forwardRef<View, Props>(
       );
     };
 
-    // For floating variant, FAB should be positioned outside the toolbar
     if (variant === "floating" && fab) {
       return (
         <View
           style={{
             flexDirection: "row",
             alignItems: "center",
-            gap: 16, // Gap between toolbar and FAB
+            gap: 16,
           }}
         >
           <View
@@ -322,7 +310,7 @@ export const Toolbar = forwardRef<View, Props>(
                 justifyContent:
                   alignment === "center" ? "center" : "flex-start",
                 height: "100%",
-                gap: 32, // M3 spec: 32dp spacing between navigation and actions
+                gap: 32,
               }}
             >
               {renderNavigationButton()}
@@ -335,7 +323,6 @@ export const Toolbar = forwardRef<View, Props>(
       );
     }
 
-    // For docked variant, FAB is inside the toolbar
     return (
       <View
         ref={ref}
@@ -350,7 +337,7 @@ export const Toolbar = forwardRef<View, Props>(
             alignItems: "center",
             justifyContent: "space-between",
             height: "100%",
-            paddingRight: fab ? 16 : 0, // Add padding when FAB is present
+            paddingRight: fab ? 16 : 0,
           }}
         >
           {/* Left side: Navigation and Actions */}
@@ -360,7 +347,7 @@ export const Toolbar = forwardRef<View, Props>(
               alignItems: "center",
               flex: 1,
               justifyContent: alignment === "center" ? "center" : "flex-start",
-              gap: 32, // M3 spec: 32dp spacing between navigation and actions
+              gap: 32,
             }}
           >
             {renderNavigationButton()}

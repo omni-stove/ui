@@ -1,13 +1,8 @@
 import { action } from "@storybook/addon-actions";
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect } from "@storybook/test";
-import { NavigationRail as Component, type NavigationRailItem } from "."; // NavigationRailItem をインポート
+import { NavigationRail as Component, type NavigationRailItem } from ".";
 import { getCanvas } from "../libs/storybook";
-// useState and other specific imports for ModalVariant's previous render are removed if no longer needed globally.
-// import { useState } from 'react';
-// import { Button } from '../Button';
-// import { IconButton, useTheme } from 'react-native-paper';
-// import { MD3Theme } from 'react-native-paper';
 
 const meta: Meta<typeof Component> = {
   component: Component,
@@ -21,8 +16,8 @@ const meta: Meta<typeof Component> = {
       control: "boolean",
       description: "Initial open state for modal variant",
     },
-    onDismiss: { action: "dismissed" }, // For modal variant
-    onMenuPress: { action: "menuPressed" }, // For modal variant (when internal menu button closes modal)
+    onDismiss: { action: "dismissed" },
+    onMenuPress: { action: "menuPressed" },
   },
 };
 
@@ -71,7 +66,7 @@ export const Collapsed: Story = {
     ...Default.args,
     initialStatus: "collapsed",
   },
-  render: (args) => <Component {...args} />, // Render with new initialStatus
+  render: (args) => <Component {...args} />,
 };
 
 export const ExpandedWithFab: Story = {
@@ -84,7 +79,7 @@ export const ExpandedWithFab: Story = {
     onFabPress: action("onFabPress"),
     initialStatus: "expanded",
   },
-  render: (args) => <Component {...args} />, // Render with new initialStatus
+  render: (args) => <Component {...args} />,
 };
 
 export const NoFab: Story = {
@@ -92,14 +87,12 @@ export const NoFab: Story = {
     items: defaultItems,
     selectedItemKey: "recent",
     onMenuPress: action("onMenuPress"),
-    // fabIcon, fabLabel, onFabPress を指定しない
   },
   render: (args) => <Component {...args} />,
 };
 
 export const Behavior: Story = {
   args: {
-    // Behavior ストーリーにも args を設定
     items: defaultItems,
     selectedItemKey: "home",
     onMenuPress: action("onMenuPress"),
@@ -111,24 +104,18 @@ export const Behavior: Story = {
   play: async ({ canvasElement }) => {
     const canvas = getCanvas(canvasElement);
     expect(canvas).toBeTruthy();
-    // ここにインタラクションのテストを追加できる
-    // 例: canvas.getByText('Favorites').click();
-    // expect(action('onPress-favorites')).toHaveBeenCalled();
   },
 };
 
 export const ModalVariant: Story = {
   args: {
-    // Explicitly define args for ModalVariant
     items: defaultItems,
     selectedItemKey: "home",
-    fabIcon: "pencil", // Optional: show FAB in modal rail
-    fabLabel: "Create", // Optional
-    onFabPress: action("onFabPress-modal"), // Optional
+    fabIcon: "pencil",
+    fabLabel: "Create",
+    onFabPress: action("onFabPress-modal"),
     variant: "modal",
-    initialModalOpen: false, // Default to closed for the story
-    // onDismiss action is defined in argTypes
-    // onMenuPress action is defined in argTypes
+    initialModalOpen: false,
   },
   render: (args) => <Component {...args} />,
 };

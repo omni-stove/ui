@@ -9,7 +9,7 @@ import { useTable } from "./hooks";
 import { useDragDrop } from "./hooks/useDragDrop";
 import { createTableStyles } from "./styles";
 import type { DataWithId, EnhancedDataTableProps } from "./types";
-import type { DragPosition } from "./utils/dragUtils"; // Add this import
+import type { DragPosition } from "./utils/dragUtils";
 
 /**
  * An enhanced DataTable component built on top of `@tanstack/react-table` and `react-native-paper`.
@@ -48,18 +48,16 @@ export const Table = forwardRef(
       const enableRowDrag = !!onRowDragEnd;
       let newColumns = [...originalColumns];
 
-      // ドラッグハンドル列を追加
       if (enableRowDrag) {
         const dragColumn: ColumnDef<T, unknown> = {
           id: "_drag",
-          header: () => null, // ヘッダーは空
-          cell: () => null, // セルは空（DraggableRowで処理）
+          header: () => null,
+          cell: () => null,
           size: 40,
         };
         newColumns = [dragColumn, ...newColumns];
       }
 
-      // 選択列を追加
       if (enableRowSelection) {
         const selectionColumn: ColumnDef<T, unknown> = {
           id: "_select",
@@ -105,7 +103,6 @@ export const Table = forwardRef(
       enableRowDrag,
     } = useTable({ ...props, columns });
 
-    // DnD機能
     const {
       dragState,
       isRowDragEnabled,
@@ -160,7 +157,6 @@ export const Table = forwardRef(
                 }
               >
                 {table.getAllLeafColumns().map((column) => {
-                  // 選択列は除外
                   if (column.id === "_select") return null;
 
                   const columnName =
@@ -207,8 +203,8 @@ export const Table = forwardRef(
                         ? { flex: 0.5, justifyContent: "center" }
                         : header.column.id === "_drag"
                           ? { flex: 0.3, justifyContent: "center" }
-                          : { flex: 1 }, // 通常の列もflex:1を指定して均等に配置
-                    ]} // チェックボックス列とドラッグハンドル列の幅と中央揃え
+                          : { flex: 1 },
+                    ]}
                     sortDirection={
                       header.column.getIsSorted() === "asc"
                         ? "ascending"
@@ -219,8 +215,8 @@ export const Table = forwardRef(
                     onPress={
                       enableSorting &&
                       header.column.getCanSort() &&
-                      header.column.id !== "_select" && // チェックボックス列はソート不可
-                      header.column.id !== "_drag" // ドラッグハンドル列もソート不可
+                      header.column.id !== "_select" &&
+                      header.column.id !== "_drag"
                         ? () => header.column.toggleSorting()
                         : undefined
                     }
@@ -267,8 +263,8 @@ export const Table = forwardRef(
                         ? { flex: 0.5, justifyContent: "center" }
                         : cell.column.id === "_drag"
                           ? { flex: 0.3, justifyContent: "center" }
-                          : { flex: 1 }, // 通常の列もflex:1を指定
-                    ]} // チェックボックス列とドラッグハンドル列の幅と中央揃え
+                          : { flex: 1 },
+                    ]}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </DataTable.Cell>
@@ -290,7 +286,6 @@ export const Table = forwardRef(
                             : false
                       }
                       onChangeCheck={() => table.toggleAllPageRowsSelected()}
-                      // label prop は削除して、Checkboxコンポーネントが自身のサイズで中央揃えされるようにする
                     />
                   </View>
                 )}
@@ -327,7 +322,7 @@ export const Table = forwardRef(
                     }
                   }}
                   selectPageDropdownLabel="Rows per page"
-                  style={{ flexShrink: 1, paddingHorizontal: 16 }} // flex: 1 を削除し、flexShrink: 1 を追加
+                  style={{ flexShrink: 1, paddingHorizontal: 16 }}
                 />
               </View>
             )}

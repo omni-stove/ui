@@ -149,7 +149,7 @@ export const FAB = forwardRef(
         };
 
       return {
-        customSize: 56, // Default small FAB size
+        customSize: 56,
         iconSize: 24,
         labelFontSize: 16,
       };
@@ -233,7 +233,7 @@ export const FAB = forwardRef(
               >
                 <Fab
                   icon="close"
-                  customSize={56} // Close button is always small
+                  customSize={56}
                   style={[
                     styles.baseFab,
                     { backgroundColor: colorSet.container },

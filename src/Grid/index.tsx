@@ -29,7 +29,6 @@ export const Grid = ({
   style,
   variant = "masonry",
 }: GridProps) => {
-  // Standard Grid の場合は直接実装
   if (variant === "standard") {
     const spacingValue = getSpacingValue(spacing);
 
@@ -48,7 +47,6 @@ export const Grid = ({
     );
   }
 
-  // Masonry Grid の実装（既存のロジック）
   const [containerWidth, setContainerWidth] = useState(0);
   const [itemHeights, setItemHeights] = useState<Map<string, number>>(
     new Map(),
@@ -57,13 +55,11 @@ export const Grid = ({
   const responsiveColumns = useResponsiveColumns(columns);
   const spacingValue = getSpacingValue(spacing);
 
-  // 子要素をMasonryItemに変換
   const masonryItems = useMemo(() => {
     return (
       (Children.map(children, (child, index) => {
         const id = `item-${index}`;
-        const height = itemHeights.get(id) || 200; // デフォルト高さ
-
+        const height = itemHeights.get(id) || 200;
         return {
           id,
           height,

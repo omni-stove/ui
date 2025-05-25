@@ -7,7 +7,6 @@ import { Text } from "react-native-paper";
 import { Table } from ".";
 import type { DataWithId, RowDragEndParams } from "./types";
 
-// サンプルデータの型定義
 type User = DataWithId & {
   name: string;
   email: string;
@@ -16,7 +15,6 @@ type User = DataWithId & {
   createdAt: string;
 };
 
-// サンプルデータ
 const sampleUsers: User[] = [
   {
     id: "1",
@@ -100,7 +98,6 @@ const sampleUsers: User[] = [
   },
 ] satisfies (DataWithId & User)[];
 
-// カラム定義
 const columnHelper = createColumnHelper<User>();
 
 const columns: ColumnDef<DataWithId, unknown>[] = [
@@ -148,7 +145,6 @@ const meta: Meta<typeof Table> = {
 export default meta;
 type Story = StoryObj<typeof Table>;
 
-// デフォルト（基本的なテーブル）
 export const Default: Story = {
   render: () => {
     const [sorting, setSorting] = useState<{ id: "id"; desc: boolean }[]>([]);
@@ -171,7 +167,6 @@ export const Default: Story = {
   },
 };
 
-// 空のデータ
 export const Empty: Story = {
   render: () => {
     const [sorting, setSorting] = useState<{ id: "id"; desc: boolean }[]>([]);
@@ -194,7 +189,6 @@ export const Empty: Story = {
   },
 };
 
-// ローディング状態
 export const Loading: Story = {
   render: () => {
     const [sorting, setSorting] = useState<{ id: "id"; desc: boolean }[]>([]);
@@ -218,7 +212,6 @@ export const Loading: Story = {
   },
 };
 
-// 全機能付き
 export const AllFeatures: Story = {
   render: () => {
     const [sorting, setSorting] = useState<{ id: "id"; desc: boolean }[]>([]);
@@ -293,7 +286,6 @@ export const AllFeatures: Story = {
   },
 };
 
-// DnD機能付き
 export const WithDragAndDrop: Story = {
   render: () => {
     const [data, setData] = useState(sampleUsers);

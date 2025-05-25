@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 import { Pressable, type TextInput, View } from "react-native";
-import { Text } from "react-native-paper"; // react-native-paperのTextをインポート
+import { Text } from "react-native-paper";
 import { Menu } from "../Menu";
 import { TextField } from "../TextField";
 
@@ -56,8 +56,8 @@ export const Select = forwardRef(function Select<T extends string | number>(
 ) {
   const { options, onChange, value, variant = "filled", label } = props;
   const [visible, setVisible] = useState(false);
-  const [menuWidth, setMenuWidth] = useState(0); // メニューの幅を保持するstate
-  const anchorRef = useRef<View>(null); // anchorとなるViewのrefに戻す
+  const [menuWidth, setMenuWidth] = useState(0);
+  const anchorRef = useRef<View>(null);
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
@@ -72,25 +72,22 @@ export const Select = forwardRef(function Select<T extends string | number>(
 
   useLayoutEffect(() => {
     if (anchorRef.current) {
-      // Platform.OS !== 'web' の条件を削除
       anchorRef.current.measure((_x, _y, width) => {
         setMenuWidth(width);
       });
     }
-  }, []); // visibleが変わったとき（Menuが開かれるとき）に幅を再計算
-
-  // handleLayout関数を削除
+  }, []);
 
   return (
     <Menu
       visible={visible}
       onDismiss={closeMenu}
-      contentStyle={{ width: menuWidth }} // メニューの幅を指定
+      contentStyle={{ width: menuWidth }}
       anchor={
         <Pressable onPress={openMenu} ref={anchorRef} style={{ width: "100%" }}>
           <View pointerEvents="none" style={{ width: "100%" }}>
             <TextField
-              ref={ref} // 通常のrefをTextFieldに渡す
+              ref={ref}
               label={label}
               variant={variant}
               value={selectedLabel}
@@ -104,7 +101,7 @@ export const Select = forwardRef(function Select<T extends string | number>(
         <Pressable
           key={option.value}
           onPress={() => handleSelect(option.value as T)}
-          style={{ width: "100%", paddingVertical: 12, paddingHorizontal: 16 }} // スタイルを調整
+          style={{ width: "100%", paddingVertical: 12, paddingHorizontal: 16 }}
         >
           <Text>{option.label}</Text>
         </Pressable>

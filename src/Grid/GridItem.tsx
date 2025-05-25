@@ -35,8 +35,6 @@ export const GridItem = ({
   const currentColumns = useMaxColumns();
   const spacingValue = getSpacingValue(spacing);
 
-  // 親要素の幅から取得したカラム数に基づいて幅を計算
-  // spanが現在のカラム数を超える場合は100%幅にする
   const actualSpan = Math.min(span, currentColumns);
   const widthPercentage = (actualSpan / currentColumns) * 100;
 

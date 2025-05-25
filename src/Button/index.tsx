@@ -57,38 +57,37 @@ type Props = BaseProps &
     | { children?: ReactNode; icon: string }
   );
 
-// M3 Button size specifications based on the provided image
 const getButtonDimensions = (size: Size) => {
   switch (size) {
-    case "extra-small": // 1
+    case "extra-small":
       return {
         height: 32,
         paddingHorizontal: 12,
         fontSize: 14,
         iconSize: 16,
       };
-    case "small": // 2 (existing default)
+    case "small":
       return {
         height: 40,
         paddingHorizontal: 16,
         fontSize: 14,
         iconSize: 18,
       };
-    case "medium": // 3
+    case "medium":
       return {
         height: 56,
         paddingHorizontal: 24,
         fontSize: 16,
         iconSize: 20,
       };
-    case "large": // 4
+    case "large":
       return {
         height: 96,
         paddingHorizontal: 48,
         fontSize: 24,
         iconSize: 28,
       };
-    case "extra-large": // 5
+    case "extra-large":
       return {
         height: 136,
         paddingHorizontal: 64,
@@ -133,7 +132,6 @@ export const Button = forwardRef(
     const theme = useTheme();
     const dimensions = getButtonDimensions(size);
 
-    // M3のvariant別カラー設定
     const getButtonColors = () => {
       if (disabled) {
         return {
@@ -180,19 +178,17 @@ export const Button = forwardRef(
 
     const colors = getButtonColors();
 
-    // ボタンスタイル
     const buttonStyle: StyleProp<ViewStyle> = [
       {
         height: dimensions.height,
         paddingHorizontal: dimensions.paddingHorizontal,
-        borderRadius: dimensions.height / 2, // md.sys.shape.corner.full
+        borderRadius: dimensions.height / 2,
         backgroundColor: colors.backgroundColor,
         justifyContent: "center",
         alignItems: "center",
         borderWidth: variant === "outlined" ? 1 : 0,
         borderColor: colors.borderColor,
         opacity: disabled ? 0.38 : 1,
-        // M3 elevated button elevation (level1)
         ...(variant === "elevated" &&
           !disabled && {
             elevation: 1,
@@ -205,7 +201,6 @@ export const Button = forwardRef(
       style,
     ];
 
-    // テキストスタイル
     const textStyle: StyleProp<TextStyle> = [
       {
         fontSize: dimensions.fontSize,
@@ -217,7 +212,6 @@ export const Button = forwardRef(
       labelStyle,
     ];
 
-    // リップルカラー（M3仕様に基づく）
     const getRippleColor = () => {
       if (disabled) {
         return theme.colors.outline;

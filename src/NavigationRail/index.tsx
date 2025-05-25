@@ -11,7 +11,7 @@ import {
   TouchableRipple,
   useTheme,
 } from "react-native-paper";
-import { FAB, IconButton } from "react-native-paper"; // Use FAB and IconButton from react-native-paper
+import { FAB, IconButton } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import Animated, {
   useSharedValue,
@@ -68,13 +68,13 @@ type Props = {
   variant?: Variant;
   items: NavigationRailItem[];
   selectedItemKey: string;
-  onMenuPress?: () => void; // Called when internal menu button is pressed
+  onMenuPress?: () => void;
   fabIcon?: IconSource;
   fabLabel?: string;
   onFabPress?: () => void;
   initialStatus?: Status;
-  initialModalOpen?: boolean; // For modal variant: initial open state
-  onDismiss?: () => void; // For modal variant: when modal is dismissed
+  initialModalOpen?: boolean;
+  onDismiss?: () => void;
 };
 
 /**
@@ -113,17 +113,14 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
     const [status, setStatus] = useState<Status>(
       variant === "modal" ? "expanded" : initialStatus,
     );
-    // Internal state for modal visibility, controlled by the component itself
     const [isModalOpen, setIsModalOpen] = useState(
       variant === "modal" ? initialModalOpen : false,
     );
 
-    // Toggle for the rail's own expanded/collapsed status (for standard variant)
     const toggleRailStatus = () => {
       setStatus((prev) => (prev === "collapsed" ? "expanded" : "collapsed"));
     };
 
-    // Toggle for the modal visibility (triggered by the fixed top-left button)
     const toggleModalVisibility = () => {
       if (variant === "modal") {
         setIsModalOpen((prev) => !prev);
@@ -133,9 +130,9 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
     const styles = StyleSheet.create({
       fixedGlobalMenuButton: {
         position: "absolute",
-        top: 8, // Align with railContent's paddingTop
-        left: 16, // Align with railContent's menuButtonContainer's paddingHorizontal when expanded
-        zIndex: 1002, // Ensure it's above Modal
+        top: 8,
+        left: 16,
+        zIndex: 1002,
         backgroundColor: "transparent",
         borderRadius: theme.roundness * 4,
       },
@@ -144,44 +141,35 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
         paddingTop: 8,
         paddingBottom: 8,
         height: "100%",
-        overflow: "hidden", // Important for width animation
-        // borderTopRightRadius: theme.roundness * 4, // Removed: Radius only for modal
-        // borderBottomRightRadius: theme.roundness * 4, // Removed: Radius only for modal
+        overflow: "hidden",
       },
       menuButtonContainer: {
-        // For standard variant
         marginBottom: 36,
         width: "100%",
-        alignItems: status === "expanded" ? "flex-start" : "center", // Align based on status
-        paddingHorizontal: status === "expanded" ? 16 : 0, // Add padding in expanded mode
+        alignItems: status === "expanded" ? "flex-start" : "center",
+        paddingHorizontal: status === "expanded" ? 16 : 0,
       },
       fabContainer: {
-        alignItems: status === "expanded" ? "flex-start" : "center", // Align main FAB based on status
+        alignItems: status === "expanded" ? "flex-start" : "center",
         width: "100%",
-        paddingHorizontal: status === "expanded" ? 16 : 0, // Add padding for expanded main FAB
-        marginBottom: 24, // Add margin bottom to separate FAB from items
+        paddingHorizontal: status === "expanded" ? 16 : 0,
+        marginBottom: 24,
       },
-      // Styles for Collapsed items
       itemContainer: {
         width: "100%",
-        alignItems: "center", // Collapsed items are always centered within their container
+        alignItems: "center",
         paddingVertical: 8,
         borderRadius: theme.roundness * 3,
         marginBottom: 6,
-        minHeight: 68, // Adjusted to fit content: paddingTop(8) + iconContainer(32) + label.marginTop(4) + labelLineHeight(approx 16) + paddingBottom(8) = 68
+        minHeight: 68,
         justifyContent: "center",
       },
-      activeItemBackground: {
-        // Used for collapsed state
-        // backgroundColor: theme.colors.secondaryContainer, // Removed: Only icon container should have active background
-      },
+      activeItemBackground: {},
       itemContent: {
-        // Used for collapsed state
         alignItems: "center",
-        flexDirection: "column", // Always column for this specific layout part
+        flexDirection: "column",
       },
       iconContainer: {
-        // Used for collapsed state
         width: 56,
         height: 32,
         alignItems: "center",
@@ -189,65 +177,48 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
         borderRadius: theme.roundness * 4,
       },
       activeIconContainer: {
-        // Used for collapsed state
         backgroundColor: theme.colors.secondaryContainer,
       },
       label: {
-        // Used for collapsed state (and expanded if not FAB)
         marginTop: 4,
         textAlign: "center",
         color: theme.colors.onSurfaceVariant,
         ...theme.fonts.labelMedium,
       },
       activeLabel: {
-        // Used for collapsed state (and expanded if not FAB)
-        color: theme.colors.onSurfaceVariant, // Keep label color same as inactive
-        // fontWeight: 'bold', // Keep label weight same as inactive
+        color: theme.colors.onSurfaceVariant,
       },
-      // Styles for Expanded items (using FAB)
       expandedItemWrapper: {
-        width: "100%", // Wrapper takes full width of the rail
+        width: "100%",
         marginBottom: 12,
-        alignItems: "flex-start", // Align the FAB itself to the start of this wrapper
-        paddingHorizontal: 16, // Add horizontal padding to the wrapper
+        alignItems: "flex-start",
+        paddingHorizontal: 16,
       },
       expandedFab: {
-        // width: '100%', // REMOVE: Allow FAB to size to its content (icon + label)
-        alignSelf: "flex-start", // Ensure FAB aligns to start if not taking full width of parent
+        alignSelf: "flex-start",
         minHeight: 56,
         justifyContent: "flex-start",
         backgroundColor: "transparent",
         elevation: 0,
-        shadowColor: "transparent", // Ensure no shadow on iOS
+        shadowColor: "transparent",
       },
       activeExpandedFab: {
         backgroundColor: theme.colors.secondaryContainer,
       },
       expandedBadgeOffset: {
         position: "absolute",
-        // Adjust based on FAB's internal icon placement and badge size
-        top: 8, // Position from the top edge of the FAB
-        // right: 12, // Removed right positioning
-        left: 44, // Position from the left edge of the FAB, aiming for icon's top-right. Adjust as needed.
+        top: 8,
+        left: 44,
       },
       modalContentContainer: {
-        // Style for the content inside the modal
         backgroundColor: theme.colors.surface,
-        // padding: 20, // Example padding, adjust as needed
-        // borderRadius: theme.roundness * 2, // Example border radius
-        // margin: 20, // Example margin to not touch screen edges
-        height: "100%", // Make the rail take full height of the modal
-        // width: 'auto', // Let the rail's animated width define its width
-        maxWidth: 360, // Consistent with the rail's max width
-        borderTopRightRadius: theme.roundness * 4, // Add border radius only to the right side for modal too
-        borderBottomRightRadius: theme.roundness * 4, // Add border radius only to the right side for modal too
-        overflow: "hidden", // Ensure content respects the modal's border radius
+        height: "100%",
+        maxWidth: 360,
+        borderTopRightRadius: theme.roundness * 4,
+        borderBottomRightRadius: theme.roundness * 4,
+        overflow: "hidden",
       },
     });
-
-    // Icon is 24x24, iconContainer is 56x32 (for collapsed). Icon is centered.
-    // Icon top-left in iconContainer: x=16, y=4
-    // Icon top-right in iconContainer: x=40, y=4
 
     const getBadgeStyleAndSize = (
       badge?: NavigationRailItem["badge"],
@@ -266,21 +237,16 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
       let calculatedRight: number;
       let badgeWidth: number | undefined = undefined;
       let badgeHeight: number | undefined = undefined;
-      // let _borderRadius: number | undefined = undefined; // Unused variable
 
       if (badge.size === "small") {
         RNPBadgeSize = RNPBadgeSizeConfig.small;
         badgeHeight = 6;
         badgeWidth = 6;
-        // _borderRadius = 3; // Unused assignment
-
-        // Simplified positioning for visibility
-        calculatedTop = 0; // Position at the top of the icon container
-        calculatedRight = 8; // Position from the right edge of the icon container
+        calculatedTop = 0;
+        calculatedRight = 8;
       } else {
         RNPBadgeSize = RNPBadgeSizeConfig.largeSingleDigit;
         badgeHeight = 16;
-        // _borderRadius = 8; // Unused assignment
 
         if (badge.label && badge.label.length > 1) {
           badgeWidth = RNPBadgeSizeConfig.largeMultiCharWidth;
@@ -288,9 +254,8 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
           badgeWidth = RNPBadgeSizeConfig.largeSingleDigit;
         }
 
-        // Simplified positioning for visibility
-        calculatedTop = 0; // Position at the top of the icon container
-        calculatedRight = 8; // Position from the right edge of the icon container
+        calculatedTop = 0;
+        calculatedRight = 8;
       }
 
       return {
@@ -298,24 +263,20 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
           position: "absolute",
           top: calculatedTop,
           right: calculatedRight,
-          width: badgeWidth, // Explicitly set width
-          height: badgeHeight, // Explicitly set height
-          // ...(badge.size !== 'small' && badge.label && badge.label.length > 1 && { minWidth: badgeWidth }), // Removed minWidth
+          width: badgeWidth,
+          height: badgeHeight,
         },
         RNPBadgeSize: RNPBadgeSize,
       };
     };
 
-    // Handler for the internal menu button (inside railContent)
     const handleInternalMenuPress = () => {
       if (variant === "modal") {
-        // In modal variant, internal menu button ONLY closes the modal
         setIsModalOpen(false);
         if (onMenuPress) {
-          onMenuPress(); // Propagate event if needed
+          onMenuPress();
         }
       } else {
-        // Standard behavior: toggle rail status
         toggleRailStatus();
         if (onMenuPress) {
           onMenuPress();
@@ -336,10 +297,6 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
         duration: ANIMATION_DURATION,
       });
     }, [status, animatedWidth, animatedAlignment]);
-
-    // REMOVED: Effect that managed rail 'status' based on modal's actual visibility.
-    // The rail's status is now independent of the modal's open/close state
-    // and is only controlled by handleInternalMenuPress (toggleRailStatus).
 
     const animatedContainerStyle = useAnimatedStyle(() => {
       return {
@@ -370,7 +327,7 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
           <View style={styles.fabContainer}>
             <FAB
               icon={fabIcon}
-              label={status === "expanded" ? fabLabel : undefined} // Revert to direct status check
+              label={status === "expanded" ? fabLabel : undefined}
               onPress={onFabPress}
               variant="primary"
             />
@@ -386,7 +343,6 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
                 status === "expanded"
                   ? animatedAlignment.value
                   : 1 - animatedAlignment.value,
-              // pointerEvents: status === 'expanded' && animatedAlignment.value < 0.5 ? 'none' : 'auto', // Prevent interaction during transition
             };
           });
 
@@ -396,7 +352,6 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
                 status === "collapsed"
                   ? 1 - animatedAlignment.value
                   : animatedAlignment.value,
-              // pointerEvents: status === 'collapsed' && animatedAlignment.value > 0.5 ? 'none' : 'auto',
             };
           });
 
@@ -433,7 +388,7 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
                   <Badge
                     style={[badgeStyles.style, styles.expandedBadgeOffset]}
                     size={badgeStyles.RNPBadgeSize}
-                    visible={status === "expanded"} // Show badge only when expanded item is visible
+                    visible={status === "expanded"}
                   >
                     {item.badge.label}
                   </Badge>
@@ -479,7 +434,7 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
                         <Badge
                           style={badgeStyles.style}
                           size={badgeStyles.RNPBadgeSize}
-                          visible={status === "collapsed"} // Show badge only when collapsed item is visible
+                          visible={status === "collapsed"}
                         >
                           {item.badge.label}
                         </Badge>
@@ -517,15 +472,13 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
             </Portal>
           )}
 
-          {/* The Modal itself, containing the railContent */}
-          {variant === "modal" && ( // Modal and its content only relevant for modal variant
+          {variant === "modal" && (
             <Portal>
               <Modal
-                visible={isModalOpen} // Controlled by internal state
+                visible={isModalOpen}
                 onDismiss={() => {
                   setIsModalOpen(false);
                   if (onDismiss) {
-                    // Call external onDismiss if provided
                     onDismiss();
                   }
                 }}
@@ -540,7 +493,6 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
       );
     }
 
-    // Standard variant
-    return railContent; // This should only be returned if not modal, or handled above.
+    return railContent;
   },
 );

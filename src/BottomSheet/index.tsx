@@ -19,7 +19,6 @@ import {
   View,
   type ViewStyle,
 } from "react-native";
-// import { GestureHandlerRootView } from 'react-native-gesture-handler'; // Removed from here
 
 /**
  * Ref methods for controlling the BottomSheet.
@@ -51,17 +50,16 @@ export type BottomSheetRef = {
  * @param {StyleProp<ViewStyle>} [props.style] - Style for the bottom sheet container.
  */
 type Props = {
-  children?: ReactNode; // Trigger element(s) or any other content to render alongside the sheet
+  children?: ReactNode;
   content: ReactNode;
   snapPoints?: (string | number)[];
   title?: string;
-  initialSnapIndex?: number; // To control initial state (e.g., -1 for closed)
+  initialSnapIndex?: number;
   onChange?: (index: number) => void;
   backdropComponent?: BottomSheetProps["backdropComponent"];
   handleIndicatorStyle?: StyleProp<ViewStyle>;
   backgroundStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
-  // Add any other props from @gorhom/bottom-sheet that we want to expose
 };
 
 /**
@@ -81,17 +79,17 @@ type Props = {
 export const BottomSheet = forwardRef<BottomSheetRef, Props>(
   (
     {
-      children, // Children are now rendered directly, not cloned.
+      children,
       content,
       snapPoints: _snapPoints,
       title,
-      initialSnapIndex = -1, // Default to closed
+      initialSnapIndex = -1,
       onChange,
       backdropComponent,
       handleIndicatorStyle,
       backgroundStyle,
       style,
-      ...rest // Pass through other BottomSheet props
+      ...rest
     },
     ref,
   ) => {
@@ -102,7 +100,6 @@ export const BottomSheet = forwardRef<BottomSheetRef, Props>(
       [_snapPoints],
     );
 
-    // Public methods exposed via ref
     const openSheet = useCallback((index = 0) => {
       bottomSheetRef.current?.snapToIndex(index);
     }, []);
@@ -137,7 +134,7 @@ export const BottomSheet = forwardRef<BottomSheetRef, Props>(
           {...props}
           disappearsOnIndex={-1}
           appearsOnIndex={0}
-          pressBehavior={"close"} // Added pressBehavior to close on backdrop press
+          pressBehavior={"close"}
         />
       ),
       [],
@@ -150,9 +147,6 @@ export const BottomSheet = forwardRef<BottomSheetRef, Props>(
     );
 
     return (
-      // GestureHandlerRootView should ideally wrap the entire app or storybook preview.
-      // It's removed from this component to avoid nesting issues.
-      // The parent application or Storybook's preview.js/tsx should provide it.
       <>
         {children /* Render children directly */}
         <BottomSheetOriginal
@@ -167,7 +161,7 @@ export const BottomSheet = forwardRef<BottomSheetRef, Props>(
           ]}
           backgroundStyle={[styles.defaultBackground, backgroundStyle]}
           style={[styles.defaultSheet, style]}
-          enablePanDownToClose={true} // Explicitly set to ensure pan down to close is enabled
+          enablePanDownToClose={true}
           {...rest}
         >
           {title && <BottomSheetTitle text={title} />}
@@ -181,40 +175,38 @@ export const BottomSheet = forwardRef<BottomSheetRef, Props>(
 );
 
 const styles = StyleSheet.create({
-  // root style removed as GestureHandlerRootView is removed
   titleContainer: {
     paddingHorizontal: 16,
     paddingTop: 16,
-    paddingBottom: 8, // Adjusted padding
+    paddingBottom: 8,
     borderBottomWidth: 1,
     borderBottomColor: "#e0e0e0",
   },
   titleText: {
-    fontSize: 18, // M3 Title Large is ~22, Medium ~16. Let's go with 18.
-    fontWeight: "500", // Medium weight
+    fontSize: 18,
+    fontWeight: "500",
   },
   contentContainer: {
-    flex: 1, // Ensure content can take up space
+    flex: 1,
     padding: 16,
   },
   defaultHandleIndicator: {
-    backgroundColor: "grey", // From story
+    backgroundColor: "grey",
     width: 32,
     height: 4,
     borderRadius: 2,
   },
   defaultBackground: {
-    backgroundColor: "white", // From story
-    borderTopLeftRadius: 28, // M3 Top corners
+    backgroundColor: "white",
+    borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
   },
   defaultSheet: {
-    // For shadow, from story
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: -3 }, // Shadow upwards
+    shadowOffset: { width: 0, height: -3 },
     shadowOpacity: 0.1,
-    shadowRadius: 5, // Softer shadow
-    elevation: 20, // For Android
+    shadowRadius: 5,
+    elevation: 20,
   },
 });
 

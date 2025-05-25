@@ -34,9 +34,7 @@ export const Default: Story = {
     ...commonArgs,
   },
   render: (args) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const [valueFilled, setValueFilled] = useState<string | number>("1");
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const [valueOutlined, setValueOutlined] = useState<string | number>("1");
 
     return (
@@ -61,22 +59,13 @@ export const Default: Story = {
 export const Behavior: Story = {
   args: {
     ...commonArgs,
-    // Behavior 用の初期値を設定する場合はここに書く
   },
   render: (args) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const [value, setValue] = useState<string | number>("1");
     return <Component {...args} value={value} onChange={setValue} />;
   },
   play: async ({ canvasElement }) => {
     const canvas = getCanvas(canvasElement);
     expect(canvas).toBeTruthy();
-    // TODO: 操作のテストを追加する
-    // 例:
-    // const select = await canvas.findByRole('combobox'); // TextField部分を探す
-    // await userEvent.press(select);
-    // const option2 = await canvas.findByText('Option 2');
-    // await userEvent.press(option2);
-    // expect(select).toHaveTextContent('Option 2'); // 表示が変わることを確認
   },
 };

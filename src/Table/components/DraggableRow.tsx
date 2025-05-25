@@ -56,7 +56,6 @@ export const DraggableRow = ({
   testID,
 }: DraggableRowProps) => {
   if (!isDragEnabled) {
-    // ドラッグが無効な場合は通常の行を表示
     return (
       <DataTable.Row style={style} testID={testID}>
         {children}
@@ -70,7 +69,7 @@ export const DraggableRow = ({
         <DataTable.Cell style={{ flex: 0.3, justifyContent: "center" }}>
           <DragHandle
             size="small"
-            disabled={!isDragEnabled} // Should be !isDragEnabled to match parent logic
+            disabled={!isDragEnabled}
             testID={`${testID}-drag-handle`}
             rowId={rowId}
             onDragStart={onDragStart}

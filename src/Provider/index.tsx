@@ -98,7 +98,6 @@ const SideSheetLayoutProvider = ({ children }: { children: ReactNode }) => {
     [],
   );
 
-  // メインコンテンツのスタイルを自動計算
   const getMainContentStyle = useCallback((): ViewStyle => {
     const openStandardSheets = Array.from(sideSheets.values()).filter(
       (sheet) => sheet.isOpen && sheet.variant === "standard",
@@ -106,7 +105,6 @@ const SideSheetLayoutProvider = ({ children }: { children: ReactNode }) => {
 
     if (openStandardSheets.length === 0) return {};
 
-    // 複数のSideSheetが開いている場合の処理も考慮
     const rightSheets = openStandardSheets.filter(
       (s) => s.position === "right",
     );

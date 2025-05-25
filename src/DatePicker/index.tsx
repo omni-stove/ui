@@ -87,7 +87,7 @@ export type Props<T extends DatePickerType> = {
   /**
    * Supporting text displayed below the text field.
    */
-  supportingText?: string; // description から supportingText に変更
+  supportingText?: string;
   /**
    * Variant of the text field.
    * @default 'filled'
@@ -160,7 +160,7 @@ export const DatePicker = <T extends DatePickerType>({
   defaultValue,
   onChange,
   label,
-  supportingText, // description から supportingText に変更
+  supportingText,
   textFieldVariant = "filled",
   isDisabled = false,
   errorMessage,
@@ -305,7 +305,7 @@ export const DatePicker = <T extends DatePickerType>({
             readOnly
             disabled={isDisabled}
             errorMessage={errorMessage}
-            supportingText={supportingText} // TextField に supportingText を渡す
+            supportingText={supportingText}
           />
         </View>
       </TouchableOpacity>
@@ -315,7 +315,7 @@ export const DatePicker = <T extends DatePickerType>({
           {supportingText}
         </HelperText>
       )}
-      {errorMessage && ( // エラーメッセージは TextField 側で表示される
+      {errorMessage && (
         <HelperText type="error" visible={!!errorMessage}>
           {errorMessage}
         </HelperText>

@@ -49,7 +49,6 @@ export const CheckboxList = ({
   disabled = false,
   testID,
 }: Props) => {
-  // 親の状態を計算
   const parentState = useMemo(() => {
     const checkedChildren = items.filter(
       (item) => checkedKeys.includes(item.id) && !item.disabled,
@@ -61,7 +60,6 @@ export const CheckboxList = ({
     return "indeterminate";
   }, [items, checkedKeys]);
 
-  // 親チェックボックスのハンドラ
   const handleParentChange = useCallback(() => {
     if (disabled) return;
 
@@ -69,13 +67,11 @@ export const CheckboxList = ({
     const enabledItemIds = enabledItems.map((item) => item.id);
 
     if (parentState === true) {
-      // 全選択状態 → 全解除
       const newCheckedKeys = checkedKeys.filter(
         (key) => !enabledItemIds.includes(key),
       );
       onChangeChecks(newCheckedKeys);
     } else {
-      // 未選択 or 部分選択 → 全選択
       const newCheckedKeys = [
         ...checkedKeys.filter((key) => !enabledItemIds.includes(key)),
         ...enabledItemIds,
@@ -84,7 +80,6 @@ export const CheckboxList = ({
     }
   }, [disabled, items, parentState, checkedKeys, onChangeChecks]);
 
-  // 子チェックボックスのハンドラ
   const handleChildChange = useCallback(
     (itemId: string) => {
       if (disabled) return;
@@ -92,11 +87,9 @@ export const CheckboxList = ({
       const isCurrentlyChecked = checkedKeys.includes(itemId);
 
       if (isCurrentlyChecked) {
-        // チェック解除
         const newCheckedKeys = checkedKeys.filter((key) => key !== itemId);
         onChangeChecks(newCheckedKeys);
       } else {
-        // チェック
         const newCheckedKeys = [...checkedKeys, itemId];
         onChangeChecks(newCheckedKeys);
       }
@@ -104,7 +97,6 @@ export const CheckboxList = ({
     [disabled, checkedKeys, onChangeChecks],
   );
 
-  // FlatListのrenderItem（子アイテムのみ）
   const renderItem = useCallback(
     ({ item }: { item: CheckboxItem }) => {
       return (
@@ -112,7 +104,7 @@ export const CheckboxList = ({
           style={{
             paddingHorizontal: 16,
             paddingVertical: 4,
-            paddingLeft: 48, // 子アイテムのインデント
+            paddingLeft: 48,
           }}
         >
           <Checkbox

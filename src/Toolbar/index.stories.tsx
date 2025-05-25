@@ -48,7 +48,6 @@ const defaultFab = {
   accessibilityLabel: "Add new item",
 };
 
-// Default story
 export const Default: Story = {
   args: {
     actions: defaultActions,
@@ -56,7 +55,6 @@ export const Default: Story = {
   },
 };
 
-// All Alignments in one story
 export const AllAlignments: Story = {
   render: () => (
     <View style={{ gap: 16 }}>
@@ -72,7 +70,6 @@ export const AllAlignments: Story = {
   ),
 };
 
-// All Sizes in one story
 export const AllSizes: Story = {
   render: () => (
     <View style={{ gap: 16 }}>
@@ -101,7 +98,6 @@ export const AllSizes: Story = {
   ),
 };
 
-// All Variants in one story
 export const AllVariants: Story = {
   render: () => (
     <View style={{ gap: 16 }}>
@@ -123,7 +119,6 @@ export const AllVariants: Story = {
   ),
 };
 
-// Test story
 export const Behavior: Story = {
   args: {
     variant: "docked",
@@ -141,7 +136,6 @@ export const Behavior: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = getCanvas(canvasElement);
-    // Test that the toolbar is rendered
     expect(canvas.getByRole("toolbar")).toBeTruthy();
   },
 };

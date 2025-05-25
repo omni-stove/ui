@@ -100,7 +100,6 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
       ? useMainContentStyle()
       : {};
 
-    // AppBar uses surface color, Toolbar uses surfaceVariant
     const topColor = appbar ? theme.colors.surface : theme.colors.background;
     const bottomColor = toolbar
       ? theme.colors.surfaceVariant

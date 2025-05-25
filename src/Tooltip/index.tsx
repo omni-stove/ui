@@ -3,7 +3,7 @@ import {
   cloneElement,
   useCallback,
   useEffect,
-  useMemo, // Re-add useMemo
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -12,7 +12,7 @@ import {
   type LayoutRectangle,
   Platform,
   Pressable,
-  type PressableStateCallbackType, // Import PressableStateCallbackType
+  type PressableStateCallbackType,
   StyleSheet,
   View,
 } from "react-native";
@@ -22,12 +22,8 @@ import {
   Portal,
   Surface,
   Text,
-  // type Theme, // Will use ReturnType<typeof useTheme> from local hook
 } from "react-native-paper";
-import { useTheme } from "../hooks"; // Import useTheme from local hooks
-
-// react-native paper currently lacks a rich tooltip component:
-// https://github.com/callstack/react-native-paper/issues/4074
+import { useTheme } from "../hooks";
 
 /**
  * Represents the measurement of the child element that triggers the tooltip.
@@ -91,21 +87,14 @@ const getTooltipXPosition = (
   const { width: layoutWidth } = Dimensions.get("window");
   let idealX = childrenX + childrenWidth / 2 - tooltipWidth / 2;
 
-  // Add padding to prevent edge touching
   const padding = 8;
-
-  // Check for left overflow
   if (idealX < padding) {
     idealX = padding;
   }
 
-  // Check for right overflow
-  // Ensure the tooltip doesn't go off the right edge
   if (idealX + tooltipWidth > layoutWidth - padding) {
     idealX = layoutWidth - tooltipWidth - padding;
 
-    // After adjusting for right overflow, re-check for left overflow
-    // This can happen if the tooltip is wider than the screen
     if (idealX < padding) {
       idealX = padding;
     }
@@ -130,7 +119,6 @@ const getTooltipYPosition = (
     return childrenY - tooltipHeight;
   }
 
-  // We assume that we can't both overflow bottom and top.
   return childrenY + childrenHeight;
 };
 
@@ -198,7 +186,7 @@ const RichTooltip = ({
   visible,
 }: RichTooltipProps) => {
   const isWeb = Platform.OS === "web";
-  const theme = useTheme(); // Use local useTheme
+  const theme = useTheme();
 
   const [internalVisible, setInternalVisible] = useState(false);
   const [isChildrenHovered, setIsChildrenHovered] = useState(false);
@@ -213,7 +201,6 @@ const RichTooltip = ({
   const hideTimeout = useRef<NodeJS.Timeout | null>(null);
   const showTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  // Use internal state if visible prop is not provided
   const isActuallyVisible = visible !== undefined ? visible : internalVisible;
 
   const showTooltip = useCallback(() => {
@@ -222,10 +209,9 @@ const RichTooltip = ({
       hideTimeout.current = null;
     }
     if (visible === undefined) {
-      // Small delay to show to prevent flickering when moving mouse between child and tooltip
       showTimeout.current = setTimeout(() => {
         setInternalVisible(true);
-      }, 50); // Adjust delay as needed
+      }, 50);
     }
   }, [visible]);
 
@@ -239,7 +225,7 @@ const RichTooltip = ({
         if (!isChildrenHovered && !isTooltipHovered) {
           setInternalVisible(false);
         }
-      }, 500); // Significantly increased delay
+      }, 500);
     }
   }, [visible, isChildrenHovered, isTooltipHovered]);
 
@@ -251,7 +237,6 @@ const RichTooltip = ({
     }
   }, [isChildrenHovered, isTooltipHovered, showTooltip, hideTooltip]);
 
-  // Cleanup timeouts on unmount
   useEffect(() => {
     return () => {
       if (hideTimeout.current) {
@@ -265,13 +250,13 @@ const RichTooltip = ({
 
   const handleTouchStart = useCallback(() => {
     if (visible === undefined) {
-      setInternalVisible(true); // For touch devices, show immediately
+      setInternalVisible(true);
     }
   }, [visible]);
 
   const handleTouchEnd = useCallback(() => {
     if (visible === undefined) {
-      setInternalVisible(false); // For touch devices, hide immediately
+      setInternalVisible(false);
     }
   }, [visible]);
 
@@ -333,8 +318,8 @@ const RichTooltip = ({
               tooltip: {
                 width: tWidth,
                 height: tHeight,
-                x: 0, // x and y for tooltip layout are relative to its parent (Portal)
-                y: 0, // so they are not directly used for absolute positioning here.
+                x: 0,
+                y: 0,
               },
               measured: true,
             });
@@ -346,18 +331,15 @@ const RichTooltip = ({
 
   useEffect(() => {
     if (isActuallyVisible) {
-      // Delay measurement to allow tooltip to render and get its layout
-      // This is a common pattern when dealing with dynamic content size
       const timeoutId = setTimeout(measureLayouts, 0);
       return () => clearTimeout(timeoutId);
     }
-    // Reset measurement when tooltip is hidden
     setMeasurement((prev) => ({ ...prev, measured: false }));
   }, [isActuallyVisible, measureLayouts]);
 
   const mobilePressProps = {
     onPress: handlePress,
-    onLongPress: handleTouchStart, // For mobile, long press shows, press out hides
+    onLongPress: handleTouchStart,
     onPressOut: handleTouchEnd,
   };
 
@@ -366,7 +348,7 @@ const RichTooltip = ({
     onHoverOut: handleChildrenHoverOut,
   };
 
-  const dynamicStyles = useMemo(() => getDynamicStyles(theme), [theme]); // Re-add dynamicStyles
+  const dynamicStyles = useMemo(() => getDynamicStyles(theme), [theme]);
 
   return (
     <>
@@ -375,8 +357,6 @@ const RichTooltip = ({
           <Pressable
             onPress={() => {
               if (visible === undefined) {
-                // Clicking outside the tooltip content (on the portal backdrop) should hide it
-                // if not controlled by `visible` prop.
                 setIsChildrenHovered(false);
                 setIsTooltipHovered(false);
                 setInternalVisible(false);
@@ -385,19 +365,16 @@ const RichTooltip = ({
             style={StyleSheet.absoluteFillObject}
           />
           <Pressable
-            pointerEvents="box-none" // Allows hover events on this, but passes touches to children
+            pointerEvents="box-none"
             onHoverIn={isWeb ? handleTooltipHoverIn : undefined}
             onHoverOut={isWeb ? handleTooltipHoverOut : undefined}
-            // This Pressable is now the primary hover target for the entire tooltip area.
-            // It should not interfere with clicks intended for the backdrop to close the tooltip,
-            // nor should it block interactions with content like buttons IF pointerEvents works as expected.
           >
             <Surface
-              pointerEvents="auto" // Ensures Surface and its children can receive touch/press events
+              pointerEvents="auto"
               ref={tooltipRef}
               elevation={2}
               style={[
-                staticStyles.surface, // Use staticStyles
+                staticStyles.surface,
                 getTooltipPosition(measurement as Measurement),
                 { opacity: measurement.measured && isActuallyVisible ? 1 : 0 },
               ]}
@@ -406,8 +383,8 @@ const RichTooltip = ({
               {subhead ? (
                 <Text
                   style={[
-                    staticStyles.subhead, // Use staticStyles
-                    { color: theme.colors.onSurfaceVariant }, // Use theme color
+                    staticStyles.subhead,
+                    { color: theme.colors.onSurfaceVariant },
                   ]}
                   variant="titleSmall"
                 >
@@ -415,7 +392,7 @@ const RichTooltip = ({
                 </Text>
               ) : null}
               <Text
-                style={{ color: theme.colors.onSurfaceVariant }} // Use theme color
+                style={{ color: theme.colors.onSurfaceVariant }}
                 variant="bodyMedium"
               >
                 {supportingText}
@@ -440,19 +417,19 @@ const RichTooltip = ({
                           hovered?: boolean;
                         };
                         return [
-                          dynamicStyles.actionButton, // Use dynamicStyles
+                          dynamicStyles.actionButton,
                           isWeb &&
                             webState.hovered &&
-                            dynamicStyles.actionButtonHovered, // Use dynamicStyles
+                            dynamicStyles.actionButtonHovered,
                         ];
                       }}
                     >
                       <Text
                         style={[
-                          dynamicStyles.actionButtonText, // Use dynamicStyles
-                          { color: theme.colors.primary }, // Use theme color
+                          dynamicStyles.actionButtonText,
+                          { color: theme.colors.primary },
                         ]}
-                        variant="labelLarge" // Consistent with Paper Button text
+                        variant="labelLarge"
                       >
                         {action.label}
                       </Text>
@@ -466,7 +443,7 @@ const RichTooltip = ({
       )}
       <Pressable
         ref={childrenWrapperRef}
-        style={pressContainerStyle} // This remains as it's defined outside
+        style={pressContainerStyle}
         {...(isWeb ? webPressProps : mobilePressProps)}
       >
         {cloneElement(children, {
@@ -477,14 +454,12 @@ const RichTooltip = ({
   );
 };
 
-// Styles that don't depend on theme
 const staticStyles = StyleSheet.create({
   actions: {
     flexDirection: "row",
     justifyContent: "flex-end",
     marginTop: 12,
   },
-  // actionButton, actionButtonHovered, actionButtonText are now in getDynamicStyles
   surface: {
     alignSelf: "flex-start",
     borderRadius: 12,
@@ -504,33 +479,26 @@ const staticStyles = StyleSheet.create({
   },
 });
 
-// pressContainerStyle is defined outside as it doesn't need theme for its current props
 const pressContainerStyle = Platform.select({
   web: { cursor: "default" as "default" | undefined },
   default: {} as object,
 });
 
-// Helper function to create dynamic styles that depend on theme
-const getDynamicStyles = (
-  theme: ReturnType<typeof useTheme>, // Use ReturnType for theme
-) =>
+const getDynamicStyles = (theme: ReturnType<typeof useTheme>) =>
   StyleSheet.create({
     actionButton: {
       paddingVertical: 8,
       paddingHorizontal: 12,
-      borderRadius: theme.roundness * 2, // Use theme
+      borderRadius: theme.roundness * 2,
       marginLeft: 8,
     },
     actionButtonHovered: {
       backgroundColor: Platform.select({
-        web: theme.colors.primaryContainer, // Use theme
+        web: theme.colors.primaryContainer,
         default: undefined,
       }),
     },
-    actionButtonText: {
-      // fontWeight: 'bold', // Example, if needed
-    },
-    // Add other dynamic styles here if needed
+    actionButtonText: {},
   });
 
 /**
@@ -550,7 +518,7 @@ const getDynamicStyles = (
 type TooltipProps = (
   | ({ variant?: "plain" } & PaperTooltipProps)
   | ({ variant: "rich" } & RichTooltipProps)
-) & { children: ReactElement }; // Ensure children is always present
+) & { children: ReactElement };
 
 /**
  * A Tooltip component that can display either a simple "plain" tooltip

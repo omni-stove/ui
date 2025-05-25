@@ -39,7 +39,6 @@ export const Divider = ({
     return <PaperDivider {...rest} style={[inset && styles.horizontalInset]} />;
   }
 
-  // Vertical divider implementation
   return (
     <View
       style={[

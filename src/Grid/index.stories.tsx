@@ -36,7 +36,6 @@ export default meta;
 
 type Story = StoryObj<typeof Component>;
 
-// サンプルカードコンポーネント
 const SampleCard = ({
   height,
   title,
@@ -158,7 +157,6 @@ export const ResponsiveDemo: Story = {
   ),
 };
 
-// Standard Grid Layout Stories
 export const StandardGridResponsive: Story = {
   args: {
     ...args,
@@ -264,7 +262,6 @@ export const Behavior: Story = {
     const canvas = getCanvas(canvasElement);
     expect(canvas).toBeTruthy();
 
-    // Gridコンポーネントが存在することを確認
     const gridElement = canvas.getByText("Test Card 1");
     expect(gridElement).toBeTruthy();
   },
