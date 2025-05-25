@@ -1,10 +1,10 @@
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Animated, { runOnJS, useAnimatedStyle } from "react-native-reanimated";
 import { Icon } from "react-native-paper";
+import Animated, { runOnJS, useAnimatedStyle } from "react-native-reanimated";
 import { useTheme } from "../../hooks";
-import type { DragPosition } from "../utils/dragUtils";
 import type { DragAnimationConfig } from "../animations/dragAnimations";
+import type { DragPosition } from "../utils/dragUtils";
 
 type DragHandleProps = {
   size?: "small" | "medium" | "large";

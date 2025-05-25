@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { View, Text, ScrollView } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { Button } from "react-native-paper";
 import { AppLayout } from "./index";
 

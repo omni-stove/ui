@@ -1,13 +1,13 @@
-import { forwardRef, useCallback, useState, useEffect } from "react";
+import RNSlider from "@react-native-community/slider";
+import { forwardRef, useCallback, useEffect, useState } from "react";
 import {
-  View,
-  StyleSheet,
-  type ViewStyle,
-  type StyleProp,
   Animated,
+  type StyleProp,
+  StyleSheet,
+  View,
+  type ViewStyle,
 } from "react-native";
 import { Text } from "react-native-paper";
-import RNSlider from "@react-native-community/slider";
 import { useTheme } from "../hooks";
 
 /** Defines the interaction mode of the slider. */

@@ -12,9 +12,9 @@ import {
   type LayoutRectangle,
   Platform,
   Pressable,
+  type PressableStateCallbackType, // Import PressableStateCallbackType
   StyleSheet,
   View,
-  type PressableStateCallbackType, // Import PressableStateCallbackType
 } from "react-native";
 import {
   Tooltip as PaperTooltip,

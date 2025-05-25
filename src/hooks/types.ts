@@ -1,3 +1,5 @@
+import type { ViewStyle } from "react-native";
+
 export type Material3Colors = {
   // Primary colors
   primary: string;
@@ -74,4 +76,20 @@ export type ExtendedTheme = {
   animation: object;
   version: number;
   isV3: boolean;
+};
+
+// SideSheet Layout Types
+export type SideSheetLayoutState = {
+  isOpen: boolean;
+  width: number;
+  position: "left" | "right";
+  variant: "standard" | "modal";
+};
+
+export type SideSheetLayoutContextType = {
+  sideSheets: Map<string, SideSheetLayoutState>;
+  registerSideSheet: (id: string, state: SideSheetLayoutState) => void;
+  unregisterSideSheet: (id: string) => void;
+  updateSideSheet: (id: string, state: Partial<SideSheetLayoutState>) => void;
+  getMainContentStyle: () => ViewStyle;
 };

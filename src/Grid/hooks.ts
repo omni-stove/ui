@@ -3,8 +3,8 @@ import { useWindowDimensions } from "react-native";
 import type { MasonryItem } from "./types";
 import {
   calculateMasonryLayout,
-  getResponsiveColumns,
   getMaxColumns,
+  getResponsiveColumns,
 } from "./utils";
 
 /**

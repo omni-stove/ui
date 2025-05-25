@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import { DataTable } from "react-native-paper";
-import { DragHandle } from "./DragHandle";
 import type { DragAnimationConfig } from "../animations/dragAnimations";
 import type { DragPosition } from "../utils/dragUtils";
+import { DragHandle } from "./DragHandle";
 
 type DraggableRowProps = {
   children: ReactNode;

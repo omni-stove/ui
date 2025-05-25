@@ -1,8 +1,8 @@
 import type {
   ColumnDef,
-  SortingState,
-  PaginationState,
   ColumnFiltersState,
+  PaginationState,
+  SortingState,
   VisibilityState,
 } from "@tanstack/react-table";
 import type { z } from "zod";

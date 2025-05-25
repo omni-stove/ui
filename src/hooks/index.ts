@@ -5,12 +5,13 @@ import {
 import { useTheme as usePaperTheme } from "react-native-paper";
 import type { ExtendedTheme, Material3Colors } from "./types";
 
-// ARGB to HEX 変換関数
+// ARGB to HEXA 変換関数（アルファ値含む）
 const argbToHex = (argb: number): string => {
+  const alpha = (argb >> 24) & 0xff;
   const red = (argb >> 16) & 0xff;
   const green = (argb >> 8) & 0xff;
   const blue = argb & 0xff;
-  return `#${[red, green, blue]
+  return `#${[red, green, blue, alpha]
     .map((c) => c.toString(16).padStart(2, "0"))
     .join("")}`;
 };
@@ -23,43 +24,7 @@ const calculateMaterial3Colors = (
   // キーカラーからMaterial3テーマを生成
   const sourceColorArgb = argbFromHex(sourceColor);
   const theme = themeFromSourceColor(sourceColorArgb);
-
-  const scheme = isDark ? theme.schemes.dark : theme.schemes.light;
   const palettes = theme.palettes;
-
-  // 基本的な色はschemeから取得
-  const baseColors = {
-    primary: argbToHex(scheme.primary),
-    onPrimary: argbToHex(scheme.onPrimary),
-    primaryContainer: argbToHex(scheme.primaryContainer),
-    onPrimaryContainer: argbToHex(scheme.onPrimaryContainer),
-    secondary: argbToHex(scheme.secondary),
-    onSecondary: argbToHex(scheme.onSecondary),
-    secondaryContainer: argbToHex(scheme.secondaryContainer),
-    onSecondaryContainer: argbToHex(scheme.onSecondaryContainer),
-    tertiary: argbToHex(scheme.tertiary),
-    onTertiary: argbToHex(scheme.onTertiary),
-    tertiaryContainer: argbToHex(scheme.tertiaryContainer),
-    onTertiaryContainer: argbToHex(scheme.onTertiaryContainer),
-    error: argbToHex(scheme.error),
-    onError: argbToHex(scheme.onError),
-    errorContainer: argbToHex(scheme.errorContainer),
-    onErrorContainer: argbToHex(scheme.onErrorContainer),
-    background: argbToHex(scheme.background),
-    onBackground: argbToHex(scheme.onBackground),
-    surface: argbToHex(scheme.surface),
-    onSurface: argbToHex(scheme.onSurface),
-    surfaceVariant: argbToHex(scheme.surfaceVariant),
-    onSurfaceVariant: argbToHex(scheme.onSurfaceVariant),
-    outline: argbToHex(scheme.outline),
-    outlineVariant: argbToHex(scheme.outlineVariant),
-    shadow: argbToHex(scheme.shadow),
-    scrim: argbToHex(scheme.scrim),
-    inverseSurface: argbToHex(scheme.inverseSurface),
-    inverseOnSurface: argbToHex(scheme.inverseOnSurface),
-    inversePrimary: argbToHex(scheme.inversePrimary),
-  };
-
   // 追加の詳細なカラーロールをパレットとトーンから生成（オタクくんのCSS生成スクリプト参考）
   const additionalColors = isDark
     ? {
@@ -109,10 +74,7 @@ const calculateMaterial3Colors = (
         surfaceTint: argbToHex(palettes.primary.tone(40)),
       };
 
-  return {
-    ...baseColors,
-    ...additionalColors,
-  };
+  return additionalColors;
 };
 
 export const useTheme = (): ExtendedTheme => {

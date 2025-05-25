@@ -1,6 +1,6 @@
-import { forwardRef, type Ref } from "react";
+import { type Ref, forwardRef } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
-import { View, StatusBar, Platform } from "react-native";
+import { Platform, StatusBar, View } from "react-native";
 import { Icon, TouchableRipple } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { useTheme } from "../hooks";

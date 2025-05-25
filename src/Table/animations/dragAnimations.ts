@@ -1,8 +1,8 @@
 import {
+  type SharedValue,
+  runOnJS,
   withSpring,
   withTiming,
-  runOnJS,
-  type SharedValue,
 } from "react-native-reanimated";
 
 export type DragAnimationConfig = {

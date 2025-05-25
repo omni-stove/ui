@@ -26,6 +26,7 @@ export * from "./RadioButton";
 export * from "./Searchbar";
 export * from "./SegmentedButtons";
 export * from "./Select";
+export * from "./SideSheet";
 export * from "./Slider";
 export * from "./Snackbar";
 export * from "./Surface";

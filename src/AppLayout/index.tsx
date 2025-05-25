@@ -1,15 +1,16 @@
 import {
-  forwardRef,
+  type ComponentProps,
   type ReactNode,
   type Ref,
-  type ComponentProps,
+  forwardRef,
 } from "react";
-import { View, KeyboardAvoidingView, Platform } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { KeyboardAvoidingView, Platform, View } from "react-native";
 import { Appbar } from "react-native-paper";
+import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useMainContentStyle } from "../Provider";
 import { Toolbar } from "../Toolbar";
 import { useTheme } from "../hooks";
-import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 
 type AppbarAction = {
   icon: IconSource;
@@ -41,6 +42,8 @@ type AppLayoutProps = {
   testID?: string;
   /** Accessibility label */
   accessibilityLabel?: string;
+  /** Whether to automatically adjust layout for SideSheet. @default true */
+  autoAdjustForSideSheet?: boolean;
 };
 
 export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
@@ -53,10 +56,14 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
       keyboardVerticalOffset = Platform.OS === "ios" ? 0 : 25,
       testID,
       accessibilityLabel,
+      autoAdjustForSideSheet = true,
     },
     ref: Ref<KeyboardAvoidingView>,
   ) => {
     const theme = useTheme();
+    const mainContentStyle = autoAdjustForSideSheet
+      ? useMainContentStyle()
+      : {};
 
     // AppBar uses surface color, Toolbar uses surfaceVariant
     const topColor = appbar ? theme.colors.surface : theme.colors.background;
@@ -66,10 +73,13 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
 
     return (
       <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: theme.colors.background,
-        }}
+        style={[
+          {
+            flex: 1,
+            backgroundColor: theme.colors.background,
+          },
+          mainContentStyle,
+        ]}
         edges={
           appbar || toolbar
             ? ["left", "right"]

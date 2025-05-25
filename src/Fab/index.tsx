@@ -1,10 +1,10 @@
-import { forwardRef, useCallback, useMemo, useState, type Ref } from "react";
+import { type Ref, forwardRef, useCallback, useMemo, useState } from "react";
 import { Animated, Pressable, StyleSheet, View } from "react-native";
 import { FAB as Fab, Text } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useTheme } from "../hooks";
 import { Icon } from "../Icon";
+import { useTheme } from "../hooks";
 
 type Color = "primary" | "secondary" | "tertiary";
 type Size = "medium" | "large";

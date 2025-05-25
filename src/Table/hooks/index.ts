@@ -1,21 +1,21 @@
-import { useState } from "react";
 import {
-  useReactTable,
   getCoreRowModel,
-  getSortedRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
 } from "@tanstack/react-table";
+import { useState } from "react";
 import { useTheme } from "../../hooks";
 import {
-  convertFromEnhancedSorting,
   convertFromEnhancedColumnFilters,
+  convertFromEnhancedSorting,
   convertFromEnhancedVisibility,
-  convertToEnhancedSorting,
   convertToEnhancedColumnFilters,
+  convertToEnhancedSorting,
   convertToEnhancedVisibility,
 } from "../types";
-import type { EnhancedDataTableProps, DataWithId } from "../types";
+import type { DataWithId, EnhancedDataTableProps } from "../types";
 
 export const useTable = <T extends DataWithId>(
   props: EnhancedDataTableProps<T>,

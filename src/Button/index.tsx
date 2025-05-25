@@ -1,4 +1,4 @@
-import { forwardRef, type ReactNode, type Ref } from "react";
+import { type ReactNode, type Ref, forwardRef } from "react";
 import type { StyleProp, TextStyle, ViewStyle } from "react-native";
 import { Text, View } from "react-native";
 import { Icon, TouchableRipple } from "react-native-paper";
