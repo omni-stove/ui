@@ -7,7 +7,7 @@ import {
   View,
   type ViewStyle,
 } from "react-native";
-import { Text } from "react-native-paper";
+import { Typography } from "../Typography";
 import { useTheme } from "../hooks";
 
 /**
@@ -124,15 +124,9 @@ const ValueIndicator = ({
         marginBottom: 4,
       }}
     >
-      <Text
-        variant="bodySmall"
-        style={{
-          color: theme.colors.inverseOnSurface,
-          fontWeight: "500",
-        }}
-      >
+      <Typography variant="bodySmall" color="inverseOnSurface">
         {Math.round(value)}
-      </Text>
+      </Typography>
     </Animated.View>
   );
 };
@@ -256,9 +250,9 @@ export const Slider = forwardRef<View, Props>(
         testID={testID || "slider"}
       >
         {label && (
-          <Text variant="bodyMedium" style={styles.label}>
+          <Typography variant="bodyMedium" color="onSurface">
             {label}
-          </Text>
+          </Typography>
         )}
         <View style={styles.sliderContainer}>
           <RNSlider

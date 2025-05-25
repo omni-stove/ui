@@ -3,10 +3,10 @@ import { Pressable } from "react-native";
 import {
   Icon,
   Checkbox as PaperCheckbox,
-  Text,
   TouchableRipple,
 } from "react-native-paper";
-import { useTheme } from "../hooks";
+import { Typography } from "../Typography";
+import { useTheme } from "../hooks"; // Keep for CheckboxCore
 
 /**
  * Represents the possible states of a checkbox.
@@ -135,8 +135,6 @@ export const Checkbox = ({
   testID,
   label,
 }: Props) => {
-  const theme = useTheme();
-
   const handlePress = useCallback(() => {
     if (disabled || !onChangeCheck) return;
 
@@ -176,14 +174,7 @@ export const Checkbox = ({
           testID={testID}
           onPress={handlePress}
         />
-        <Text
-          style={{
-            color: disabled ? theme.colors.onSurface : theme.colors.onSurface,
-            opacity: disabled ? 0.38 : 1,
-          }}
-        >
-          {label}
-        </Text>
+        <Typography color="onSurface">{label}</Typography>
       </Pressable>
     );
   }

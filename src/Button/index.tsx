@@ -1,7 +1,13 @@
-import { type ReactNode, type Ref, forwardRef } from "react";
-import type { StyleProp, TextStyle, ViewStyle } from "react-native";
-import { Text, View } from "react-native";
+import {
+  type ComponentProps,
+  type ReactNode,
+  type Ref,
+  forwardRef,
+} from "react";
+import type { StyleProp, ViewStyle } from "react-native";
+import { View } from "react-native";
 import { Icon, TouchableRipple } from "react-native-paper";
+import { Typography } from "../Typography";
 import { useTheme } from "../hooks";
 
 /**
@@ -29,7 +35,6 @@ type Size = "extra-small" | "small" | "medium" | "large" | "extra-large";
  * @param {Variant} [props.variant="filled"] - The visual style of the button.
  * @param {Size} [props.size="small"] - The size of the button.
  * @param {StyleProp<ViewStyle>} [props.style] - Custom style for the button's outer View.
- * @param {StyleProp<TextStyle>} [props.labelStyle] - Custom style for the button's label Text.
  * @param {boolean} [props.disabled=false] - Whether the button is disabled.
  * @param {() => void} [props.onPress] - Function to call when the button is pressed.
  * @param {string} [props.testID] - Test ID for the button.
@@ -39,7 +44,6 @@ type BaseProps = {
   variant?: Variant;
   size?: Size;
   style?: StyleProp<ViewStyle>;
-  labelStyle?: StyleProp<TextStyle>;
   disabled?: boolean;
   onPress?: () => void;
   testID?: string;
@@ -119,7 +123,7 @@ export const Button = forwardRef(
       variant = "filled",
       size = "small",
       style,
-      labelStyle,
+      // labelStyle, // Removed as per user request to not use style overrides for Typography
       disabled = false,
       onPress,
       children,
@@ -201,16 +205,56 @@ export const Button = forwardRef(
       style,
     ];
 
-    const textStyle: StyleProp<TextStyle> = [
-      {
-        fontSize: dimensions.fontSize,
-        lineHeight: dimensions.fontSize * 1.2,
-        color: colors.textColor,
-        fontWeight: "500",
-        textAlign: "center",
-      },
-      labelStyle,
-    ];
+    // const textStyle: StyleProp<TextStyle> = [
+    //   {
+    //     fontSize: dimensions.fontSize,
+    //     lineHeight: dimensions.fontSize * 1.2,
+    //     color: colors.textColor,
+    //     fontWeight: "500",
+    //     textAlign: "center",
+    //   },
+    //   labelStyle,
+    // ];
+
+    const getTypographyVariantForSize = (
+      currentSize: Size,
+    ): ComponentProps<typeof Typography>["variant"] => {
+      switch (currentSize) {
+        case "extra-small":
+          return "labelLarge"; // 14px
+        case "small":
+          return "labelLarge"; // 14px
+        case "medium":
+          return "bodyLarge"; // 16px
+        case "large":
+          return "headlineSmall"; // 24px
+        case "extra-large":
+          return "displaySmall"; // 32px
+        default:
+          return "labelLarge";
+      }
+    };
+
+    const getTypographyColorForVariant = (
+      currentVariant: Variant,
+      isDisabled: boolean,
+    ): ComponentProps<typeof Typography>["color"] => {
+      if (isDisabled) {
+        return "outline";
+      }
+      switch (currentVariant) {
+        case "filled":
+          return "onPrimary";
+        case "tonal":
+          return "onSecondaryContainer";
+        case "outlined":
+        case "text":
+        case "elevated":
+          return "primary";
+        default:
+          return "onPrimary";
+      }
+    };
 
     const getRippleColor = () => {
       if (disabled) {
@@ -264,7 +308,15 @@ export const Button = forwardRef(
               color={colors.textColor}
             />
           )}
-          {children && <Text style={textStyle}>{children}</Text>}
+          {children && (
+            <Typography
+              variant={getTypographyVariantForSize(size)}
+              color={getTypographyColorForVariant(variant, disabled)}
+              // labelStyle is intentionally not applied here as per user request to use variant/color
+            >
+              {children}
+            </Typography>
+          )}
         </View>
       </TouchableRipple>
     );

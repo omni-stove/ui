@@ -1,17 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { userEvent, within } from "@storybook/test";
 import { useCallback, useMemo, useRef } from "react";
-import { Button as ReactNativeButton, Text, View } from "react-native";
+import { Button as ReactNativeButton, View } from "react-native";
 import { type BottomSheetRef, BottomSheet as Component } from ".";
 import { Button as CustomButton } from "../Button";
+import { Typography } from "../Typography";
 
 const meta: Meta<typeof Component> = {
   component: Component,
   args: {
     content: (
       <View style={{ padding: 16 }}>
-        <Text>This is the content of the bottom sheet!</Text>
-        <Text>You can put anything you want here.</Text>
+        <Typography>This is the content of the bottom sheet!</Typography>
+        <Typography>You can put anything you want here.</Typography>
       </View>
     ),
   },
@@ -112,8 +113,10 @@ export const DynamicSnapPointsDirect: Story = {
             <BottomSheetView
               style={{ flex: 1, padding: 24, alignItems: "center" }}
             >
-              <Text style={{ fontSize: 18, marginBottom: 10 }}>Awesome 🔥</Text>
-              <Text>This is a direct @gorhom/bottom-sheet implementation.</Text>
+              <Typography variant="titleMedium">Awesome 🔥</Typography>
+              <Typography>
+                This is a direct @gorhom/bottom-sheet implementation.
+              </Typography>
             </BottomSheetView>
           </GorhomBottomSheet>
         </View>

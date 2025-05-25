@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { type ComponentProps, useState } from "react";
 import { View } from "react-native";
-import { Button, Text } from "react-native-paper";
+import { Button } from "react-native-paper";
 import { SideSheet as Component } from ".";
 import { AppLayout } from "../AppLayout";
+import { Typography } from "../Typography";
 
 const meta: Meta<typeof Component> = {
   component: Component,
@@ -34,20 +35,18 @@ const SideSheetWithAppLayout = (args: ComponentProps<typeof Component>) => {
         }}
       >
         <View style={{ flex: 1, padding: 16 }}>
-          <Text variant="headlineSmall" style={{ marginBottom: 16 }}>
-            Main Content Area
-          </Text>
-          <Text variant="bodyMedium" style={{ marginBottom: 16 }}>
+          <Typography variant="headlineSmall">Main Content Area</Typography>
+          <Typography variant="bodyMedium">
             This content is automatically adjusted when SideSheet opens.
             AppLayout handles the layout changes seamlessly using Context API.
-          </Text>
+          </Typography>
           <Button mode="contained" onPress={() => setIsOpen(true)}>
             Open SideSheet
           </Button>
-          <Text variant="bodySmall" style={{ marginTop: 16, color: "#666" }}>
+          <Typography variant="bodySmall" color="onSurfaceVariant">
             Notice how the entire app layout adjusts when the SideSheet opens,
             including the AppBar and content area.
-          </Text>
+          </Typography>
         </View>
       </AppLayout>
 
@@ -63,18 +62,18 @@ const args: Story["args"] = {
   headline: "SideSheet Title",
   content: (
     <View>
-      <Text variant="bodyLarge" style={{ marginBottom: 16 }}>
+      <Typography variant="bodyLarge">
         This is the main content of the side sheet. You can put any React Native
         components here.
-      </Text>
-      <Text variant="bodyMedium" style={{ marginBottom: 16 }}>
+      </Typography>
+      <Typography variant="bodyMedium">
         The side sheet slides in from the right side of the screen and provides
         additional space for content and actions.
-      </Text>
-      <Text variant="bodySmall" style={{ color: "#666" }}>
+      </Typography>
+      <Typography variant="bodySmall" color="onSurfaceVariant">
         When used with AppLayout, the entire app layout automatically adjusts to
         accommodate the SideSheet width.
-      </Text>
+      </Typography>
     </View>
   ),
   actions: [
@@ -113,13 +112,11 @@ export const ModalVariant: Story = {
           }}
         >
           <View style={{ flex: 1, padding: 16 }}>
-            <Text variant="headlineSmall" style={{ marginBottom: 16 }}>
-              Modal Variant Demo
-            </Text>
-            <Text variant="bodyMedium" style={{ marginBottom: 16 }}>
+            <Typography variant="headlineSmall">Modal Variant Demo</Typography>
+            <Typography variant="bodyMedium">
               In modal variant, the SideSheet appears as an overlay without
               affecting the main content layout.
-            </Text>
+            </Typography>
             <Button mode="contained" onPress={() => setIsOpen(true)}>
               Open Modal SideSheet
             </Button>

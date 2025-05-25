@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect } from "@storybook/test";
 import type { ComponentProps } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { IconButton as Component } from ".";
+import { Typography } from "../Typography";
 import { getCanvas } from "../libs/storybook";
 
 const meta: Meta<typeof Component> = {
@@ -99,7 +100,7 @@ export const AllVariants: Story = {
             variant={variant}
             accessibilityLabel={`${variant} icon button`}
           />
-          <Text style={styles.variantLabel}>{variant}</Text>
+          <Typography variant="labelSmall">{variant}</Typography>
         </View>
       ))}
     </View>
@@ -134,7 +135,7 @@ export const ToggledStates: Story = {
           key={`${variant}-toggle`}
           style={{ flexDirection: "column", alignItems: "center", margin: 8 }}
         >
-          <Text style={styles.variantLabel}>{variant}</Text>
+          <Typography variant="labelSmall">{variant}</Typography>
           <View
             style={{ flexDirection: "row", alignItems: "center", marginTop: 8 }}
           >
@@ -145,7 +146,7 @@ export const ToggledStates: Story = {
                 selected={false}
                 accessibilityLabel={`${variant} icon button unselected`}
               />
-              <Text style={styles.variantLabel}>Off</Text>
+              <Typography variant="labelSmall">Off</Typography>
             </View>
             <View style={styles.variantCell}>
               <Component
@@ -154,7 +155,7 @@ export const ToggledStates: Story = {
                 selected={true}
                 accessibilityLabel={`${variant} icon button selected`}
               />
-              <Text style={styles.variantLabel}>On</Text>
+              <Typography variant="labelSmall">On</Typography>
             </View>
           </View>
         </View>

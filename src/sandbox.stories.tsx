@@ -1,13 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
+import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
 import {
   Appbar,
   Avatar,
   Button,
   Card,
   Chip,
-  DataTable,
+  Table,
   Divider,
   FAB,
   Grid,
@@ -18,9 +19,10 @@ import {
   Snackbar,
   Surface,
   Switch,
-  Text,
+  Typography,
   TextField,
 } from ".";
+import type { DataWithId } from "./Table/types";
 
 const meta: Meta = {
   title: "Sandbox/Application Examples",
@@ -55,10 +57,10 @@ export const UserProfileApp: Story = {
             <View style={styles.profileHeader}>
               <Avatar source="https://picsum.photos/200" />
               <View style={styles.profileInfo}>
-                <Text variant="headlineSmall">春日部つむぎ</Text>
-                <Text variant="bodyMedium" style={styles.subtitle}>
+                <Typography variant="headlineSmall">春日部つむぎ</Typography>
+                <Typography variant="bodyMedium" style={styles.subtitle}>
                   ハイパー埼玉ギャル
-                </Text>
+                </Typography>
                 <View style={styles.chipContainer}>
                   <Chip mode="outlined" compact>
                     フォロワー 1.2K
@@ -215,13 +217,16 @@ export const ShoppingApp: Story = {
                     }}
                   />
                   <Card.Content style={styles.productContent}>
-                    <Text variant="titleMedium">商品 {item}</Text>
-                    <Text variant="bodySmall" style={styles.productDescription}>
+                    <Typography variant="titleMedium">商品 {item}</Typography>
+                    <Typography
+                      variant="bodySmall"
+                      style={styles.productDescription}
+                    >
                       高品質な商品の説明文がここに入ります
-                    </Text>
-                    <Text variant="titleLarge" style={styles.price}>
+                    </Typography>
+                    <Typography variant="titleLarge" style={styles.price}>
                       ¥{(item * 1000).toLocaleString()}
-                    </Text>
+                    </Typography>
                   </Card.Content>
                   <Card.Actions>
                     <Button onPress={addToCart}>カートに追加</Button>
@@ -410,6 +415,82 @@ export const DashboardApp: Story = {
       { title: "在庫数", value: "1,234", change: "+5.7%", color: "#9c27b0" },
     ]);
 
+    type Order = DataWithId & {
+      orderId: string;
+      customerName: string;
+      amount: string;
+      status: string;
+      statusColor: string;
+    };
+
+    const sampleOrders: Order[] = [
+      {
+        id: "1",
+        orderId: "#1234",
+        customerName: "田中太郎",
+        amount: "¥12,000",
+        status: "配送中",
+        statusColor: "#e3f2fd",
+      },
+      {
+        id: "2",
+        orderId: "#1235",
+        customerName: "佐藤花子",
+        amount: "¥8,500",
+        status: "処理中",
+        statusColor: "#fff3e0",
+      },
+      {
+        id: "3",
+        orderId: "#1236",
+        customerName: "鈴木一郎",
+        amount: "¥15,200",
+        status: "完了",
+        statusColor: "#e8f5e8",
+      },
+    ];
+
+    const columnHelper = createColumnHelper<Order>();
+
+    const orderColumns: ColumnDef<DataWithId, unknown>[] = [
+      columnHelper.accessor("orderId", {
+        header: "注文ID",
+        cell: (info) => <Typography>{info.getValue()}</Typography>,
+        id: "orderId",
+      }),
+      columnHelper.accessor("customerName", {
+        header: "顧客名",
+        cell: (info) => <Typography>{info.getValue()}</Typography>,
+        id: "customerName",
+      }),
+      columnHelper.accessor("amount", {
+        header: "金額",
+        cell: (info) => <Typography>{info.getValue()}</Typography>,
+        id: "amount",
+        meta: {
+          numeric: true,
+        },
+      }),
+      columnHelper.accessor("status", {
+        header: "ステータス",
+        cell: (info) => (
+          <Chip
+            mode="outlined"
+            compact
+            style={{ backgroundColor: info.row.original.statusColor }}
+          >
+            {info.getValue()}
+          </Chip>
+        ),
+        id: "status",
+      }),
+    ] as ColumnDef<DataWithId, unknown>[];
+
+    const [pagination, setPagination] = useState({
+      pageIndex: 0,
+      pageSize: 3,
+    });
+
     return (
       <View style={styles.container}>
         <Appbar.Header>
@@ -425,13 +506,16 @@ export const DashboardApp: Story = {
               <GridItem key={JSON.stringify(stat)} span={6}>
                 <Card style={styles.statCard}>
                   <Card.Content>
-                    <Text variant="bodySmall" style={styles.statLabel}>
+                    <Typography variant="bodySmall" style={styles.statLabel}>
                       {stat.title}
-                    </Text>
-                    <Text variant="headlineMedium" style={styles.statValue}>
+                    </Typography>
+                    <Typography
+                      variant="headlineMedium"
+                      style={styles.statValue}
+                    >
                       {stat.value}
-                    </Text>
-                    <Text
+                    </Typography>
+                    <Typography
                       variant="bodySmall"
                       style={[
                         styles.statChange,
@@ -443,7 +527,7 @@ export const DashboardApp: Story = {
                       ]}
                     >
                       {stat.change}
-                    </Text>
+                    </Typography>
                   </Card.Content>
                 </Card>
               </GridItem>
@@ -462,12 +546,15 @@ export const DashboardApp: Story = {
                 <Card.Title title="売上推移" />
                 <Card.Content>
                   <View style={styles.chartPlaceholder}>
-                    <Text variant="bodyLarge" style={styles.chartText}>
+                    <Typography variant="bodyLarge" style={styles.chartText}>
                       📊 チャートエリア
-                    </Text>
-                    <Text variant="bodyMedium" style={styles.chartSubtext}>
+                    </Typography>
+                    <Typography
+                      variant="bodyMedium"
+                      style={styles.chartSubtext}
+                    >
                       ここに売上グラフが表示されます
-                    </Text>
+                    </Typography>
                   </View>
                 </Card.Content>
               </Card>
@@ -508,66 +595,13 @@ export const DashboardApp: Story = {
               <Card style={styles.tableCard}>
                 <Card.Title title="最近の注文" />
                 <Card.Content>
-                  <DataTable>
-                    <DataTable.Header>
-                      <DataTable.Title>注文ID</DataTable.Title>
-                      <DataTable.Title>顧客名</DataTable.Title>
-                      <DataTable.Title numeric>金額</DataTable.Title>
-                      <DataTable.Title>ステータス</DataTable.Title>
-                    </DataTable.Header>
-
-                    <DataTable.Row>
-                      <DataTable.Cell>#1234</DataTable.Cell>
-                      <DataTable.Cell>田中太郎</DataTable.Cell>
-                      <DataTable.Cell numeric>¥12,000</DataTable.Cell>
-                      <DataTable.Cell>
-                        <Chip
-                          mode="outlined"
-                          compact
-                          style={{ backgroundColor: "#e3f2fd" }}
-                        >
-                          配送中
-                        </Chip>
-                      </DataTable.Cell>
-                    </DataTable.Row>
-
-                    <DataTable.Row>
-                      <DataTable.Cell>#1235</DataTable.Cell>
-                      <DataTable.Cell>佐藤花子</DataTable.Cell>
-                      <DataTable.Cell numeric>¥8,500</DataTable.Cell>
-                      <DataTable.Cell>
-                        <Chip
-                          mode="outlined"
-                          compact
-                          style={{ backgroundColor: "#fff3e0" }}
-                        >
-                          処理中
-                        </Chip>
-                      </DataTable.Cell>
-                    </DataTable.Row>
-
-                    <DataTable.Row>
-                      <DataTable.Cell>#1236</DataTable.Cell>
-                      <DataTable.Cell>鈴木一郎</DataTable.Cell>
-                      <DataTable.Cell numeric>¥15,200</DataTable.Cell>
-                      <DataTable.Cell>
-                        <Chip
-                          mode="outlined"
-                          compact
-                          style={{ backgroundColor: "#e8f5e8" }}
-                        >
-                          完了
-                        </Chip>
-                      </DataTable.Cell>
-                    </DataTable.Row>
-
-                    <DataTable.Pagination
-                      page={1}
-                      numberOfPages={3}
-                      onPageChange={(page) => console.log(page)}
-                      label="1-3 of 6"
-                    />
-                  </DataTable>
+                  <Table
+                    data={sampleOrders}
+                    columns={orderColumns}
+                    pagination={pagination}
+                    onPaginationChange={setPagination}
+                    striped
+                  />
                 </Card.Content>
               </Card>
             </GridItem>

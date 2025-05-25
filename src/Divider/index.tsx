@@ -1,4 +1,4 @@
-import { StyleSheet, View, type StyleProp, type ViewStyle } from "react-native";
+import { type StyleProp, StyleSheet, View, type ViewStyle } from "react-native";
 import { Divider as PaperDivider } from "react-native-paper";
 import type { DividerProps as PaperDividerProps } from "react-native-paper";
 import { useTheme } from "../hooks";

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Button } from "react-native-paper";
+import { Typography } from "../Typography";
 import { AppLayout } from "./index";
 
 const meta: Meta<typeof AppLayout> = {
@@ -32,7 +33,7 @@ const SampleContent = ({ title = "Sample Content" }: { title?: string }) => (
       alignItems: "center",
     }}
   >
-    <Text style={{ fontSize: 18, marginBottom: 16 }}>{title}</Text>
+    <Typography variant="titleMedium">{title}</Typography>
     <Button mode="contained" onPress={() => console.log("Button pressed")}>
       Sample Button
     </Button>
@@ -53,11 +54,11 @@ const ScrollableContent = () => (
             borderRadius: 8,
           }}
         >
-          <Text>Scrollable Item {i + 1}</Text>
-          <Text style={{ fontSize: 12, color: "#666", marginTop: 4 }}>
+          <Typography>Scrollable Item {i + 1}</Typography>
+          <Typography variant="labelSmall" color="onSurfaceVariant">
             This is a sample scrollable content item to demonstrate the layout
             behavior.
-          </Text>
+          </Typography>
         </View>
       );
     })}

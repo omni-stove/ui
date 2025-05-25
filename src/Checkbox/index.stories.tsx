@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { expect } from "@storybook/test";
 import { useState } from "react";
 import { View } from "react-native";
-import { Text } from "react-native-paper";
 import { Checkbox as Component } from ".";
+import { Typography } from "../Typography";
 import { getCanvas } from "../libs/storybook";
 
 const meta: Meta<typeof Component> = {
@@ -26,28 +26,28 @@ type Story = StoryObj<typeof Component>;
 export const Default: Story = {
   render: () => (
     <View style={{ gap: 16 }}>
-      <Text variant="titleMedium">通常状態</Text>
+      <Typography variant="titleMedium">通常状態</Typography>
       <View style={{ flexDirection: "row", gap: 16, alignItems: "center" }}>
         <Component checked={false} />
         <Component checked="indeterminate" />
         <Component checked={true} />
       </View>
 
-      <Text variant="titleMedium">無効状態</Text>
+      <Typography variant="titleMedium">無効状態</Typography>
       <View style={{ flexDirection: "row", gap: 16, alignItems: "center" }}>
         <Component checked={false} disabled />
         <Component checked="indeterminate" disabled />
         <Component checked={true} disabled />
       </View>
 
-      <Text variant="titleMedium">ラベル付き</Text>
+      <Typography variant="titleMedium">ラベル付き</Typography>
       <View style={{ gap: 8 }}>
         <Component checked={false} label="未チェック" />
         <Component checked="indeterminate" label="部分選択" />
         <Component checked={true} label="チェック済み" />
       </View>
 
-      <Text variant="titleMedium">ラベル付き（無効状態）</Text>
+      <Typography variant="titleMedium">ラベル付き（無効状態）</Typography>
       <View style={{ gap: 8 }}>
         <Component checked={false} label="無効な未チェック" disabled />
         <Component checked="indeterminate" label="無効な部分選択" disabled />
@@ -78,7 +78,7 @@ export const Behavior: Story = {
         </View>
 
         <View style={{ gap: 8 }}>
-          <Text variant="titleSmall">状態を直接変更:</Text>
+          <Typography variant="titleSmall">状態を直接変更:</Typography>
           <Component
             checked={false}
             onChangeCheck={() => setChecked(false)}

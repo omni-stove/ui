@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect } from "@storybook/test";
 import { View } from "react-native";
-import { Card, Text } from "react-native-paper";
+import { Card } from "react-native-paper";
 import { Grid as Component, GridItem } from ".";
+import { Typography } from "../Typography";
 import { getCanvas } from "../libs/storybook";
 
 const meta: Meta<typeof Component> = {
@@ -45,10 +46,8 @@ const SampleCard = ({
     style={{ height, backgroundColor: color || "#f5f5f5", marginBottom: 0 }}
   >
     <Card.Content style={{ padding: 16 }}>
-      <Text variant="titleMedium">{title}</Text>
-      <Text variant="bodySmall" style={{ marginTop: 8 }}>
-        高さ: {height}px
-      </Text>
+      <Typography variant="titleMedium">{title}</Typography>
+      <Typography variant="bodySmall">高さ: {height}px</Typography>
     </Card.Content>
   </Card>
 );
@@ -140,9 +139,9 @@ export const ResponsiveDemo: Story = {
   },
   render: (args) => (
     <View>
-      <Text style={{ padding: 16, fontSize: 16, fontWeight: "bold" }}>
+      <Typography variant="bodyLarge">
         画面サイズを変更してレスポンシブ動作を確認
-      </Text>
+      </Typography>
       <Component {...args}>
         <SampleCard height={200} title="Responsive 1" color="#e3f2fd" />
         <SampleCard height={150} title="Responsive 2" color="#f3e5f5" />
@@ -165,82 +164,86 @@ export const StandardGridResponsive: Story = {
   },
   render: (args) => (
     <View>
-      <Text style={{ padding: 16, fontSize: 16, fontWeight: "bold" }}>
+      <Typography variant="bodyLarge">
         Material Design 3 - レスポンシブグリッドシステム
-      </Text>
-      <Text style={{ padding: 16, fontSize: 14, color: "#666" }}>
+      </Typography>
+      <Typography variant="labelLarge" color="onSurfaceVariant">
         画面サイズを変更して動作を確認してください
-      </Text>
+      </Typography>
       <Component {...args}>
         <GridItem span={12} spacing="comfortable">
           <Card style={{ backgroundColor: "#ffcdd2" }}>
             <Card.Content style={{ padding: 16 }}>
-              <Text variant="titleMedium">Header (12/12)</Text>
-              <Text variant="bodySmall">フルワイズヘッダー - 常に100%</Text>
+              <Typography variant="titleMedium">Header (12/12)</Typography>
+              <Typography variant="bodySmall">
+                フルワイズヘッダー - 常に100%
+              </Typography>
             </Card.Content>
           </Card>
         </GridItem>
         <GridItem span={8} spacing="comfortable">
           <Card style={{ backgroundColor: "#c8e6c9" }}>
             <Card.Content style={{ padding: 16 }}>
-              <Text variant="titleMedium">Main Content (8/12)</Text>
-              <Text variant="bodySmall">メインコンテンツエリア</Text>
+              <Typography variant="titleMedium">Main Content (8/12)</Typography>
+              <Typography variant="bodySmall">
+                メインコンテンツエリア
+              </Typography>
             </Card.Content>
           </Card>
         </GridItem>
         <GridItem span={4} spacing="comfortable">
           <Card style={{ backgroundColor: "#bbdefb" }}>
             <Card.Content style={{ padding: 16 }}>
-              <Text variant="titleMedium">Sidebar (4/12)</Text>
-              <Text variant="bodySmall">サイドバー</Text>
+              <Typography variant="titleMedium">Sidebar (4/12)</Typography>
+              <Typography variant="bodySmall">サイドバー</Typography>
             </Card.Content>
           </Card>
         </GridItem>
         <GridItem span={6} spacing="comfortable">
           <Card style={{ backgroundColor: "#dcedc8" }}>
             <Card.Content style={{ padding: 16 }}>
-              <Text variant="titleMedium">Feature 1 (6/12)</Text>
-              <Text variant="bodySmall">50%幅</Text>
+              <Typography variant="titleMedium">Feature 1 (6/12)</Typography>
+              <Typography variant="bodySmall">50%幅</Typography>
             </Card.Content>
           </Card>
         </GridItem>
         <GridItem span={6} spacing="comfortable">
           <Card style={{ backgroundColor: "#ffe0b2" }}>
             <Card.Content style={{ padding: 16 }}>
-              <Text variant="titleMedium">Feature 2 (6/12)</Text>
-              <Text variant="bodySmall">50%幅</Text>
+              <Typography variant="titleMedium">Feature 2 (6/12)</Typography>
+              <Typography variant="bodySmall">50%幅</Typography>
             </Card.Content>
           </Card>
         </GridItem>
         <GridItem span={3} spacing="comfortable">
           <Card style={{ backgroundColor: "#f8bbd9" }}>
             <Card.Content style={{ padding: 16 }}>
-              <Text variant="titleMedium">Card 1 (3/12)</Text>
-              <Text variant="bodySmall">25%幅</Text>
+              <Typography variant="titleMedium">Card 1 (3/12)</Typography>
+              <Typography variant="bodySmall">25%幅</Typography>
             </Card.Content>
           </Card>
         </GridItem>
         <GridItem span={3} spacing="comfortable">
           <Card style={{ backgroundColor: "#e1bee7" }}>
             <Card.Content style={{ padding: 16 }}>
-              <Text variant="titleMedium">Card 2 (3/12)</Text>
-              <Text variant="bodySmall">25%幅</Text>
+              <Typography variant="titleMedium">Card 2 (3/12)</Typography>
+              <Typography variant="bodySmall">25%幅</Typography>
             </Card.Content>
           </Card>
         </GridItem>
         <GridItem span={3} spacing="comfortable">
           <Card style={{ backgroundColor: "#c5cae9" }}>
             <Card.Content style={{ padding: 16 }}>
-              <Text variant="titleMedium">Card 3 (3/12)</Text>
-              <Text variant="bodySmall">25%幅</Text>
+              <Typography variant="titleMedium">Card 3 (3/12)</Typography>
+              <Typography variant="bodySmall">25%幅</Typography>
             </Card.Content>
           </Card>
         </GridItem>
         <GridItem span={3} spacing="comfortable">
           <Card style={{ backgroundColor: "#b2dfdb" }}>
             <Card.Content style={{ padding: 16 }}>
-              <Text variant="titleMedium">Card 4 (3/12)</Text>
-              <Text variant="bodySmall">25%幅</Text>
+              <Typography variant="titleMedium">Card 4 (3/12)</Typography>
+              <Typography variant="bodySmall">25%幅</Typography>
             </Card.Content>
           </Card>
         </GridItem>

@@ -12,17 +12,11 @@ import {
   View,
   type ViewStyle,
 } from "react-native";
-import {
-  Button,
-  IconButton,
-  Modal,
-  Portal,
-  Surface,
-  Text,
-} from "react-native-paper";
+import { Button, IconButton, Modal, Portal, Surface } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Divider } from "../Divider";
 import { useSideSheetLayout } from "../Provider";
+import { Typography } from "../Typography";
 import { useTheme } from "../hooks";
 
 const { width: screenWidth } = Dimensions.get("window");
@@ -171,9 +165,9 @@ export const SideSheet = forwardRef<View, Props>(
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text variant="headlineSmall" style={styles.headline}>
+          <Typography variant="headlineSmall" style={styles.headline}>
             {headline}
-          </Text>
+          </Typography>
           <IconButton
             icon="close"
             size={24}

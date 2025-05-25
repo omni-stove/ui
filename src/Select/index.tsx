@@ -7,9 +7,9 @@ import {
   useState,
 } from "react";
 import { Pressable, type TextInput, View } from "react-native";
-import { Text } from "react-native-paper";
 import { Menu } from "../Menu";
 import { TextField } from "../TextField";
+import { Typography } from "../Typography";
 
 /**
  * Represents a single option in the Select component.
@@ -103,7 +103,7 @@ export const Select = forwardRef(function Select<T extends string | number>(
           onPress={() => handleSelect(option.value as T)}
           style={{ width: "100%", paddingVertical: 12, paddingHorizontal: 16 }}
         >
-          <Text>{option.label}</Text>
+          <Typography variant="bodyLarge">{option.label}</Typography>
         </Pressable>
       ))}
     </Menu>

@@ -21,8 +21,8 @@ import {
   type TooltipProps as PaperTooltipProps,
   Portal,
   Surface,
-  Text,
 } from "react-native-paper";
+import { Typography } from "../Typography";
 import { useTheme } from "../hooks";
 
 /**
@@ -381,22 +381,17 @@ const RichTooltip = ({
               testID="tooltip-container"
             >
               {subhead ? (
-                <Text
-                  style={[
-                    staticStyles.subhead,
-                    { color: theme.colors.onSurfaceVariant },
-                  ]}
+                <Typography
+                  style={staticStyles.subhead}
+                  color="onSurfaceVariant"
                   variant="titleSmall"
                 >
                   {subhead}
-                </Text>
+                </Typography>
               ) : null}
-              <Text
-                style={{ color: theme.colors.onSurfaceVariant }}
-                variant="bodyMedium"
-              >
+              <Typography color="onSurfaceVariant" variant="bodyMedium">
                 {supportingText}
-              </Text>
+              </Typography>
               {actions && actions.length > 0 ? (
                 <View style={staticStyles.actions}>
                   {actions.map((action) => (
@@ -424,15 +419,9 @@ const RichTooltip = ({
                         ];
                       }}
                     >
-                      <Text
-                        style={[
-                          dynamicStyles.actionButtonText,
-                          { color: theme.colors.primary },
-                        ]}
-                        variant="labelLarge"
-                      >
+                      <Typography color="primary" variant="labelLarge">
                         {action.label}
-                      </Text>
+                      </Typography>
                     </Pressable>
                   ))}
                 </View>
@@ -469,6 +458,7 @@ const staticStyles = StyleSheet.create({
     maxWidth: 320 - 2 * 16,
   },
   subhead: {
+    // color is handled by Typography
     marginBottom: 4,
   },
   visible: {

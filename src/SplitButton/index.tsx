@@ -6,9 +6,10 @@ import {
   useRef,
   useState,
 } from "react";
-import { Animated, Text, View } from "react-native";
+import { Animated, View } from "react-native";
 import { Icon, Menu, TouchableRipple } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
+import { Typography } from "../Typography";
 import { useTheme } from "../hooks";
 
 /**
@@ -199,6 +200,42 @@ export const SplitButton = forwardRef<ComponentRef<typeof View>, Props>(
     };
     const vStyle = variantStyles[variant];
 
+    const getTypographyVariant = (
+      currentSize: Size,
+    ): ComponentProps<typeof Typography>["variant"] => {
+      switch (currentSize) {
+        case "xs":
+          return "labelLarge"; // 14px
+        case "s":
+          return "bodyLarge"; // 16px
+        case "m":
+          return "titleMedium"; // 18px, Paper default for titleMedium is 16, but it's the closest for 18px intent
+        case "l":
+          return "headlineSmall"; // 24px
+        case "xl":
+          return "displaySmall"; // 32px, Paper default for displaySmall is 36px
+        default:
+          return "bodyMedium";
+      }
+    };
+
+    const getTypographyColor = (
+      currentVariant: Variant,
+    ): ComponentProps<typeof Typography>["color"] => {
+      switch (currentVariant) {
+        case "filled":
+          return "onPrimary";
+        case "outlined":
+          return "onSurfaceVariant";
+        case "elevated":
+          return "primary";
+        case "tonal":
+          return "onSecondaryContainer";
+        default:
+          return "onSurface";
+      }
+    };
+
     return (
       <View ref={ref} style={{ flexDirection: "row", alignItems: "center" }}>
         {/* メインボタン */}
@@ -226,19 +263,17 @@ export const SplitButton = forwardRef<ComponentRef<typeof View>, Props>(
                 <Icon
                   source={icon}
                   size={sizeStyles[size].iconSize}
-                  color={vStyle.textColor}
+                  color={vStyle.textColor} // Icon color remains directly from vStyle
                 />
               </View>
             )}
             {label && (
-              <Text
-                style={{
-                  color: vStyle.textColor,
-                  fontSize: sizeStyles[size].fontSize,
-                }}
+              <Typography
+                variant={getTypographyVariant(size)}
+                color={getTypographyColor(variant)}
               >
                 {label}
-              </Text>
+              </Typography>
             )}
           </View>
         </TouchableRipple>

@@ -5,20 +5,15 @@ import BottomSheetOriginal, {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import {
-  forwardRef,
   type ReactNode,
+  forwardRef,
   useCallback,
   useImperativeHandle,
   useMemo,
   useRef,
 } from "react";
-import {
-  type StyleProp,
-  StyleSheet,
-  Text,
-  View,
-  type ViewStyle,
-} from "react-native";
+import { type StyleProp, StyleSheet, View, type ViewStyle } from "react-native";
+import { Typography } from "../Typography";
 
 /**
  * Ref methods for controlling the BottomSheet.
@@ -142,7 +137,7 @@ export const BottomSheet = forwardRef<BottomSheetRef, Props>(
 
     const BottomSheetTitle = ({ text }: { text: string }) => (
       <View style={styles.titleContainer}>
-        <Text style={styles.titleText}>{text}</Text>
+        <Typography variant="titleMedium">{text}</Typography>
       </View>
     );
 
@@ -183,8 +178,8 @@ const styles = StyleSheet.create({
     borderBottomColor: "#e0e0e0",
   },
   titleText: {
-    fontSize: 18,
-    fontWeight: "500",
+    // fontSize: 18, // Handled by Typography variant
+    // fontWeight: "500", // Removed as per user request to not use style for this
   },
   contentContainer: {
     flex: 1,

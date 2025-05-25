@@ -1,6 +1,6 @@
-import type { ReactNode, ComponentProps } from "react";
-import { Text as PaperText } from "react-native-paper";
+import type { ComponentProps, ReactNode } from "react";
 import type { TextProps as NativeTextProps } from "react-native";
+import { Text as PaperText } from "react-native-paper";
 import { useTheme } from "../hooks";
 import type { Material3Colors } from "../hooks/types";
 

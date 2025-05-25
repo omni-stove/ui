@@ -1,4 +1,5 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { Typography } from "../Typography";
 import { useTheme } from "../hooks";
 
 /**
@@ -40,16 +41,16 @@ export const ThemeColors = () => {
                   },
                 ]}
               />
-              <Text
-                style={[styles.colorName, { color: theme.colors.onSurface }]}
+              <Typography
+                variant="bodyLarge"
+                color="onSurface"
+                style={styles.colorNameTypography}
               >
                 {name}
-              </Text>
-              <Text
-                style={[styles.colorValue, { color: theme.colors.onSurface }]}
-              >
+              </Typography>
+              <Typography variant="bodyLarge" color="onSurface">
                 {colorValueText}
-              </Text>
+              </Typography>
             </View>
           );
         })}
@@ -78,10 +79,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   colorName: {
+    // flex: 1, // Moved to colorNameTypography
+    // fontSize: 16, // Handled by Typography variant
+  },
+  colorNameTypography: {
     flex: 1,
-    fontSize: 16,
   },
   colorValue: {
-    fontSize: 16,
+    // fontSize: 16, // Handled by Typography variant
   },
 });

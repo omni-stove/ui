@@ -3,8 +3,8 @@ import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useState } from "react";
 import { View } from "react-native";
-import { Text } from "react-native-paper";
 import { Table } from ".";
+import { Typography } from "../Typography";
 import type { DataWithId, RowDragEndParams } from "./types";
 
 type User = DataWithId & {
@@ -103,27 +103,27 @@ const columnHelper = createColumnHelper<User>();
 const columns: ColumnDef<DataWithId, unknown>[] = [
   columnHelper.accessor("name", {
     header: "名前",
-    cell: (info) => <Text>{info.getValue()}</Text>,
+    cell: (info) => <Typography>{info.getValue()}</Typography>,
     id: "name",
   }),
   columnHelper.accessor("email", {
     header: "メールアドレス",
-    cell: (info) => <Text>{info.getValue()}</Text>,
+    cell: (info) => <Typography>{info.getValue()}</Typography>,
     id: "email",
   }),
   columnHelper.accessor("age", {
     header: "年齢",
-    cell: (info) => <Text>{info.getValue()}</Text>,
+    cell: (info) => <Typography>{info.getValue()}</Typography>,
     id: "age",
   }),
   columnHelper.accessor("department", {
     header: "部署",
-    cell: (info) => <Text>{info.getValue()}</Text>,
+    cell: (info) => <Typography>{info.getValue()}</Typography>,
     id: "department",
   }),
   columnHelper.accessor("createdAt", {
     header: "作成日",
-    cell: (info) => <Text>{info.getValue()}</Text>,
+    cell: (info) => <Typography>{info.getValue()}</Typography>,
     id: "createdAt",
   }),
 ] as ColumnDef<DataWithId, unknown>[];
@@ -252,20 +252,20 @@ export const AllFeatures: Story = {
 
     return (
       <View>
-        <Text style={{ marginBottom: 8 }}>
+        <Typography>
           検索クエリ: "{searchQuery}" | 結果: {filteredData.length}件
-        </Text>
-        <Text style={{ marginBottom: 8 }}>
+        </Typography>
+        <Typography>
           選択された行: {Array.from(selectedIds).join(", ") || "なし"}
-        </Text>
-        <Text style={{ marginBottom: 8 }}>
+        </Typography>
+        <Typography>
           表示中のカラム:{" "}
           {visibleColumns.length > 0 ? visibleColumns.join(", ") : "全て"}
-        </Text>
-        <Text style={{ marginBottom: 16 }}>
+        </Typography>
+        <Typography>
           非表示のカラム:{" "}
           {hiddenColumns.length > 0 ? hiddenColumns.join(", ") : "なし"}
-        </Text>
+        </Typography>
         <Table
           data={filteredData as DataWithId[]}
           columns={columns}
@@ -316,9 +316,7 @@ export const WithDragAndDrop: Story = {
 
     return (
       <View>
-        <Text style={{ marginBottom: 16, fontWeight: "bold" }}>
-          行をドラッグして並び替えができます
-        </Text>
+        <Typography>行をドラッグして並び替えができます</Typography>
         <Table
           data={data as DataWithId[]}
           columns={columns}

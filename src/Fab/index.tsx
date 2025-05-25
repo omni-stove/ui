@@ -1,9 +1,10 @@
 import { type Ref, forwardRef, useCallback, useMemo, useState } from "react";
 import { Animated, Pressable, StyleSheet, View } from "react-native";
-import { FAB as Fab, Text } from "react-native-paper";
+import { FAB as Fab } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon } from "../Icon";
+import { Typography } from "../Typography";
 import { useTheme } from "../hooks";
 
 /**
@@ -200,9 +201,15 @@ export const FAB = forwardRef(
                       size={24}
                       color={colorSet.onActionContainer}
                     />
-                    <Text style={{ color: colorSet.onActionContainer }}>
+                    <Typography
+                      color={
+                        colorSet.onActionContainer as keyof ReturnType<
+                          typeof useTheme
+                        >["colors"]
+                      }
+                    >
                       {action.label}
-                    </Text>
+                    </Typography>
                   </Pressable>
                 </Animated.View>
               ))}

@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { View, ScrollView, StyleSheet } from "react-native";
+import type { ComponentProps } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { Typography as Component } from ".";
 import type { Material3Colors } from "../hooks/types";
-import type { ComponentProps } from "react";
 
 // Extract PaperTextVariant type locally if not exported from component
 type PaperTextVariant = ComponentProps<typeof Component>["variant"];

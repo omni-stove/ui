@@ -7,7 +7,6 @@ import {
   type MD3Theme,
   Modal,
   Portal,
-  Text,
   TouchableRipple,
   useTheme,
 } from "react-native-paper";
@@ -18,6 +17,7 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
+import { Typography } from "../Typography";
 
 /**
  * Defines the display variant of the NavigationRail.
@@ -180,13 +180,14 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
         backgroundColor: theme.colors.secondaryContainer,
       },
       label: {
+        // Styles for Typography will be handled by its own props or specific style overrides if necessary
         marginTop: 4,
         textAlign: "center",
-        color: theme.colors.onSurfaceVariant,
-        ...theme.fonts.labelMedium,
+        // color: theme.colors.onSurfaceVariant, // Handled by Typography color prop
+        // ...theme.fonts.labelMedium, // Handled by Typography variant prop
       },
       activeLabel: {
-        color: theme.colors.onSurfaceVariant,
+        // color: theme.colors.onSurfaceVariant, // Handled by Typography color prop
       },
       expandedItemWrapper: {
         width: "100%",
@@ -440,13 +441,14 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
                         </Badge>
                       )}
                     </View>
-                    <Text
+                    <Typography
                       variant="labelMedium"
-                      style={[styles.label, isActive && styles.activeLabel]}
+                      color="onSurfaceVariant"
+                      style={[styles.label, isActive && styles.activeLabel]} // Keep for marginTop, textAlign
                       numberOfLines={1}
                     >
                       {item.label}
-                    </Text>
+                    </Typography>
                   </View>
                 </TouchableRipple>
               </Animated.View>
