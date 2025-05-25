@@ -103,8 +103,6 @@ export const SideSheet = forwardRef<View, Props>(
       useSideSheetLayout();
     const sideSheetId = useId();
 
-    console.log(theme.colors);
-
     const handleClose = useCallback(() => {
       onOpenChange?.(false);
     }, [onOpenChange]);

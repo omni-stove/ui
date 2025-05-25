@@ -10,7 +10,6 @@ export * from "./Card";
 export * from "./Checkbox";
 export * from "./CheckboxList";
 export * from "./Chip";
-export * from "./DataTable";
 export * from "./Dialog";
 export * from "./Divider";
 export * from "./Fab";
