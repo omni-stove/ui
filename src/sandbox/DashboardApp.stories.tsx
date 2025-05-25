@@ -100,13 +100,17 @@ export const DashboardApp: Story = {
       columnHelper.accessor("status", {
         header: "ステータス",
         cell: (info) => (
-          <Chip
-            mode="outlined"
-            compact
-            style={{ backgroundColor: info.row.original.statusColor }}
+          <View
+            style={{
+              backgroundColor: info.row.original.statusColor,
+              borderRadius: 8,
+              paddingHorizontal: 2,
+              paddingVertical: 1,
+              alignSelf: "flex-start",
+            }}
           >
-            {info.getValue()}
-          </Chip>
+            <Chip>{info.getValue()}</Chip>
+          </View>
         ),
         id: "status",
       }),

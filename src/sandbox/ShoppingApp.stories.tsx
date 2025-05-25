@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import {
   AppLayout, // Added AppLayout
   Button,
@@ -59,21 +59,23 @@ export const ShoppingApp: Story = {
             showsHorizontalScrollIndicator={false}
             style={styles.categoryContainer}
           >
-            <Chip mode="flat" selected style={styles.categoryChip}>
-              すべて
-            </Chip>
-            <Chip mode="outlined" style={styles.categoryChip}>
-              ファッション
-            </Chip>
-            <Chip mode="outlined" style={styles.categoryChip}>
-              エレクトロニクス
-            </Chip>
-            <Chip mode="outlined" style={styles.categoryChip}>
-              ホーム
-            </Chip>
-            <Chip mode="outlined" style={styles.categoryChip}>
-              スポーツ
-            </Chip>
+            <View style={styles.categoryChip}>
+              <Chip variant="filter" isSelected>
+                すべて
+              </Chip>
+            </View>
+            <View style={styles.categoryChip}>
+              <Chip variant="filter">ファッション</Chip>
+            </View>
+            <View style={styles.categoryChip}>
+              <Chip variant="filter">エレクトロニクス</Chip>
+            </View>
+            <View style={styles.categoryChip}>
+              <Chip variant="filter">ホーム</Chip>
+            </View>
+            <View style={styles.categoryChip}>
+              <Chip variant="filter">スポーツ</Chip>
+            </View>
           </ScrollView>
 
           {/* 商品リスト - Grid Layout使用 */}

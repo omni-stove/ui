@@ -55,12 +55,10 @@ export const UserProfileApp: Story = {
                   ハイパー埼玉ギャル
                 </Typography>
                 <View style={styles.chipContainer}>
-                  <Chip mode="outlined" compact>
-                    フォロワー 1.2K
-                  </Chip>
-                  <Chip mode="outlined" compact style={styles.chipSpacing}>
-                    フォロー中 234
-                  </Chip>
+                  <Chip>フォロワー 1.2K</Chip>
+                  <View style={styles.chipSpacing}>
+                    <Chip>フォロー中 234</Chip>
+                  </View>
                 </View>
               </View>
             </View>
