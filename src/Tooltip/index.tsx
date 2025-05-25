@@ -335,6 +335,7 @@ const RichTooltip = ({
       return () => clearTimeout(timeoutId);
     }
     setMeasurement((prev) => ({ ...prev, measured: false }));
+    return;
   }, [isActuallyVisible, measureLayouts]);
 
   const mobilePressProps = {

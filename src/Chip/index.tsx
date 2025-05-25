@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
-import { Chip as PaperChip } from "react-native-paper";
-import { useTheme } from "../hooks";
 import type { ComponentProps, ComponentRef } from "react"; // ComponentRef を直接インポート
 import { forwardRef } from "react";
+import { Chip as PaperChip } from "react-native-paper";
+import { useTheme } from "../hooks";
 // import * as React from "react"; // こちらは不要になったので削除
 
 /**

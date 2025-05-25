@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect } from "@storybook/test";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 import { Chip as Component } from ".";
 import { getCanvas } from "../libs/storybook";
 
