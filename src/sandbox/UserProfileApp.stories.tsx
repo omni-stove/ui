@@ -18,7 +18,7 @@ import {
 } from ".."; // Path adjusted for new location
 
 const meta: Meta = {
-  title: "Sandbox/Application Examples/User Profile App", // Title adjusted
+  title: "Sandbox/User Profile App", // Title adjusted
   parameters: {
     docs: {
       autodocs: false,

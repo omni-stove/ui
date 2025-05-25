@@ -15,7 +15,7 @@ import {
 import type { DataWithId } from "../Table/types"; // Path adjusted
 
 const meta: Meta = {
-  title: "Sandbox/Application Examples/Dashboard App", // Title adjusted
+  title: "Sandbox/Dashboard App", // Title adjusted
   parameters: {
     docs: {
       autodocs: false,
@@ -99,19 +99,7 @@ export const DashboardApp: Story = {
       }),
       columnHelper.accessor("status", {
         header: "ステータス",
-        cell: (info) => (
-          <View
-            style={{
-              backgroundColor: info.row.original.statusColor,
-              borderRadius: 8,
-              paddingHorizontal: 2,
-              paddingVertical: 1,
-              alignSelf: "flex-start",
-            }}
-          >
-            <Chip>{info.getValue()}</Chip>
-          </View>
-        ),
+        cell: (info) => <Chip>{info.getValue()}</Chip>,
         id: "status",
       }),
     ] as ColumnDef<DataWithId, unknown>[];

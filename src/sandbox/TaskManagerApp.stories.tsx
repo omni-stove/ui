@@ -14,7 +14,7 @@ import {
 } from ".."; // Path adjusted
 
 const meta: Meta = {
-  title: "Sandbox/Application Examples/Task Manager App", // Title adjusted
+  title: "Sandbox/Task Manager App", // Title adjusted
   parameters: {
     docs: {
       autodocs: false,

@@ -25,14 +25,14 @@ type BaseProps = {
 
 // --- 型定義を variant ごとに分割 ---
 type AssistChipProps = BaseProps & {
-  variant: "assist";
+  variant?: "assist";
   isSelected?: never;
   trailingIcon?: never;
   onTrailingIconPress?: never;
 };
 
 type FilterChipProps = BaseProps & {
-  variant: "filter";
+  variant?: "filter";
   /** Whether the filter chip is currently selected. */
   isSelected?: boolean;
   /** An optional icon displayed at the end of the chip, typically for removal in input chips or custom actions in filter chips. */
@@ -42,7 +42,7 @@ type FilterChipProps = BaseProps & {
 };
 
 type InputChipProps = BaseProps & {
-  variant: "input";
+  variant?: "input";
   isSelected?: never;
   /** An optional icon displayed at the end of the chip, typically for removal. */
   trailingIcon?: ComponentProps<typeof PaperChip>["closeIcon"];
@@ -51,7 +51,7 @@ type InputChipProps = BaseProps & {
 };
 
 type SuggestionChipProps = BaseProps & {
-  variant: "suggestion";
+  variant?: "suggestion";
   isSelected?: never;
   trailingIcon?: never;
   onTrailingIconPress?: never;
@@ -89,20 +89,23 @@ export const Chip = forwardRef<
     isDisabled,
     onPress,
     "aria-label": ariaLabel,
+    variant = "assist", // デフォルト値を "assist" に設定
   } = props;
   const theme = useTheme();
 
   const paperChipMode: "flat" | "outlined" = // 型を明示
-    props.variant === "filter" || props.variant === "input" ? "flat" : "flat";
+    variant === "filter" || variant === "input" ? "flat" : "flat";
 
   const showSelectedCheck =
-    props.variant === "filter" && props.isSelected && !props.trailingIcon;
+    variant === "filter" &&
+    (props as FilterChipProps).isSelected && // 型アサーションを追加
+    !(props as FilterChipProps).trailingIcon; // 型アサーションを追加
 
   let chipStyle: object = {};
   let elevated = false;
 
   // --- variant ごとのプロパティアクセスを修正 ---
-  switch (props.variant) {
+  switch (variant) {
     case "assist":
       elevated = !isDisabled;
       chipStyle = {
@@ -115,7 +118,8 @@ export const Chip = forwardRef<
       break;
     case "filter":
       elevated = false;
-      if (props.isSelected) {
+      if ((props as FilterChipProps).isSelected) {
+        // 型アサーションを追加
         chipStyle = {
           backgroundColor: isDisabled
             ? theme.colors.surfaceVariant
@@ -177,13 +181,13 @@ export const Chip = forwardRef<
     ref, // ref を渡す
   };
 
-  if (props.variant === "filter") {
+  if (variant === "filter") {
     return (
       <PaperChip
         {...commonPaperChipProps}
-        selected={props.isSelected}
-        closeIcon={props.trailingIcon}
-        onClose={props.onTrailingIconPress}
+        selected={(props as FilterChipProps).isSelected} // 型アサーションを追加
+        closeIcon={(props as FilterChipProps).trailingIcon} // 型アサーションを追加
+        onClose={(props as FilterChipProps).onTrailingIconPress} // 型アサーションを追加
         showSelectedCheck={showSelectedCheck}
       >
         {children}
@@ -191,12 +195,12 @@ export const Chip = forwardRef<
     );
   }
 
-  if (props.variant === "input") {
+  if (variant === "input") {
     return (
       <PaperChip
         {...commonPaperChipProps}
-        closeIcon={props.trailingIcon}
-        onClose={props.onTrailingIconPress}
+        closeIcon={(props as InputChipProps).trailingIcon} // 型アサーションを追加
+        onClose={(props as InputChipProps).onTrailingIconPress} // 型アサーションを追加
       >
         {children}
       </PaperChip>
