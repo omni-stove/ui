@@ -6,14 +6,43 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon } from "../Icon";
 import { useTheme } from "../hooks";
 
+/**
+ * Defines the color palette for the FAB and its actions.
+ * - `primary`: Uses the primary color scheme.
+ * - `secondary`: Uses the secondary color scheme.
+ * - `tertiary`: Uses the tertiary color scheme.
+ */
 type Color = "primary" | "secondary" | "tertiary";
+
+/**
+ * Defines the size of the main FAB.
+ * - `medium`: A medium-sized FAB.
+ * - `large`: A large-sized FAB.
+ * (If not specified, a default small size is used)
+ */
 type Size = "medium" | "large";
+
+/**
+ * Represents a single action item in the FAB's speed dial.
+ * @param {IconSource} [icon] - The icon to display for the action.
+ * @param {string} label - The text label for the action.
+ * @param {() => void} onPress - Function to call when the action is pressed.
+ */
 type Action = {
   icon?: IconSource;
   label: string;
   onPress: () => void;
 };
 
+/**
+ * Props for the FAB (Floating Action Button) component.
+ * @param {Color} [props.color="primary"] - The color scheme for the FAB and its actions.
+ * @param {IconSource} props.icon - The icon for the main FAB.
+ * @param {() => void} [props.onPress] - Function to call when the main FAB is pressed (if no actions are provided or if actions are closed).
+ * @param {Size} [props.size] - The size of the main FAB. Defaults to a small size if not "medium" or "large".
+ * @param {Action[]} [props.actions] - An array of action items to display in a speed dial when the FAB is pressed.
+ * @param {string} [props.label] - Optional label for the main FAB (typically used for extended FABs).
+ */
 type Props = {
   color?: Color;
   icon: IconSource;
@@ -23,6 +52,16 @@ type Props = {
   label?: string;
 };
 
+/**
+ * A customizable Floating Action Button (FAB) component.
+ * It can function as a simple FAB or as a speed dial, revealing multiple actions when pressed.
+ * The component uses `react-native-paper`'s `FAB` and incorporates animations for opening/closing the speed dial.
+ *
+ * @param {Props} props - The component's props.
+ * @param {Ref<View>} ref - Ref for the outer View container.
+ * @returns {JSX.Element} The FAB component.
+ * @see {@link https://callstack.github.io/react-native-paper/docs/components/FAB/|React Native Paper FAB}
+ */
 export const FAB = forwardRef(
   (
     { icon, actions, onPress, color = "primary", size, label }: Props,
@@ -110,7 +149,7 @@ export const FAB = forwardRef(
         };
 
       return {
-        customSize: 56,
+        customSize: 56, // Default small FAB size
         iconSize: 24,
         labelFontSize: 16,
       };
@@ -194,7 +233,7 @@ export const FAB = forwardRef(
               >
                 <Fab
                   icon="close"
-                  customSize={56}
+                  customSize={56} // Close button is always small
                   style={[
                     styles.baseFab,
                     { backgroundColor: colorSet.container },

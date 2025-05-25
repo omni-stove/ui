@@ -29,6 +29,13 @@ import { useTheme } from "../hooks"; // Import useTheme from local hooks
 // react-native paper currently lacks a rich tooltip component:
 // https://github.com/callstack/react-native-paper/issues/4074
 
+/**
+ * Represents the measurement of the child element that triggers the tooltip.
+ * @param {number} width - The width of the child element.
+ * @param {number} height - The height of the child element.
+ * @param {number} pageX - The x-coordinate of the child element relative to the screen.
+ * @param {number} pageY - The y-coordinate of the child element relative to the screen.
+ */
 type ChildrenMeasurement = {
   width: number;
   height: number;
@@ -36,8 +43,18 @@ type ChildrenMeasurement = {
   pageY: number;
 };
 
+/**
+ * Represents the layout (dimensions) of the tooltip itself.
+ * Inherits from `LayoutRectangle`.
+ */
 type TooltipLayout = LayoutRectangle;
 
+/**
+ * Contains all necessary measurements to calculate the tooltip's position.
+ * @param {ChildrenMeasurement} children - Measurement of the child element.
+ * @param {TooltipLayout} tooltip - Layout of the tooltip content.
+ * @param {boolean} measured - Whether the measurements have been successfully taken.
+ */
 export type Measurement = {
   children: ChildrenMeasurement;
   tooltip: TooltipLayout;
@@ -58,6 +75,15 @@ const overflowBottom = (
   return childrenY + childrenHeight + tooltipHeight > layoutHeight;
 };
 
+/**
+ * Calculates the optimal X (horizontal) position for the tooltip.
+ * It tries to center the tooltip above/below the child element,
+ * while ensuring it doesn't overflow the screen edges.
+ *
+ * @param {ChildrenMeasurement} childrenMeasurement - The measurement of the child element.
+ * @param {TooltipLayout} tooltipLayout - The layout of the tooltip.
+ * @returns {number} The calculated left position for the tooltip.
+ */
 const getTooltipXPosition = (
   { pageX: childrenX, width: childrenWidth }: ChildrenMeasurement,
   { width: tooltipWidth }: TooltipLayout,
@@ -87,6 +113,15 @@ const getTooltipXPosition = (
   return idealX;
 };
 
+/**
+ * Calculates the optimal Y (vertical) position for the tooltip.
+ * It places the tooltip below the child element by default, or above if
+ * placing it below would cause it to overflow the bottom of the screen.
+ *
+ * @param {ChildrenMeasurement} childrenMeasurement - The measurement of the child element.
+ * @param {TooltipLayout} tooltipLayout - The layout of the tooltip.
+ * @returns {number} The calculated top position for the tooltip.
+ */
 const getTooltipYPosition = (
   { pageY: childrenY, height: childrenHeight }: ChildrenMeasurement,
   { height: tooltipHeight }: TooltipLayout,
@@ -99,6 +134,14 @@ const getTooltipYPosition = (
   return childrenY + childrenHeight;
 };
 
+/**
+ * Calculates the absolute top and left position for the tooltip based on
+ * the measurements of the child element and the tooltip itself.
+ * Returns an empty object if measurements are not yet available.
+ *
+ * @param {Measurement} measurement - The combined measurement data.
+ * @returns {Record<string, never> | { left: number; top: number }} The position object or an empty object.
+ */
 export const getTooltipPosition = ({
   children,
   tooltip,
@@ -114,11 +157,24 @@ export const getTooltipPosition = ({
   };
 };
 
+/**
+ * Represents an action button within a RichTooltip.
+ * @param {string} label - The text label for the action button.
+ * @param {() => void} [onPress] - Callback function invoked when the action button is pressed.
+ */
 type Action = {
   label: string;
   onPress?: () => void;
 };
 
+/**
+ * Props for the RichTooltip component.
+ * @param {Action[]} [actions=[]] - An array of action buttons to display in the tooltip.
+ * @param {ReactElement} children - The child element that triggers the tooltip. Must accept a ref.
+ * @param {string} [subhead] - An optional sub-headline for the tooltip.
+ * @param {string} supportingText - The main descriptive text of the tooltip.
+ * @param {boolean} [visible] - Controls the visibility of the tooltip. If undefined, visibility is handled internally based on hover/press.
+ */
 type RichTooltipProps = {
   actions?: Action[];
   children: ReactElement;
@@ -477,11 +533,37 @@ const getDynamicStyles = (
     // Add other dynamic styles here if needed
   });
 
+/**
+ * Props for the main Tooltip component.
+ * It can render either a "plain" tooltip (using `react-native-paper`'s Tooltip)
+ * or a "rich" tooltip (using the custom `RichTooltip` component).
+ *
+ * @param {"plain" | "rich"} [variant] - The variant of the tooltip to display.
+ *                                      If "plain", `PaperTooltipProps` are expected.
+ *                                      If "rich", `RichTooltipProps` are expected.
+ * @param {ReactElement} children - The child element that will trigger the tooltip.
+ *                                  For "rich" variant, it must accept a ref.
+ *                                  For "plain" variant, it's passed directly to `PaperTooltip`.
+ * @see {@link PaperTooltipProps}
+ * @see {@link RichTooltipProps}
+ */
 type TooltipProps = (
   | ({ variant?: "plain" } & PaperTooltipProps)
   | ({ variant: "rich" } & RichTooltipProps)
 ) & { children: ReactElement }; // Ensure children is always present
 
+/**
+ * A Tooltip component that can display either a simple "plain" tooltip
+ * (wrapping `react-native-paper`'s `Tooltip`) or a more complex "rich" tooltip
+ * with subheadings, supporting text, and action buttons, adhering to M3 guidelines.
+ *
+ * The `variant` prop determines which type of tooltip is rendered.
+ *
+ * @param {TooltipProps} props - The component's props, varying based on the `variant`.
+ * @returns {JSX.Element} The Tooltip component.
+ * @see {@link https://callstack.github.io/react-native-paper/docs/components/Tooltip/|React Native Paper Tooltip} (for "plain" variant)
+ * @see {@link RichTooltip} (for "rich" variant)
+ */
 export const Tooltip = (props: TooltipProps) => {
   if (props.variant === "rich") {
     const { variant, ...rest } = props;

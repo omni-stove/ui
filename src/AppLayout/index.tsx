@@ -12,6 +12,13 @@ import { useMainContentStyle } from "../Provider";
 import { Toolbar } from "../Toolbar";
 import { useTheme } from "../hooks";
 
+/**
+ * Represents an action item for the Appbar.
+ * @param {IconSource} icon - The icon to display for the action.
+ * @param {() => void} onPress - Function to call when the action is pressed.
+ * @param {string} [accessibilityLabel] - Accessibility label for the action.
+ * @param {string} [testID] - Test ID for the action.
+ */
 type AppbarAction = {
   icon: IconSource;
   onPress: () => void;
@@ -19,6 +26,23 @@ type AppbarAction = {
   testID?: string;
 };
 
+/**
+ * Props for the AppLayout component.
+ * @param {object} [props.appbar] - Configuration for the Appbar. If provided, an Appbar will be displayed at the top.
+ * @param {string} [props.appbar.title] - The title to display in the Appbar.
+ * @param {string} [props.appbar.subtitle] - The subtitle to display in the Appbar.
+ * @param {object} [props.appbar.backAction] - Configuration for the back action in the Appbar.
+ * @param {() => void} props.appbar.backAction.onPress - Function to call when the back action is pressed.
+ * @param {string} [props.appbar.backAction.accessibilityLabel] - Accessibility label for the back action.
+ * @param {AppbarAction[]} [props.appbar.actions] - An array of action items to display in the Appbar.
+ * @param {ComponentProps<typeof Toolbar>} [props.toolbar] - Props for the Toolbar component. If provided, a Toolbar will be displayed at the bottom.
+ * @param {ReactNode} props.children - The main content to be rendered within the layout.
+ * @param {"height" | "position" | "padding"} [props.keyboardBehavior] - Defines how the layout behaves when the keyboard is visible. Defaults to "padding" on iOS and "height" on other platforms.
+ * @param {number} [props.keyboardVerticalOffset] - The offset for the keyboard. Defaults to 0 on iOS and 25 on other platforms.
+ * @param {string} [props.testID] - Test ID for the AppLayout component.
+ * @param {string} [props.accessibilityLabel] - Accessibility label for the AppLayout component.
+ * @param {boolean} [props.autoAdjustForSideSheet=true] - Whether to automatically adjust the layout when a SideSheet is present. Defaults to true.
+ */
 type AppLayoutProps = {
   /** Appbar configuration - if provided, will be displayed at the top */
   appbar?: {
@@ -46,6 +70,17 @@ type AppLayoutProps = {
   autoAdjustForSideSheet?: boolean;
 };
 
+/**
+ * AppLayout provides a consistent layout structure for application screens.
+ * It can include an Appbar at the top, a Toolbar at the bottom, and handles
+ * keyboard avoidance and safe area insets.
+ * The layout can also automatically adjust for the presence of SideSheets.
+ *
+ * @param {AppLayoutProps} props - The component's props.
+ * @param {Ref<KeyboardAvoidingView>} ref - Ref for the underlying KeyboardAvoidingView.
+ * @returns {JSX.Element} The AppLayout component.
+ * @see {@link Toolbar}
+ */
 export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
   (
     {

@@ -2,12 +2,54 @@ import { Pressable, type StyleProp, type ViewStyle } from "react-native";
 import { Icon, TouchableRipple } from "react-native-paper";
 import { useTheme } from "../hooks";
 
-// Types based on M3 documentation
+/**
+ * Defines the overall size of the IconButton, affecting icon size and container dimensions.
+ * - `extra-small`
+ * - `small`
+ * - `medium`
+ * - `large`
+ * - `extra-large`
+ */
 type Size = "extra-small" | "small" | "medium" | "large" | "extra-large";
+
+/**
+ * Defines the shape of the IconButton's container.
+ * - `round`: A circular button.
+ * - `square`: A button with rounded corners (radius varies by size).
+ */
 type Shape = "round" | "square";
+
+/**
+ * Defines the visual style variant of the IconButton.
+ * - `filled`: A contained button with a background color.
+ * - `tonal`: A contained button with a secondary/tonal background color.
+ * - `outlined`: A button with a transparent background and a border.
+ * - `standard`: A button with a transparent background and no border (icon only).
+ */
 type Variant = "filled" | "tonal" | "outlined" | "standard";
+
+/**
+ * Defines the width type of the IconButton's visual container, allowing for adjustments to the default width.
+ * - `default`: Standard width for the given size.
+ * - `narrow`: A narrower version of the button.
+ * - `wide`: A wider version of the button.
+ */
 type WidthType = "default" | "narrow" | "wide";
 
+/**
+ * Props for the IconButton component.
+ * @param {string} props.icon - The name of the icon to display.
+ * @param {Size} [props.size="small"] - The overall size of the IconButton.
+ * @param {Shape} [props.shape="round"] - The shape of the IconButton.
+ * @param {Variant} [props.variant="filled"] - The visual style variant of the IconButton.
+ * @param {WidthType} [props.widthType="default"] - The width type of the IconButton's visual container.
+ * @param {() => void} [props.onPress] - Function to call when the button is pressed.
+ * @param {boolean} [props.disabled] - Whether the button is disabled.
+ * @param {boolean} [props.selected] - Whether the button is in a selected state (used for toggle buttons). This affects styling for some variants.
+ * @param {string} [props.accessibilityLabel] - Accessibility label for the button.
+ * @param {StyleProp<ViewStyle>} [props.style] - Custom style for the outer TouchableRipple container, affecting the touchable area.
+ * @param {string} [props.testID] - Test ID for the button.
+ */
 type Props = {
   icon: string;
   size?: Size;
@@ -145,6 +187,16 @@ const getCornerRadius = (
   }
 };
 
+/**
+ * A customizable IconButton component adhering to Material Design 3 (M3) specifications.
+ * It supports various sizes, shapes (round/square), visual variants (filled, tonal, outlined, standard),
+ * and width types (default, narrow, wide). It can also function as a toggle button using the `selected` prop.
+ * The component ensures a minimum touch target size for accessibility.
+ *
+ * @param {Props} props - The component's props.
+ * @returns {JSX.Element} The IconButton component.
+ * @see {@link https://m3.material.io/components/icon-buttons/specs|Material Design 3 - Icon buttons}
+ */
 export const IconButton = ({
   icon,
   size = "small",

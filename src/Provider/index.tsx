@@ -9,15 +9,33 @@ import type {
   SideSheetLayoutState,
 } from "../hooks/types";
 
+/**
+ * Props for the UIProvider component.
+ * @param {object} props - The component's props.
+ * @param {string} [props.keyColor] - Optional key color for the theme.
+ * @param {ReactNode} props.children - The child components to be rendered within the provider.
+ */
 interface ThemeProviderProps extends PropsWithChildren {
   keyColor?: string;
 }
 
-// SideSheet Layout Context
+/**
+ * Context for managing the layout of SideSheets.
+ * This context provides functions to register, unregister, and update SideSheets,
+ * as well as a function to get the style for the main content area,
+ * adjusting for any open standard SideSheets.
+ */
 const SideSheetLayoutContext = createContext<SideSheetLayoutContextType | null>(
   null,
 );
 
+/**
+ * Hook to access the SideSheetLayoutContext.
+ * Throws an error if used outside of a UIProvider.
+ *
+ * @returns {SideSheetLayoutContextType} The SideSheet layout context.
+ * @throws {Error} If used outside of UIProvider.
+ */
 export const useSideSheetLayout = () => {
   const context = useContext(SideSheetLayoutContext);
   if (!context) {
@@ -26,12 +44,26 @@ export const useSideSheetLayout = () => {
   return context;
 };
 
+/**
+ * Hook to get the style for the main content area.
+ * This style adjusts dynamically based on the presence and width of open standard SideSheets.
+ *
+ * @returns {ViewStyle} The style object for the main content.
+ */
 export const useMainContentStyle = () => {
   const { getMainContentStyle } = useSideSheetLayout();
   return getMainContentStyle();
 };
 
-// SideSheet Layout Provider Component
+/**
+ * Provider component for SideSheet layout management.
+ * Manages the state of registered SideSheets and provides context values
+ * to its children.
+ *
+ * @param {object} props - The component's props.
+ * @param {ReactNode} props.children - The child components.
+ * @returns {JSX.Element} The SideSheetLayoutProvider component.
+ */
 const SideSheetLayoutProvider = ({ children }: { children: ReactNode }) => {
   const [sideSheets, setSideSheets] = useState<
     Map<string, SideSheetLayoutState>
@@ -104,6 +136,16 @@ const SideSheetLayoutProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+/**
+ * UIProvider component that sets up the application's theme and layout context.
+ * It integrates Material 3 theming with React Native Paper and provides
+ * SideSheet layout management.
+ *
+ * @param {ThemeProviderProps} props - The component's props.
+ * @param {ReactNode} props.children - The child components to be rendered within the provider.
+ * @param {string} [props.keyColor="#6750A4"] - The primary color used to generate the Material 3 theme. Defaults to "#6750A4".
+ * @returns {JSX.Element} The UIProvider component.
+ */
 export const UIProvider = ({
   children,
   keyColor = "#6750A4",

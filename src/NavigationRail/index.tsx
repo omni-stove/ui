@@ -19,8 +19,25 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
+/**
+ * Defines the display variant of the NavigationRail.
+ * - `standard`: A persistent rail typically shown on the left side of the screen.
+ * - `modal`: A rail that appears as a modal, often triggered by a menu button.
+ */
 type Variant = "standard" | "modal";
 
+/**
+ * Represents a single item in the NavigationRail.
+ * @param {string} key - A unique key for the navigation item.
+ * @param {IconSource} icon - The icon to display for the item.
+ * @param {string} label - The text label for the item.
+ * @param {() => void} onPress - Function to call when the item is pressed.
+ * @param {object} [badge] - Optional badge configuration for the item.
+ * @param {string} badge.label - The text content of the badge.
+ * @param {"small" | "large"} [badge.size] - The size of the badge.
+ * @param {string} [ariaLabel] - Accessibility label for the item.
+ * @param {string} [testID] - Test ID for the item.
+ */
 export type NavigationRailItem = {
   key: string;
   icon: IconSource;
@@ -34,6 +51,19 @@ export type NavigationRailItem = {
   testID?: string;
 };
 
+/**
+ * Props for the NavigationRail component.
+ * @param {Variant} [variant="standard"] - The display variant of the NavigationRail.
+ * @param {NavigationRailItem[]} items - An array of navigation items to display.
+ * @param {string} selectedItemKey - The key of the currently selected navigation item.
+ * @param {() => void} [onMenuPress] - Callback function invoked when the internal menu button (for expanding/collapsing or closing modal) is pressed.
+ * @param {IconSource} [fabIcon] - Icon for the Floating Action Button (FAB) within the rail.
+ * @param {string} [fabLabel] - Label for the FAB (visible when the rail is expanded).
+ * @param {() => void} [onFabPress] - Callback function invoked when the FAB is pressed.
+ * @param {Status} [initialStatus="collapsed"] - Initial expanded/collapsed status for the `standard` variant. Ignored for `modal` variant (always starts expanded within modal).
+ * @param {boolean} [initialModalOpen=false] - For `modal` variant, defines if the modal is initially open.
+ * @param {() => void} [onDismiss] - For `modal` variant, callback function invoked when the modal is dismissed.
+ */
 type Props = {
   variant?: Variant;
   items: NavigationRailItem[];
@@ -47,8 +77,22 @@ type Props = {
   onDismiss?: () => void; // For modal variant: when modal is dismissed
 };
 
+/**
+ * Defines the expanded or collapsed status of the NavigationRail (primarily for `standard` variant).
+ * - `collapsed`: The rail is narrow, showing only icons.
+ * - `expanded`: The rail is wider, showing icons and labels.
+ */
 type Status = "collapsed" | "expanded";
 
+/**
+ * NavigationRail provides a side navigation component, conforming to Material Design 3 guidelines.
+ * It supports two main variants: `standard` (a persistent rail) and `modal` (a rail appearing in a modal).
+ * The rail can be expanded or collapsed, can include a FAB, and navigation items can display badges.
+ *
+ * @param {Props} props - The component's props.
+ * @param {ComponentRef<typeof View>} ref - Ref for the main animated View container of the rail.
+ * @returns {JSX.Element} The NavigationRail component.
+ */
 export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
   (
     {
@@ -498,10 +542,5 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
 
     // Standard variant
     return railContent; // This should only be returned if not modal, or handled above.
-    // The current structure means if variant is not modal, it returns railContent.
-    // If variant is modal, it returns the modal structure (or null if not isModalOpen and no toggle button).
-    // This seems okay. The top-level return railContent is for standard.
   },
 );
-
-NavigationRail.displayName = "NavigationRail";

@@ -1,8 +1,23 @@
+/**
+ * Represents a 2D position (x, y coordinates).
+ * @param {number} x - The x-coordinate.
+ * @param {number} y - The y-coordinate.
+ */
 export type DragPosition = {
   x: number;
   y: number;
 };
 
+/**
+ * Represents a droppable area in the table.
+ * @param {string} id - A unique identifier for the drop zone (typically the ID of the target row/column).
+ * @param {"before" | "after"} position - Indicates if the drop zone is before or after the target element.
+ * @param {object} bounds - The screen coordinates and dimensions of the drop zone.
+ * @param {number} bounds.top - The top y-coordinate.
+ * @param {number} bounds.bottom - The bottom y-coordinate.
+ * @param {number} bounds.left - The left x-coordinate.
+ * @param {number} bounds.right - The right x-coordinate.
+ */
 export type DropZone = {
   id: string;
   position: "before" | "after";
@@ -15,7 +30,10 @@ export type DropZone = {
 };
 
 /**
- * 指定された座標がドロップゾーン内にあるかチェック
+ * Checks if a given screen position is within the bounds of a drop zone.
+ * @param {DragPosition} position - The current drag position (x, y).
+ * @param {DropZone} dropZone - The drop zone to check against.
+ * @returns {boolean} True if the position is inside the drop zone, false otherwise.
  */
 export const isInDropZone = (
   position: DragPosition,
@@ -33,7 +51,13 @@ export const isInDropZone = (
 };
 
 /**
- * 最も近いドロップゾーンを見つける
+ * Finds the closest drop zone to a given screen position from a list of available drop zones.
+ * If the position is directly inside a drop zone, that zone is returned immediately.
+ * Otherwise, it calculates the distance to the center of each zone and returns the nearest one.
+ *
+ * @param {DragPosition} position - The current drag position (x, y).
+ * @param {DropZone[]} dropZones - An array of available drop zones.
+ * @returns {DropZone | null} The closest drop zone, or null if no drop zones are provided.
  */
 export const findClosestDropZone = (
   position: DragPosition,
@@ -64,7 +88,14 @@ export const findClosestDropZone = (
 };
 
 /**
- * 配列内の要素を移動
+ * Moves an item within an array from a specified index to another.
+ * Returns a new array with the item moved, without modifying the original array.
+ *
+ * @template T - The type of items in the array.
+ * @param {T[]} array - The original array.
+ * @param {number} fromIndex - The index of the item to move.
+ * @param {number} toIndex - The index to move the item to.
+ * @returns {T[]} A new array with the item moved.
  */
 export const moveArrayItem = <T>(
   array: T[],
@@ -78,7 +109,10 @@ export const moveArrayItem = <T>(
 };
 
 /**
- * ハプティックフィードバックを実行（プレースホルダー）
+ * Triggers haptic feedback.
+ * (Placeholder: Actual implementation depends on a haptic feedback library like `expo-haptics`).
+ *
+ * @param {"light" | "medium" | "heavy"} [type="medium"] - The intensity of the haptic feedback.
  */
 export const triggerHapticFeedback = async (
   type: "light" | "medium" | "heavy" = "medium",
@@ -88,14 +122,25 @@ export const triggerHapticFeedback = async (
 };
 
 /**
- * ドラッグ中の要素のZ-indexを計算
+ * Calculates the z-index for a draggable element.
+ * Returns a higher z-index if the element is currently being dragged.
+ *
+ * @param {boolean} isDragging - Whether the element is currently being dragged.
+ * @returns {number} The calculated z-index.
  */
 export const getDragZIndex = (isDragging: boolean): number => {
   return isDragging ? 1000 : 1;
 };
 
 /**
- * ドロップゾーンの境界を計算
+ * Calculates the screen bounds for a drop zone relative to a target element.
+ * The drop zone can be positioned "before" or "after" the element,
+ * and can be oriented "horizontal" (for columns) or "vertical" (for rows).
+ *
+ * @param {object} elementLayout - The layout of the target element ({ x, y, width, height }).
+ * @param {"before" | "after"} position - Whether the drop zone is before or after the element.
+ * @param {"horizontal" | "vertical"} [orientation="vertical"] - The orientation of the drop zone.
+ * @returns {DropZone["bounds"]} The calculated bounds of the drop zone.
  */
 export const calculateDropZoneBounds = (
   elementLayout: { x: number; y: number; width: number; height: number },

@@ -8,12 +8,27 @@ import {
 } from "react-native-paper-dates";
 import { TextField } from "../TextField";
 
+/**
+ * Defines the type of the DatePicker.
+ * - `single`: Allows selection of a single date.
+ * - `range`: Allows selection of a date range (start and end dates).
+ * - `multiple`: Allows selection of multiple individual dates.
+ */
 export type DatePickerType = "single" | "range" | "multiple";
 
+/**
+ * Defines the type of the value for the DatePicker based on its `DatePickerType`.
+ * - For `single` type, it's a single `Date` object or `undefined`.
+ * - For `range` or `multiple` types, it's an array of `Date` objects or `undefined`.
+ */
 export type DatePickerValue<T extends DatePickerType> = T extends "single"
   ? Date | undefined
   : Date[] | undefined;
 
+/**
+ * Defines the type of the parameters received by the `onConfirm` callback of the `DatePickerModal`,
+ * based on the `DatePickerType`. This is used internally to correctly handle confirmation parameters.
+ */
 type ConfirmParamsType<T extends DatePickerType> = T extends "single"
   ? Parameters<NonNullable<DatePickerModalSingleProps["onConfirm"]>>[0]
   : T extends "range"
@@ -22,6 +37,29 @@ type ConfirmParamsType<T extends DatePickerType> = T extends "single"
       ? Parameters<NonNullable<DatePickerModalMultiProps["onConfirm"]>>[0]
       : never;
 
+/**
+ * Props for the DatePicker component.
+ * @template T - The type of the date picker, extending `DatePickerType`.
+ * @param {T} props.type - The type of date picker (`single`, `range`, or `multiple`).
+ * @param {DatePickerValue<T>} [props.value] - The currently selected date(s). This makes the component controlled.
+ * @param {DatePickerValue<T>} [props.defaultValue] - The default selected date(s) for uncontrolled usage.
+ * @param {(value: DatePickerValue<T>) => void} [props.onChange] - Callback function invoked when the date selection is confirmed.
+ * @param {string} [props.label] - Label for the TextField that displays the selected date(s).
+ * @param {string} [props.supportingText] - Supporting text displayed below the TextField.
+ * @param {"outlined" | "filled"} [props.textFieldVariant="filled"] - Variant of the TextField.
+ * @param {boolean} [props.isDisabled=false] - Whether the DatePicker is disabled.
+ * @param {string} [props.errorMessage] - Error message displayed below the TextField.
+ * @param {boolean} [props.required=false] - Whether the field is required. Adds an asterisk to the label.
+ * @param {object} [props.validRange] - Defines the valid range of dates that can be selected.
+ * @param {Date} [props.validRange.startDate] - The earliest selectable date.
+ * @param {Date} [props.validRange.endDate] - The latest selectable date.
+ * @param {Date[]} [props.validRange.disabledDates] - An array of specific dates that are disabled.
+ * @param {string} [props.locale="ja"] - Locale for the date picker modal (e.g., "en", "ja").
+ * @param {string} [props.saveLabel] - Custom label for the save button in the modal.
+ * @param {string} [props.cancelLabel] - Custom label for the cancel button in the modal.
+ * @param {string} [props.startLabel] - Custom label for the start date input (for `range` type).
+ * @param {string} [props.endLabel] - Custom label for the end date input (for `range` type).
+ */
 export type Props<T extends DatePickerType> = {
   /**
    * The type of date picker.
@@ -105,6 +143,17 @@ export type Props<T extends DatePickerType> = {
   endLabel?: string;
 };
 
+/**
+ * A DatePicker component that allows users to select a single date, a date range, or multiple dates.
+ * It uses a `TextField` to display the selected date(s) and opens a `DatePickerModal` from
+ * `react-native-paper-dates` for selection.
+ *
+ * @template T - The type of the date picker, extending `DatePickerType`.
+ * @param {Props<T>} props - The component's props.
+ * @returns {JSX.Element} The DatePicker component.
+ * @see {@link TextField}
+ * @see {@link https://www.react-native-paper-dates.com/docs/date-picker/date-picker-modal|React Native Paper Dates - DatePickerModal}
+ */
 export const DatePicker = <T extends DatePickerType>({
   type,
   value: controlledValue,

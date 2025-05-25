@@ -6,6 +6,21 @@ import { getSpacingValue } from "./utils";
 
 export { GridItem } from "./GridItem";
 
+/**
+ * A Grid component that supports both standard and masonry layouts.
+ *
+ * In `standard` mode, children are laid out in a simple row-wrapping grid.
+ * It's recommended to use `GridItem` as children for standard grids to handle column spanning.
+ *
+ * In `masonry` mode, children are arranged in a Pinterest-like layout,
+ * where items of varying heights are positioned to minimize gaps.
+ * The masonry layout dynamically calculates item positions based on their heights.
+ *
+ * @param {GridProps} props - The component's props.
+ * @returns {JSX.Element} The Grid component.
+ * @see {@link GridItem}
+ * @see {@link GridProps}
+ */
 export const Grid = ({
   columns = "auto",
   spacing = "comfortable",

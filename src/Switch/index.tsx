@@ -9,6 +9,15 @@ import { Icon } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { useTheme } from "../hooks";
 
+/**
+ * Props for the Switch component.
+ * @param {boolean} props.selected - The current state of the switch (true for on, false for off).
+ * @param {() => void} props.onPress - Callback function invoked when the switch is pressed or its state changes.
+ * @param {boolean} [props.fluid] - (Not currently implemented) Intended for a fluid animation style.
+ * @param {IconSource} [props.switchOnIcon="check"] - Icon to display when the switch is in the "on" state. Defaults to "check".
+ * @param {IconSource} [props.switchOffIcon] - Icon to display when the switch is in the "off" state.
+ * @param {boolean} [props.disabled] - Whether the switch is disabled.
+ */
 type SwitchProps = {
   selected: boolean;
   onPress: () => void;
@@ -18,6 +27,15 @@ type SwitchProps = {
   disabled?: boolean;
 };
 
+/**
+ * A custom Switch component with Material Design 3 styling and animations.
+ * It supports gestures for toggling and displays icons for on/off states.
+ * The component uses `react-native-gesture-handler` for pan gesture detection
+ * and `Animated` API for smooth transitions.
+ *
+ * @param {SwitchProps} props - The component's props.
+ * @returns {JSX.Element} The Switch component.
+ */
 export const Switch = ({
   selected,
   onPress,

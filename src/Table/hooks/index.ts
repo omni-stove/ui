@@ -17,6 +17,34 @@ import {
 } from "../types";
 import type { DataWithId, EnhancedDataTableProps } from "../types";
 
+/**
+ * Custom hook for managing the state and logic of the `Table` component.
+ * It integrates `@tanstack/react-table` with the features and props of the `EnhancedDataTableProps`.
+ * This includes handling sorting, pagination, column filters, row selection, column visibility,
+ * and global filtering (search). It also manages local UI state for search visibility
+ * and column visibility menu.
+ *
+ * @template T - The type of the data for each row, extending `DataWithId`.
+ * @param {EnhancedDataTableProps<T>} props - The props passed to the `Table` component.
+ * @returns {object} An object containing:
+ *  - `searchValue`: Current value of the search input.
+ *  - `setSearchValue`: Function to update the search value.
+ *  - `searchVisible`: Boolean indicating if the search input is visible.
+ *  - `setSearchVisible`: Function to toggle search input visibility.
+ *  - `columnVisibilityMenuVisible`: Boolean indicating if the column visibility menu is open.
+ *  - `setColumnVisibilityMenuVisible`: Function to toggle column visibility menu.
+ *  - `theme`: The current theme object from `useTheme`.
+ *  - `table`: The table instance from `useReactTable`.
+ *  - `enableSorting`: Boolean indicating if sorting is enabled.
+ *  - `enableFiltering`: Boolean indicating if column filtering is enabled.
+ *  - `enablePagination`: Boolean indicating if pagination is enabled.
+ *  - `enableRowSelection`: Boolean indicating if row selection is enabled.
+ *  - `enableRowDrag`: Boolean indicating if row dragging is enabled.
+ *  - `enableColumnDrag`: Boolean indicating if column dragging is enabled.
+ * @see {@link Table}
+ * @see {@link EnhancedDataTableProps}
+ * @see {@link https://tanstack.com/table/v8|TanStack Table v8}
+ */
 export const useTable = <T extends DataWithId>(
   props: EnhancedDataTableProps<T>,
 ) => {

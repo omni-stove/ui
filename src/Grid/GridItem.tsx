@@ -3,10 +3,28 @@ import { useMaxColumns } from "./hooks";
 import type { GridItemProps } from "./types";
 import { getSpacingValue } from "./utils";
 
+/**
+ * Extended props for the GridItem component, including spacing options.
+ * @augments GridItemProps
+ * @param {number | "compact" | "comfortable" | "spacious"} [spacing="comfortable"] - The spacing around the grid item. Inherits from the parent Grid if not specified, but can be overridden.
+ */
 type GridItemPropsExtended = GridItemProps & {
   spacing?: number | "compact" | "comfortable" | "spacious";
 };
 
+/**
+ * A GridItem component designed to be used as a child of the `Grid` component,
+ * particularly in `standard` mode. It allows specifying how many columns
+ * the item should span within the grid.
+ *
+ * The width of the GridItem is calculated based on the `span` prop and the
+ * total number of columns available in the parent `Grid`.
+ *
+ * @param {GridItemPropsExtended} props - The component's props.
+ * @returns {JSX.Element} The GridItem component.
+ * @see {@link Grid}
+ * @see {@link GridItemProps}
+ */
 export const GridItem = ({
   children,
   span = 1,

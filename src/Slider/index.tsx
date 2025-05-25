@@ -10,10 +10,18 @@ import {
 import { Text } from "react-native-paper";
 import { useTheme } from "../hooks";
 
-/** Defines the interaction mode of the slider. */
+/**
+ * Defines the interaction mode of the slider.
+ * - `continuous`: The value changes continuously as the user drags the thumb.
+ * - `centered`: (Not yet implemented) The slider might have a centered origin or different interaction.
+ */
 type Mode = "continuous" | "centered";
 
-/** Defines the visual variant of the slider. */
+/**
+ * Defines the visual variant of the slider.
+ * - `number`: A standard slider for selecting a single numeric value.
+ * - `range`: (Not yet fully implemented for value handling) Intended for selecting a range of values. Currently behaves like 'number'.
+ */
 type Variant = "number" | "range";
 
 /**
@@ -46,7 +54,14 @@ type Props = {
   testID?: string;
 };
 
-// Custom Thumb Component
+/**
+ * Custom thumb (the draggable part) for the Slider.
+ * Its height changes when the user starts sliding.
+ * @param {object} props - The component's props.
+ * @param {boolean} props.isDisabled - Whether the slider is disabled.
+ * @param {boolean} props.isSliding - Whether the user is currently dragging the thumb.
+ * @returns {JSX.Element} The CustomThumb component.
+ */
 const CustomThumb = ({
   isDisabled,
   isSliding,
@@ -72,7 +87,14 @@ const CustomThumb = ({
   );
 };
 
-// Value Indicator Component
+/**
+ * Component to display the current value of the slider above the thumb.
+ * It appears when the user starts sliding and fades out when sliding stops.
+ * @param {object} props - The component's props.
+ * @param {number} props.value - The current value to display.
+ * @param {boolean} props.visible - Whether the indicator should be visible.
+ * @returns {JSX.Element} The ValueIndicator component.
+ */
 const ValueIndicator = ({
   value,
   visible,
@@ -115,6 +137,18 @@ const ValueIndicator = ({
   );
 };
 
+/**
+ * A Slider component that allows users to select a value from a continuous or stepped range.
+ * It features a custom thumb and a value indicator that appears during sliding.
+ * Based on `@react-native-community/slider`.
+ *
+ * Note: `range` variant and `centered` mode are not fully implemented yet.
+ *
+ * @param {Props} props - The component's props.
+ * @param {React.Ref<View>} ref - Ref for the main container View.
+ * @returns {JSX.Element} The Slider component.
+ * @see {@link https://github.com/react-native-community/react-native-slider|@react-native-community/slider}
+ */
 export const Slider = forwardRef<View, Props>(
   (
     {

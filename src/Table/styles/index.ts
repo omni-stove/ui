@@ -1,6 +1,15 @@
 import { StyleSheet } from "react-native";
 import type { ExtendedTheme } from "../../hooks/types";
 
+/**
+ * Creates a StyleSheet object containing styles for the `Table` component and its sub-components.
+ * The styles are generated based on the provided theme.
+ *
+ * @param {ExtendedTheme} theme - The extended theme object containing Material 3 colors and other theme properties.
+ * @returns {StyleSheet.NamedStyles<any>} A StyleSheet object with various styles for the table.
+ * @see {@link Table}
+ * @see {@link ExtendedTheme}
+ */
 export const createTableStyles = (theme: ExtendedTheme) =>
   StyleSheet.create({
     container: {

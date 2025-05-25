@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import React from "react";
+import { useState } from "react";
 import { View } from "react-native";
 import { Button, Menu as Component, Divider } from "react-native-paper";
 
@@ -34,7 +34,7 @@ const MenuItems = () => (
 
 export const Default: Story = {
   render: function Render(args) {
-    const [visible, setVisible] = React.useState(false);
+    const [visible, setVisible] = useState(false);
     const openMenu = () => setVisible(true);
     const closeMenu = () => setVisible(false);
 
@@ -53,7 +53,7 @@ export const Default: Story = {
 
 export const WithLeadingIcon: Story = {
   render: function Render(args) {
-    const [visible, setVisible] = React.useState(false);
+    const [visible, setVisible] = useState(false);
     const openMenu = () => setVisible(true);
     const closeMenu = () => setVisible(false);
 

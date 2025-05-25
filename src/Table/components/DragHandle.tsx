@@ -6,6 +6,19 @@ import { useTheme } from "../../hooks";
 import type { DragAnimationConfig } from "../animations/dragAnimations";
 import type { DragPosition } from "../utils/dragUtils";
 
+/**
+ * Props for the DragHandle component.
+ * @param {"small" | "medium" | "large"} [size="medium"] - The size of the drag handle, affecting icon and container size.
+ * @param {boolean} [disabled=false] - Whether the drag handle is disabled.
+ * @param {() => void} [onPress] - Optional press handler if the handle is not used for dragging (e.g., when dragging is disabled).
+ * @param {string} [testID] - Test ID for the component.
+ * @param {string} [rowId] - The ID of the row associated with this drag handle (required for drag operations).
+ * @param {(id: string, position: DragPosition) => void} [onDragStart] - Callback invoked when dragging starts.
+ * @param {(position: DragPosition) => void} [onDragUpdate] - Callback invoked when the drag position updates.
+ * @param {() => void} [onDragEnd] - Callback invoked when dragging ends.
+ * @param {boolean} [isDragging=false] - Whether the associated row is currently being dragged.
+ * @param {DragAnimationConfig} [animationConfig] - Shared values for controlling drag animations.
+ */
 type DragHandleProps = {
   size?: "small" | "medium" | "large";
   disabled?: boolean;
@@ -20,6 +33,15 @@ type DragHandleProps = {
   animationConfig?: DragAnimationConfig;
 };
 
+/**
+ * A DragHandle component used within table rows to initiate drag and drop operations.
+ * It displays a drag icon and uses `react-native-gesture-handler` to detect pan gestures.
+ * Applies animations during drag via `DragAnimationConfig`.
+ * If drag functionality is disabled or not configured, it can act as a simple pressable icon.
+ *
+ * @param {DragHandleProps} props - The component's props.
+ * @returns {JSX.Element} The DragHandle component.
+ */
 export const DragHandle = ({
   size = "medium",
   disabled = false,

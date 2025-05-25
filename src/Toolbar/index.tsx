@@ -5,11 +5,35 @@ import { Icon, TouchableRipple } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { useTheme } from "../hooks";
 
-// M3 Toolbar variants and sizes
+/**
+ * Defines the visual variant of the Toolbar.
+ * - `docked`: A toolbar docked to the edge of the screen, typically the bottom.
+ * - `floating`: A toolbar that floats above the content, with rounded corners and elevation.
+ */
 type Variant = "docked" | "floating";
+
+/**
+ * Defines the size of the Toolbar, affecting its height and internal typography.
+ * - `small`
+ * - `medium`
+ * - `large`
+ */
 type Size = "small" | "medium" | "large";
+
+/**
+ * Defines the alignment of the actions within the Toolbar.
+ * - `start`: Actions are aligned to the start (left).
+ * - `center`: Actions are centered.
+ */
 type Alignment = "start" | "center";
 
+/**
+ * Represents a single action item in the Toolbar.
+ * @param {IconSource} icon - The icon to display for the action.
+ * @param {() => void} onPress - Function to call when the action is pressed.
+ * @param {string} [accessibilityLabel] - Accessibility label for the action.
+ * @param {string} [testID] - Test ID for the action.
+ */
 type ActionItem = {
   icon: IconSource;
   onPress: () => void;
@@ -17,6 +41,22 @@ type ActionItem = {
   testID?: string;
 };
 
+/**
+ * Props for the Toolbar component.
+ * @param {Variant} [props.variant="docked"] - The visual variant of the Toolbar.
+ * @param {Size} [props.size="small"] - The size of the Toolbar.
+ * @param {Alignment} [props.alignment="center"] - The alignment of action items within the Toolbar.
+ * @param {IconSource} [props.navigationIcon] - Icon to display for navigation (e.g., back arrow, menu).
+ * @param {() => void} [props.onNavigationPress] - Callback function invoked when the navigation icon is pressed.
+ * @param {ActionItem[]} [props.actions=[]] - An array of action items to display in the Toolbar (max 3 recommended).
+ * @param {string} [props.testID] - Test ID for the Toolbar.
+ * @param {string} [props.accessibilityLabel] - Accessibility label for the Toolbar.
+ * @param {object} [props.fab] - Configuration for a Floating Action Button (FAB) to be displayed with the Toolbar.
+ * @param {IconSource} props.fab.icon - The icon for the FAB.
+ * @param {() => void} props.fab.onPress - Function to call when the FAB is pressed.
+ * @param {string} [props.fab.accessibilityLabel] - Accessibility label for the FAB.
+ * @param {string} [props.fab.testID] - Test ID for the FAB.
+ */
 type Props = {
   /** Toolbar variant */
   variant?: Variant;
@@ -85,6 +125,16 @@ const getToolbarDimensions = (size: Size) => {
   }
 };
 
+/**
+ * A Toolbar component adhering to Material Design 3 (M3) specifications.
+ * It supports `docked` and `floating` variants, different sizes, and can include
+ * a navigation icon, action items, and a Floating Action Button (FAB).
+ *
+ * @param {Props} props - The component's props.
+ * @param {Ref<View>} ref - Ref for the main container View.
+ * @returns {JSX.Element} The Toolbar component.
+ * @see {@link https://m3.material.io/components/bottom-app-bar/specs|Material Design 3 - Bottom app bar}
+ */
 export const Toolbar = forwardRef<View, Props>(
   (
     {

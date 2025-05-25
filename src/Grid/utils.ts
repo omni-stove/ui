@@ -1,7 +1,11 @@
 import type { MasonryItem, MasonryLayout, SpacingToken } from "./types";
 
 /**
- * Material Design 3のスペーシングトークンを数値に変換
+ * Converts Material Design 3 spacing tokens ("compact", "comfortable", "spacious")
+ * or a numeric value into a numerical spacing value.
+ *
+ * @param {number | SpacingToken} spacing - The spacing token or a numeric value.
+ * @returns {number} The numerical spacing value. Defaults to 16 for "comfortable" or unknown tokens.
  */
 export const getSpacingValue = (spacing: number | SpacingToken): number => {
   if (typeof spacing === "number") return spacing;
@@ -14,12 +18,24 @@ export const getSpacingValue = (spacing: number | SpacingToken): number => {
     case "spacious":
       return 24;
     default:
-      return 16;
+      return 16; // Default to comfortable
   }
 };
 
 /**
- * Masonryレイアウトの位置を計算
+ * Calculates the positions and total height for items in a masonry layout.
+ * It distributes items across a specified number of columns, attempting to keep
+ * column heights balanced.
+ *
+ * @param {MasonryItem[]} items - An array of items to be laid out, each with an id and height.
+ * @param {number} columns - The number of columns in the masonry layout.
+ * @param {number} spacing - The spacing (gap) between items, both horizontally and vertically.
+ * @param {number} containerWidth - The total width available for the masonry layout.
+ * @returns {MasonryLayout} An object containing an array of calculated item positions (`positions`)
+ *                          and the total height (`totalHeight`) of the layout.
+ *                          Returns an empty layout if columns or containerWidth is non-positive.
+ * @see {@link MasonryItem}
+ * @see {@link MasonryLayout}
  */
 export const calculateMasonryLayout = (
   items: MasonryItem[],
@@ -60,13 +76,17 @@ export const calculateMasonryLayout = (
 
   return {
     positions,
-    totalHeight: Math.max(0, totalHeight),
+    totalHeight: Math.max(0, totalHeight), // Ensure totalHeight is not negative
   };
 };
 
 /**
- * Material Design 3のブレークポイントに基づいてカラム数を決定
- * 12カラムシステムを基準とした適切なカラム数を返す
+ * Determines the appropriate number of columns for a grid based on Material Design 3 breakpoints
+ * and the provided screen width. It typically returns 4, 8, or 12 columns.
+ *
+ * @param {number} width - The current screen or container width.
+ * @returns {number} The number of columns to use (4 for mobile, 8 for tablet, 12 for desktop).
+ * @see {@link https://m3.material.io/foundations/layout/applying-layout/window-size-classes|M3 Window size classes}
  */
 export const getResponsiveColumns = (width: number): number => {
   // Material Design 3 breakpoints
@@ -76,8 +96,12 @@ export const getResponsiveColumns = (width: number): number => {
 };
 
 /**
- * Material Design 3のブレークポイントに基づいて最大カラム数を決定
- * GridItemで使用する基準カラム数
+ * Determines the maximum number of columns for a grid based on Material Design 3 breakpoints.
+ * This is used as a reference by `GridItem` to calculate its span.
+ *
+ * @param {number} width - The current screen or container width.
+ * @returns {number} The maximum number of columns (4 for mobile, 8 for tablet, 12 for desktop).
+ * @see {@link https://m3.material.io/foundations/layout/applying-layout/window-size-classes|M3 Window size classes}
  */
 export const getMaxColumns = (width: number): number => {
   // Material Design 3 breakpoints

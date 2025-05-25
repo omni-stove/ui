@@ -10,6 +10,11 @@ import type {
 import type { TextInput as RNTextInput } from "react-native";
 import { HelperText, TextInput } from "react-native-paper";
 
+/**
+ * Defines the visual style variant of the TextField.
+ * - `filled`: A TextField with a background color (React Native Paper's `flat` mode).
+ * - `outlined`: A TextField with an outline border.
+ */
 type TextFieldVariant = "filled" | "outlined";
 type Props = {
   /**
@@ -70,7 +75,15 @@ type Props = {
 };
 
 /**
- * TextField コンポーネント
+ * A customizable TextField component based on `react-native-paper`'s `TextInput`.
+ * It supports features like error messages, supporting text, character counter,
+ * start/end adornments (icons or text), and different visual variants.
+ *
+ * @param {Props} props - The component's props.
+ * @param {React.Ref<RNTextInput>} ref - Ref to be forwarded to the underlying `react-native-paper` TextInput component.
+ * @returns {JSX.Element} The TextField component.
+ * @see {@link https://callstack.github.io/react-native-paper/docs/components/TextInput/|React Native Paper TextInput}
+ * @see {@link HelperText}
  */
 export const TextField = forwardRef<RNTextInput, Props>(
   // Propsのみを指定

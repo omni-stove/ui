@@ -62,6 +62,23 @@ type Props = {
   hasDivider?: boolean;
 };
 
+/**
+ * A SideSheet component that can be displayed as a standard persistent panel
+ * or as a modal. It typically appears from the left or right edge of the screen
+ * to display supplementary content or actions.
+ *
+ * The component integrates with `SideSheetLayoutContext` (from `UIProvider`)
+ * to manage its state and potentially affect the layout of other components
+ * when in `standard` variant.
+ *
+ * @param {Props} props - The component's props.
+ * @param {React.Ref<View>} ref - Ref for the main Surface container of the SideSheet.
+ * @returns {JSX.Element} The SideSheet component.
+ * @see {@link UIProvider}
+ * @see {@link Portal}
+ * @see {@link Modal}
+ * @see {@link Surface}
+ */
 export const SideSheet = forwardRef<View, Props>(
   (
     {

@@ -8,8 +8,22 @@ import {
 } from "react-native-paper";
 import { useTheme } from "../hooks";
 
+/**
+ * Represents the possible states of a checkbox.
+ * - `true`: The checkbox is checked.
+ * - `false`: The checkbox is unchecked.
+ * - `"indeterminate"`: The checkbox is in an indeterminate state.
+ */
 type CheckedState = boolean | "indeterminate";
 
+/**
+ * Props for the Checkbox component.
+ * @param {CheckedState} props.checked - The current checked state of the checkbox.
+ * @param {(checked: CheckedState) => void} [props.onChangeCheck] - Callback function invoked when the checkbox state changes.
+ * @param {boolean} [props.disabled=false] - Whether the checkbox is disabled.
+ * @param {string} [props.testID] - Test ID for the checkbox.
+ * @param {string} [props.label] - Optional label to display next to the checkbox.
+ */
 type Props = {
   checked: CheckedState;
   onChangeCheck?: (checked: CheckedState) => void;
@@ -18,6 +32,18 @@ type Props = {
   label?: string;
 };
 
+/**
+ * Core Checkbox rendering component.
+ * Handles the visual representation of checked, unchecked, and indeterminate states.
+ * This component is primarily for internal use by the main `Checkbox` component.
+ *
+ * @param {object} props - The component's props.
+ * @param {CheckedState} props.checked - The current checked state.
+ * @param {boolean} [props.disabled=false] - Whether the checkbox is disabled.
+ * @param {string} [props.testID] - Test ID for the checkbox.
+ * @param {() => void} props.onPress - Function to call when the checkbox is pressed.
+ * @returns {JSX.Element} The core checkbox element.
+ */
 const CheckboxCore = ({
   checked,
   disabled = false,
@@ -89,6 +115,21 @@ const CheckboxCore = ({
   );
 };
 
+/**
+ * A Checkbox component that supports checked, unchecked, and indeterminate states.
+ * It can optionally display a label next to the checkbox.
+ * The component handles state transitions:
+ * - `false` -> `true`
+ * - `true` -> `false`
+ * - `indeterminate` -> `true` (when pressed)
+ *
+ * It uses `react-native-paper`'s `Checkbox` for standard states and provides a custom
+ * implementation for the `indeterminate` state.
+ *
+ * @param {Props} props - The component's props.
+ * @returns {JSX.Element} The Checkbox component.
+ * @see {@link https://callstack.github.io/react-native-paper/docs/components/Checkbox/|React Native Paper Checkbox}
+ */
 export const Checkbox = ({
   checked,
   onChangeCheck,

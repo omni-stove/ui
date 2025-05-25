@@ -6,6 +6,11 @@ import { useTheme as usePaperTheme } from "react-native-paper";
 import type { ExtendedTheme, Material3Colors } from "./types";
 
 // ARGB to HEXA 変換関数（アルファ値含む）
+/**
+ * Converts an ARGB (Alpha, Red, Green, Blue) number to a HEXA string (e.g., #RRGGBBAA).
+ * @param {number} argb - The ARGB color value as a number.
+ * @returns {string} The HEXA color string.
+ */
 const argbToHex = (argb: number): string => {
   const alpha = (argb >> 24) & 0xff;
   const red = (argb >> 16) & 0xff;
@@ -17,6 +22,17 @@ const argbToHex = (argb: number): string => {
 };
 
 // キーカラーからMaterial3の全カラーを動的に計算
+/**
+ * Calculates a partial set of Material 3 dynamic colors based on a source color and theme mode (dark/light).
+ * It uses `@material/material-color-utilities` to generate color palettes and then derives
+ * specific M3 color roles (like primaryFixed, surfaceContainer, etc.) from these palettes.
+ *
+ * @param {string} sourceColor - The source color in hex format (e.g., "#6750A4").
+ * @param {boolean} isDark - True if the dark theme is active, false for light theme.
+ * @returns {Partial<Material3Colors>} An object containing the calculated Material 3 color roles.
+ * @see {@link https://github.com/material-foundation/material-color-utilities|Material Color Utilities}
+ * @see {@link Material3Colors}
+ */
 const calculateMaterial3Colors = (
   sourceColor: string,
   isDark: boolean,
@@ -77,6 +93,17 @@ const calculateMaterial3Colors = (
   return additionalColors;
 };
 
+/**
+ * Custom hook to access the extended Material 3 theme.
+ * This hook takes the base theme from `react-native-paper` and extends its `colors`
+ * object with a full set of Material 3 dynamic colors, calculated based on the
+ * primary color of the base theme.
+ *
+ * @returns {ExtendedTheme} The extended theme object containing Material 3 colors.
+ * @see {@link ExtendedTheme}
+ * @see {@link calculateMaterial3Colors}
+ * @see {@link usePaperTheme}
+ */
 export const useTheme = (): ExtendedTheme => {
   const paperTheme = usePaperTheme();
   const isDark = paperTheme.dark;

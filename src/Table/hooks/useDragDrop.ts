@@ -19,6 +19,14 @@ import {
   triggerHapticFeedback,
 } from "../utils/dragUtils";
 
+/**
+ * Represents the current state of a drag and drop operation.
+ * @param {boolean} isDragging - Whether an item is currently being dragged.
+ * @param {string | null} draggedId - The ID of the item being dragged.
+ * @param {"row" | "column" | null} draggedType - The type of the item being dragged.
+ * @param {DragPosition} dragPosition - The current screen coordinates of the dragged item.
+ * @param {DropZone | null} activeDropZone - The drop zone currently under the dragged item.
+ */
 export type DragState = {
   isDragging: boolean;
   draggedId: string | null;
@@ -27,6 +35,18 @@ export type DragState = {
   activeDropZone: DropZone | null;
 };
 
+/**
+ * Props for the `useDragDrop` hook.
+ * @param {DragDropConfig} [config] - Configuration options for drag and drop behavior (not currently used).
+ * @param {(params: RowDragEndParams) => void} [onRowDragEnd] - Callback invoked when a row drag operation ends.
+ * @param {(params: ColumnDragEndParams) => void} [onColumnDragEnd] - Callback invoked when a column drag operation ends.
+ * @param {boolean} [enableRowDrag=false] - Whether row dragging is enabled.
+ * @param {boolean} [enableColumnDrag=false] - Whether column dragging is enabled.
+ * @param {boolean} [autoDisableOnSort=true] - Whether to automatically disable dragging when sorting is active.
+ * @param {boolean} [autoDisableOnFilter=true] - Whether to automatically disable dragging when filtering is active.
+ * @param {boolean} [isSorting=false] - Whether sorting is currently active on the table.
+ * @param {boolean} [isFiltering=false] - Whether filtering is currently active on the table.
+ */
 export type UseDragDropProps = {
   config?: DragDropConfig;
   onRowDragEnd?: (params: RowDragEndParams) => void;
@@ -39,6 +59,25 @@ export type UseDragDropProps = {
   isFiltering?: boolean;
 };
 
+/**
+ * Custom hook to manage drag and drop functionality for table rows and columns.
+ * It handles the drag state, animations, drop zone detection, and haptic feedback.
+ *
+ * @param {UseDragDropProps} props - Props to configure the drag and drop behavior.
+ * @returns {object} An object containing:
+ *  - `dragState`: The current state of the drag operation.
+ *  - `isRowDragEnabled`: Boolean indicating if row dragging is currently enabled (considering sorting/filtering).
+ *  - `isColumnDragEnabled`: Boolean indicating if column dragging is currently enabled.
+ *  - `animationConfig`: Shared values for drag animations.
+ *  - `dropZoneOpacity`: Shared value for drop zone highlight opacity.
+ *  - `startDrag`: Function to initiate a drag operation.
+ *  - `updateDrag`: Function to update the position during a drag.
+ *  - `endDrag`: Function to end a drag operation and trigger callbacks.
+ *  - `registerDropZone`: Function to register a potential drop zone.
+ *  - `unregisterDropZone`: Function to unregister a drop zone.
+ *  - `clearDropZones`: Function to clear all registered drop zones.
+ *  - `moveItem`: Utility function to move an item within an array.
+ */
 export const useDragDrop = ({
   onRowDragEnd,
   onColumnDragEnd,

@@ -1,5 +1,4 @@
-import type React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, type StyleProp, type ViewStyle } from "react-native";
 import { Divider as PaperDivider } from "react-native-paper";
 import type { DividerProps as PaperDividerProps } from "react-native-paper";
 import { useTheme } from "../hooks";
@@ -19,27 +18,25 @@ type Props = PaperDividerProps & {
    * @default false
    */
   inset?: boolean;
+  /**
+   * Optional custom style for the divider.
+   */
+  style?: StyleProp<ViewStyle>;
 };
 
 /**
  * A divider component that can be oriented horizontally or vertically.
  * Based on React Native Paper's Divider with additional orientation support.
  */
-export const Divider: React.FC<Props> = ({
+export const Divider = ({
   orientation = "horizontal",
   inset = false,
-  style,
   ...rest
-}) => {
+}: Props) => {
   const theme = useTheme();
 
   if (orientation === "horizontal") {
-    return (
-      <PaperDivider
-        {...rest}
-        style={[inset && styles.horizontalInset, style]}
-      />
-    );
+    return <PaperDivider {...rest} style={[inset && styles.horizontalInset]} />;
   }
 
   // Vertical divider implementation
@@ -51,7 +48,6 @@ export const Divider: React.FC<Props> = ({
           backgroundColor: theme.colors.outlineVariant,
         },
         inset && styles.verticalInset,
-        style,
       ]}
       {...rest}
     />

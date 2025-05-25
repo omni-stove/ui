@@ -11,6 +11,21 @@ import { createTableStyles } from "./styles";
 import type { DataWithId, EnhancedDataTableProps } from "./types";
 import type { DragPosition } from "./utils/dragUtils"; // Add this import
 
+/**
+ * An enhanced DataTable component built on top of `@tanstack/react-table` and `react-native-paper`.
+ * It supports features like sorting, global filtering (search), column visibility toggling,
+ * pagination, row selection, and row drag-and-drop.
+ *
+ * @template T - The type of the data for each row, which must extend `DataWithId` (i.e., include an `id` property).
+ * @param {EnhancedDataTableProps<T>} props - The component's props.
+ * @param {Ref<View>} ref - Ref for the main container View.
+ * @returns {JSX.Element} The Table component.
+ * @see {@link https://tanstack.com/table/v8|TanStack Table v8}
+ * @see {@link https://callstack.github.io/react-native-paper/docs/components/DataTable/|React Native Paper DataTable}
+ * @see {@link EnhancedDataTableProps}
+ * @see {@link DraggableRow}
+ * @see {@link Checkbox}
+ */
 export const Table = forwardRef(
   <T extends DataWithId>(props: EnhancedDataTableProps<T>, ref: Ref<View>) => {
     const {

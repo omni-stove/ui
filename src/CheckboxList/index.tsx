@@ -2,12 +2,27 @@ import { useCallback, useMemo } from "react";
 import { FlatList, View } from "react-native";
 import { Checkbox } from "../Checkbox";
 
+/**
+ * Represents a single item in the CheckboxList.
+ * @param {string} id - A unique identifier for the checkbox item.
+ * @param {string} label - The text label to display next to the checkbox.
+ * @param {boolean} [disabled=false] - Whether this specific checkbox item is disabled.
+ */
 type CheckboxItem = {
   id: string;
   label: string;
   disabled?: boolean;
 };
 
+/**
+ * Props for the CheckboxList component.
+ * @param {string} props.parent - The label for the parent checkbox.
+ * @param {CheckboxItem[]} props.items - An array of checkbox items to display under the parent.
+ * @param {string[]} [props.checkedKeys=[]] - An array of IDs of the currently checked items.
+ * @param {(checkedKeys: string[]) => void} props.onChangeChecks - Callback function invoked when the selection changes. It receives an array of the new checked item IDs.
+ * @param {boolean} [props.disabled=false] - Whether the entire CheckboxList (parent and all children) is disabled.
+ * @param {string} [props.testID] - Test ID for the CheckboxList component and its sub-components.
+ */
 type Props = {
   parent: string;
   items: CheckboxItem[];
@@ -17,6 +32,15 @@ type Props = {
   testID?: string;
 };
 
+/**
+ * A CheckboxList component that displays a parent checkbox and a list of child checkboxes.
+ * The parent checkbox reflects the state of its children (unchecked, checked, or indeterminate).
+ * Selecting the parent checkbox toggles the selection of all enabled child items.
+ *
+ * @param {Props} props - The component's props.
+ * @returns {JSX.Element} The CheckboxList component.
+ * @see {@link Checkbox}
+ */
 export const CheckboxList = ({
   parent,
   items,

@@ -1,6 +1,15 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useTheme } from "../hooks";
 
+/**
+ * A component that displays a list of all colors defined in the current theme.
+ * For each color, it shows a preview swatch, the color's name (key in the theme object),
+ * and its string value (e.g., hex code).
+ * This is primarily a utility component for development and debugging purposes
+ * to visualize the active theme's color palette.
+ *
+ * @returns {JSX.Element} A ScrollView containing the list of theme colors.
+ */
 export const ThemeColors = () => {
   const theme = useTheme();
   const colors = Object.entries(theme.colors).map(([name, color]) => ({

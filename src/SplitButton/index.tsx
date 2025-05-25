@@ -11,10 +11,40 @@ import { Icon, Menu, TouchableRipple } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { useTheme } from "../hooks";
 
+/**
+ * Defines the size of the SplitButton, affecting its height, padding, font size, and icon size.
+ * - `xs`: Extra Small
+ * - `s`: Small
+ * - `m`: Medium (default)
+ * - `l`: Large
+ * - `xl`: Extra Large
+ */
 type Size = "xs" | "s" | "m" | "l" | "xl";
+
+/**
+ * Defines the visual style variant of the SplitButton.
+ * - `filled`: A contained button with a primary background color.
+ * - `outlined`: A button with a transparent background and a border.
+ * - `elevated`: A contained button with a surface background color and shadow.
+ * - `tonal`: A contained button with a secondary/tonal background color.
+ */
 type Variant = "filled" | "outlined" | "elevated" | "tonal";
+
+/**
+ * Represents a single action item in the SplitButton's dropdown menu.
+ * Inherits props from `react-native-paper`'s `Menu.Item`.
+ */
 type Action = ComponentProps<typeof Menu.Item>;
 
+/**
+ * Props for the SplitButton component.
+ * @param {Size} [props.size="m"] - The size of the SplitButton.
+ * @param {Variant} [props.variant="filled"] - The visual style variant of the SplitButton.
+ * @param {() => void} props.onPress - Function to call when the main action part of the button is pressed.
+ * @param {Action[]} props.actions - An array of action items for the dropdown menu. Each item is a `Menu.Item` prop set.
+ * @param {string} [props.label] - The text label for the main action part of the button.
+ * @param {IconSource} [props.icon] - The icon for the main action part of the button.
+ */
 type Props = {
   size?: Size;
   variant?: Variant;
@@ -24,6 +54,18 @@ type Props = {
   icon?: IconSource;
 };
 
+/**
+ * A SplitButton component combines a main action button with a dropdown menu for secondary actions.
+ * The main button can have an icon and/or a label. The dropdown displays a list of `Menu.Item`s.
+ * The appearance (size and variant) of the button can be customized.
+ *
+ * @param {Props} props - The component's props.
+ * @param {ComponentRef<typeof View>} ref - Ref for the outer View container.
+ * @returns {JSX.Element} The SplitButton component.
+ * @see {@link Menu.Item}
+ * @see {@link TouchableRipple}
+ * @see {@link Icon}
+ */
 export const SplitButton = forwardRef<ComponentRef<typeof View>, Props>(
   ({ actions, onPress, label, icon, size = "m", variant = "filled" }, ref) => {
     const [visible, setVisible] = useState(false);
