@@ -29,6 +29,7 @@ type Option = {
  * @param {T} props.value - The currently selected value.
  * @param {ComponentProps<typeof TextField>["variant"]} [props.variant="filled"] - The variant of the TextField used to display the selected value.
  * @param {string} [props.label] - Label for the TextField.
+ * @param {string} [props.errorMessage] - Error message to display below the TextField.
  */
 type Props<T extends string | number> = {
   options: Option[];
@@ -36,6 +37,8 @@ type Props<T extends string | number> = {
   value: T;
   variant?: ComponentProps<typeof TextField>["variant"];
   label?: string;
+  errorMessage?: string;
+  supportingText?: string;
 };
 
 /**
@@ -45,6 +48,13 @@ type Props<T extends string | number> = {
  *
  * @template T - The type of the value, which can be a string or a number.
  * @param {Props<T>} props - The component's props.
+ * @param {Option[]} props.options - An array of options to display in the select menu.
+ * @param {(value: T) => void} props.onChange - Callback function invoked when an option is selected.
+ * @param {T} props.value - The currently selected value.
+ * @param {ComponentProps<typeof TextField>["variant"]} [props.variant="filled"] - The variant of the TextField used to display the selected value.
+ * @param {string} [props.label] - Label for the TextField.
+ * @param {string} [props.errorMessage] - Error message to display below the TextField.
+ * @param {string} [props.supportingText] - Supporting text to display below the TextField.
  * @param {ForwardedRef<TextInput>} ref - Ref to be forwarded to the underlying TextField component.
  * @returns {JSX.Element} The Select component.
  * @see {@link TextField}
@@ -54,7 +64,15 @@ export const Select = forwardRef(function Select<T extends string | number>(
   props: Props<T>,
   ref: ForwardedRef<TextInput>,
 ) {
-  const { options, onChange, value, variant = "filled", label } = props;
+  const {
+    options,
+    onChange,
+    value,
+    variant = "filled",
+    label,
+    errorMessage,
+    supportingText,
+  } = props;
   const [visible, setVisible] = useState(false);
   const [menuWidth, setMenuWidth] = useState(0);
   const anchorRef = useRef<View>(null);
@@ -92,6 +110,8 @@ export const Select = forwardRef(function Select<T extends string | number>(
               variant={variant}
               value={selectedLabel}
               readOnly
+              errorMessage={errorMessage}
+              supportingText={supportingText}
             />
           </View>
         </Pressable>

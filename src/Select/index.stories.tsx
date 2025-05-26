@@ -69,3 +69,57 @@ export const Behavior: Story = {
     expect(canvas).toBeTruthy();
   },
 };
+
+export const WithErrorAndSupportingText: Story = {
+  args: {
+    ...commonArgs,
+    label: "Select with Messages",
+  },
+  render: (args) => {
+    const [valueFilledError, setValueFilledError] = useState<string | number>(
+      "1",
+    );
+    const [valueOutlinedError, setValueOutlinedError] = useState<
+      string | number
+    >("1");
+    const [valueFilledSupport, setValueFilledSupport] = useState<
+      string | number
+    >("1");
+    const [valueOutlinedSupport, setValueOutlinedSupport] = useState<
+      string | number
+    >("1");
+
+    return (
+      <View style={{ gap: 32 }}>
+        <Component
+          {...args}
+          variant="filled"
+          value={valueFilledError}
+          onChange={setValueFilledError}
+          errorMessage="This is an error message for filled variant."
+        />
+        <Component
+          {...args}
+          variant="outlined"
+          value={valueOutlinedError}
+          onChange={setValueOutlinedError}
+          errorMessage="This is an error message for outlined variant."
+        />
+        <Component
+          {...args}
+          variant="filled"
+          value={valueFilledSupport}
+          onChange={setValueFilledSupport}
+          supportingText="This is a supporting text for filled variant."
+        />
+        <Component
+          {...args}
+          variant="outlined"
+          value={valueOutlinedSupport}
+          onChange={setValueOutlinedSupport}
+          supportingText="This is a supporting text for outlined variant."
+        />
+      </View>
+    );
+  },
+};
