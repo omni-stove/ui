@@ -1,97 +1,7 @@
-import {
-  argbFromHex,
-  themeFromSourceColor,
-} from "@material/material-color-utilities";
+import { calculateMaterial3Colors } from "./theme";
+import type { Material3Colors } from "./types";
+import type { ExtendedTheme } from "./types";
 import { useTheme as usePaperTheme } from "react-native-paper";
-import type { ExtendedTheme, Material3Colors } from "./types";
-
-// ARGB to HEXA 変換関数（アルファ値含む）
-/**
- * Converts an ARGB (Alpha, Red, Green, Blue) number to a HEXA string (e.g., #RRGGBBAA).
- * @param {number} argb - The ARGB color value as a number.
- * @returns {string} The HEXA color string.
- */
-const argbToHex = (argb: number): string => {
-  const alpha = (argb >> 24) & 0xff;
-  const red = (argb >> 16) & 0xff;
-  const green = (argb >> 8) & 0xff;
-  const blue = argb & 0xff;
-  return `#${[red, green, blue, alpha]
-    .map((c) => c.toString(16).padStart(2, "0"))
-    .join("")}`;
-};
-
-// キーカラーからMaterial3の全カラーを動的に計算
-/**
- * Calculates a partial set of Material 3 dynamic colors based on a source color and theme mode (dark/light).
- * It uses `@material/material-color-utilities` to generate color palettes and then derives
- * specific M3 color roles (like primaryFixed, surfaceContainer, etc.) from these palettes.
- *
- * @param {string} sourceColor - The source color in hex format (e.g., "#6750A4").
- * @param {boolean} isDark - True if the dark theme is active, false for light theme.
- * @returns {Partial<Material3Colors>} An object containing the calculated Material 3 color roles.
- * @see {@link https://github.com/material-foundation/material-color-utilities|Material Color Utilities}
- * @see {@link Material3Colors}
- */
-const calculateMaterial3Colors = (
-  sourceColor: string,
-  isDark: boolean,
-): Partial<Material3Colors> => {
-  // キーカラーからMaterial3テーマを生成
-  const sourceColorArgb = argbFromHex(sourceColor);
-  const theme = themeFromSourceColor(sourceColorArgb);
-  const palettes = theme.palettes;
-  // 追加の詳細なカラーロールをパレットとトーンから生成（オタクくんのCSS生成スクリプト参考）
-  const additionalColors = isDark
-    ? {
-        // ダークテーマ用のトーン（M3仕様）
-        primaryFixed: argbToHex(palettes.primary.tone(90)),
-        primaryFixedDim: argbToHex(palettes.primary.tone(80)),
-        onPrimaryFixed: argbToHex(palettes.primary.tone(10)),
-        onPrimaryFixedVariant: argbToHex(palettes.primary.tone(30)),
-        secondaryFixed: argbToHex(palettes.secondary.tone(90)),
-        secondaryFixedDim: argbToHex(palettes.secondary.tone(80)),
-        onSecondaryFixed: argbToHex(palettes.secondary.tone(10)),
-        onSecondaryFixedVariant: argbToHex(palettes.secondary.tone(30)),
-        tertiaryFixed: argbToHex(palettes.tertiary.tone(90)),
-        tertiaryFixedDim: argbToHex(palettes.tertiary.tone(80)),
-        onTertiaryFixed: argbToHex(palettes.tertiary.tone(10)),
-        onTertiaryFixedVariant: argbToHex(palettes.tertiary.tone(30)),
-        surfaceDim: argbToHex(palettes.neutral.tone(6)),
-        surfaceBright: argbToHex(palettes.neutral.tone(24)),
-        surfaceContainerLowest: argbToHex(palettes.neutral.tone(4)),
-        surfaceContainerLow: argbToHex(palettes.neutral.tone(10)),
-        surfaceContainer: argbToHex(palettes.neutral.tone(12)),
-        surfaceContainerHigh: argbToHex(palettes.neutral.tone(17)),
-        surfaceContainerHighest: argbToHex(palettes.neutral.tone(22)),
-        surfaceTint: argbToHex(palettes.primary.tone(80)),
-      }
-    : {
-        // ライトテーマ用のトーン（M3仕様）
-        primaryFixed: argbToHex(palettes.primary.tone(90)),
-        primaryFixedDim: argbToHex(palettes.primary.tone(80)),
-        onPrimaryFixed: argbToHex(palettes.primary.tone(10)),
-        onPrimaryFixedVariant: argbToHex(palettes.primary.tone(30)),
-        secondaryFixed: argbToHex(palettes.secondary.tone(90)),
-        secondaryFixedDim: argbToHex(palettes.secondary.tone(80)),
-        onSecondaryFixed: argbToHex(palettes.secondary.tone(10)),
-        onSecondaryFixedVariant: argbToHex(palettes.secondary.tone(30)),
-        tertiaryFixed: argbToHex(palettes.tertiary.tone(90)),
-        tertiaryFixedDim: argbToHex(palettes.tertiary.tone(80)),
-        onTertiaryFixed: argbToHex(palettes.tertiary.tone(10)),
-        onTertiaryFixedVariant: argbToHex(palettes.tertiary.tone(30)),
-        surfaceDim: argbToHex(palettes.neutral.tone(87)),
-        surfaceBright: argbToHex(palettes.neutral.tone(98)),
-        surfaceContainerLowest: argbToHex(palettes.neutral.tone(100)),
-        surfaceContainerLow: argbToHex(palettes.neutral.tone(96)),
-        surfaceContainer: argbToHex(palettes.neutral.tone(94)),
-        surfaceContainerHigh: argbToHex(palettes.neutral.tone(92)),
-        surfaceContainerHighest: argbToHex(palettes.neutral.tone(90)),
-        surfaceTint: argbToHex(palettes.primary.tone(40)),
-      };
-
-  return additionalColors;
-};
 
 /**
  * Custom hook to access the extended Material 3 theme.
@@ -128,4 +38,8 @@ export const useTheme = (): ExtendedTheme => {
   return extendedTheme;
 };
 
+// Theme related hooks and functions are now in ./theme
+export * from "./theme";
+
+// Type exports remain here for now, or could also be moved if preferred
 export type { Material3Colors, ExtendedTheme } from "./types";
