@@ -45,3 +45,4 @@ export * from "./Grid";
 export * from "./Table";
 export * from "./Toolbar";
 export * from "./Stack";
+export * from "./VisuallyHidden";
