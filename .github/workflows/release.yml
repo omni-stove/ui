@@ -21,6 +21,9 @@ jobs:
         uses: ./.github/actions/setup
 
 
+      - name: Set main field for build
+        run: node scripts/set-main-for-build.js
+
       - name: Build package
         run: npm run build
 
