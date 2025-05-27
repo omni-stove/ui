@@ -11,13 +11,13 @@ const ThemeAwareDecorator = (Story: any, context: any) => {
 	const theme = colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme;
 	
 	return (
-		<SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
+		<UIProvider>
+			<SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
 			<GestureHandlerRootView style={{ flex: 1 }}>
-				<UIProvider>
-					<Story />
-				</UIProvider>
+			  <Story />
 			</GestureHandlerRootView>
-		</SafeAreaView>
+			</SafeAreaView>
+		</UIProvider>
 	);
 };
 

@@ -519,7 +519,6 @@ export const ComplexFormApp: Story = {
               variant="filled"
               onPress={handleSubmit}
               disabled={isSubmitting}
-              style={styles.submitButton}
             >
               {isSubmitting ? "送信中..." : "登録する"}
             </Button>

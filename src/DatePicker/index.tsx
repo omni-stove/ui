@@ -141,6 +141,11 @@ export type Props<T extends DatePickerType> = {
    * @default 'End date' or localized equivalent
    */
   endLabel?: string;
+  /**
+   * Modal presentation style for iOS.
+   * @default 'pageSheet'
+   */
+  presentationStyle?: "overFullScreen" | "pageSheet";
 };
 
 /**
@@ -171,6 +176,7 @@ export const DatePicker = <T extends DatePickerType>({
   cancelLabel,
   startLabel,
   endLabel,
+  presentationStyle = "pageSheet",
 }: Props<T>) => {
   const [open, setOpen] = useState(false);
   const [internalValue, setInternalValue] =
@@ -255,6 +261,7 @@ export const DatePicker = <T extends DatePickerType>({
     validRange,
     saveLabel,
     cancelLabel,
+    presentationStyle,
   };
 
   let modalProps:

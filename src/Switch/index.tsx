@@ -7,8 +7,8 @@ import {
 } from "react-native-gesture-handler";
 import { Icon } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
-import { useTheme } from "../hooks";
 import { Typography } from "../Typography";
+import { useTheme } from "../hooks";
 
 /**
  * Props for the Switch component.
