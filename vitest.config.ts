@@ -1,6 +1,6 @@
-import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import babel from "vite-plugin-babel";
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   plugins: [react(), babel()],

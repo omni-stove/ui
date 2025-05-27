@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { argbToHex, calculateMaterial3Colors } from "./index";
+import { describe, expect, it } from "vitest";
 import type { Material3Colors } from "../types";
+import { argbToHex, calculateMaterial3Colors } from "./index";
 
 describe("Theme Utilities", () => {
   describe("argbToHex", () => {

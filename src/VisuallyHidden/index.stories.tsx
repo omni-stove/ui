@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { View, Text } from "react-native"; // Reactのimportを削除し、Viewを追加
+import { Text, View } from "react-native"; // Reactのimportを削除し、Viewを追加
 import { VisuallyHidden } from "./index"; // プロジェクトに合わせてパスを調整
 
 const meta = {

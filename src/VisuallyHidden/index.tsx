@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 type VisuallyHiddenProps = {
   children: ReactNode;

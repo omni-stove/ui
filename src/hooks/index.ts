@@ -1,7 +1,7 @@
+import { useTheme as usePaperTheme } from "react-native-paper";
 import { calculateMaterial3Colors } from "./theme";
 import type { Material3Colors } from "./types";
 import type { ExtendedTheme } from "./types";
-import { useTheme as usePaperTheme } from "react-native-paper";
 
 /**
  * Custom hook to access the extended Material 3 theme.

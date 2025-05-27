@@ -2,8 +2,8 @@
 // Remove React default import as jsx: "react-jsx" is used
 import {
   Children,
-  type ReactNode,
   type ReactElement, // Import ReactElement type
+  type ReactNode,
   cloneElement,
   forwardRef,
   isValidElement,
@@ -11,20 +11,20 @@ import {
   useRef,
 } from "react";
 import {
-  View,
+  type NativeSyntheticEvent,
+  Platform, // Platformを追加
+  type TextInput as RNTextInput, // TextInputがPaperと衝突するためエイリアス
   ScrollView,
   StyleSheet,
-  type NativeSyntheticEvent,
-  type TextInput as RNTextInput, // TextInputがPaperと衝突するためエイリアス
   type TextInputKeyPressEventData,
-  Platform, // Platformを追加
+  View,
 } from "react-native";
 import { TextInput } from "react-native-paper"; // Keep TextInput from paper
-import { useTheme } from "../hooks"; // Import useTheme from local hooks
-import { Typography } from "../Typography";
 import { Button } from "../Button"; // Import local Button
-import { Surface } from "../Surface"; // Import local Surface
 import { IconButton } from "../IconButton"; // Import local IconButton
+import { Surface } from "../Surface"; // Import local Surface
+import { Typography } from "../Typography";
+import { useTheme } from "../hooks"; // Import useTheme from local hooks
 
 /**
  * @typedef {object} WrapperProps

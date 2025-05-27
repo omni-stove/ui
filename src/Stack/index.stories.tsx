@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 import { Stack } from "./index";
 
 const meta = {
