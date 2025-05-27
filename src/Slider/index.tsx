@@ -1,5 +1,13 @@
 import RNSlider from "@react-native-community/slider";
-import { forwardRef, useCallback, useEffect, useState } from "react";
+import {
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Animated,
   type StyleProp,
@@ -62,30 +70,31 @@ type Props = {
  * @param {boolean} props.isSliding - Whether the user is currently dragging the thumb.
  * @returns {JSX.Element} The CustomThumb component.
  */
-const CustomThumb = ({
-  isDisabled,
-  isSliding,
-}: { isDisabled: boolean; isSliding: boolean }) => {
-  const theme = useTheme();
+const CustomThumb = memo(
+  ({ isDisabled, isSliding }: { isDisabled: boolean; isSliding: boolean }) => {
+    const theme = useTheme();
 
-  return (
-    <View
-      style={{
-        width: 4,
-        height: isSliding ? 40 : 30,
-        borderRadius: 2,
-        backgroundColor: isDisabled
-          ? theme.colors.onSurface
-          : theme.colors.primary,
-        shadowColor: theme.colors.shadow,
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.3,
-        shadowRadius: 2,
-        elevation: 2,
-      }}
-    />
-  );
-};
+    return (
+      <View
+        style={{
+          width: 4,
+          height: isSliding ? 40 : 30,
+          borderRadius: 2,
+          backgroundColor: isDisabled
+            ? theme.colors.onSurface
+            : theme.colors.primary,
+          shadowColor: theme.colors.shadow,
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: 0.3,
+          shadowRadius: 2,
+          elevation: 2,
+        }}
+      />
+    );
+  },
+);
+
+CustomThumb.displayName = "CustomThumb";
 
 /**
  * Component to display the current value of the slider above the thumb.
@@ -95,41 +104,45 @@ const CustomThumb = ({
  * @param {boolean} props.visible - Whether the indicator should be visible.
  * @returns {JSX.Element} The ValueIndicator component.
  */
-const ValueIndicator = ({
-  value,
-  visible,
-}: {
-  value: number;
-  visible: boolean;
-}) => {
-  const theme = useTheme();
-  const [opacity] = useState(new Animated.Value(0));
+const ValueIndicator = memo(
+  ({
+    value,
+    visible,
+  }: {
+    value: number;
+    visible: boolean;
+  }) => {
+    const theme = useTheme();
+    const [opacity] = useState(new Animated.Value(0));
 
-  useEffect(() => {
-    Animated.timing(opacity, {
-      toValue: visible ? 1 : 0,
-      duration: 150,
-      useNativeDriver: true,
-    }).start();
-  }, [visible, opacity]);
+    useEffect(() => {
+      Animated.timing(opacity, {
+        toValue: visible ? 1 : 0,
+        duration: 150,
+        useNativeDriver: true,
+      }).start();
+    }, [visible, opacity]);
 
-  return (
-    <Animated.View
-      style={{
-        backgroundColor: theme.colors.inverseSurface,
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        borderRadius: 8,
-        opacity,
-        marginBottom: 4,
-      }}
-    >
-      <Typography variant="bodySmall" color="inverseOnSurface">
-        {Math.round(value)}
-      </Typography>
-    </Animated.View>
-  );
-};
+    return (
+      <Animated.View
+        style={{
+          backgroundColor: theme.colors.inverseSurface,
+          paddingHorizontal: 8,
+          paddingVertical: 4,
+          borderRadius: 8,
+          opacity,
+          marginBottom: 4,
+        }}
+      >
+        <Typography variant="bodySmall" color="inverseOnSurface">
+          {Math.round(value)}
+        </Typography>
+      </Animated.View>
+    );
+  },
+);
+
+ValueIndicator.displayName = "ValueIndicator";
 
 /**
  * A Slider component that allows users to select a value from a continuous or stepped range.
@@ -162,14 +175,18 @@ export const Slider = forwardRef<View, Props>(
   ) => {
     const theme = useTheme();
     const [isSliding, setIsSliding] = useState(false);
+    const onChangeRef = useRef(onChange);
+
+    // Keep the latest onChange function in ref
+    onChangeRef.current = onChange;
 
     const handleSingleValueChange = useCallback(
       (newValue: number) => {
         if (variant === "number") {
-          onChange(newValue);
+          onChangeRef.current(newValue);
         }
       },
-      [onChange, variant],
+      [variant],
     );
 
     const handleSlidingStart = useCallback(() => {
@@ -180,7 +197,7 @@ export const Slider = forwardRef<View, Props>(
       setIsSliding(false);
     }, []);
 
-    const getSliderColors = () => {
+    const colors = useMemo(() => {
       if (isDisabled) {
         return {
           minimumTrackTintColor: theme.colors.onSurface,
@@ -194,54 +211,56 @@ export const Slider = forwardRef<View, Props>(
         maximumTrackTintColor: theme.colors.surfaceVariant,
         thumbTintColor: "transparent",
       };
-    };
+    }, [isDisabled, theme.colors]);
 
-    const colors = getSliderColors();
-
-    const getSliderValue = () => {
+    const sliderValue = useMemo(() => {
       if (Array.isArray(value)) {
         return value[0] || minValue;
       }
       return value;
-    };
+    }, [value, minValue]);
 
-    const sliderValue = getSliderValue();
-
-    const styles = StyleSheet.create({
-      container: {
-        opacity: isDisabled ? 0.38 : 1,
-      },
-      label: {
-        marginBottom: 8,
-        color: theme.colors.onSurface,
-      },
-      sliderContainer: {
-        height: 60,
-        justifyContent: "center",
-        position: "relative",
-      },
-      slider: {
-        height: 20,
-        borderRadius: 10,
-        ...(orientation === "vertical" && {
-          width: 20,
-          height: 200,
-          borderRadius: 10,
+    const styles = useMemo(
+      () =>
+        StyleSheet.create({
+          container: {
+            opacity: isDisabled ? 0.38 : 1,
+          },
+          label: {
+            marginBottom: 8,
+            color: theme.colors.onSurface,
+          },
+          sliderContainer: {
+            height: 60,
+            justifyContent: "center",
+            position: "relative",
+          },
+          slider: {
+            height: 20,
+            borderRadius: 10,
+            ...(orientation === "vertical" && {
+              width: 20,
+              height: 200,
+              borderRadius: 10,
+            }),
+          },
+          thumbContainer: {
+            position: "absolute",
+            top: -14,
+            left: 0,
+            right: 26,
+            height: 60,
+            justifyContent: "center",
+            pointerEvents: "none",
+          },
         }),
-      },
-      thumbContainer: {
-        position: "absolute",
-        top: -14,
-        left: 0,
-        right: 26,
-        height: 60,
-        justifyContent: "center",
-        pointerEvents: "none",
-      },
-    });
+      [isDisabled, theme.colors.onSurface, orientation],
+    );
 
-    const thumbPosition =
-      ((sliderValue - minValue) / (maxValue - minValue)) * 100;
+    const thumbPosition = useMemo(
+      () => ((sliderValue - minValue) / (maxValue - minValue)) * 100,
+      [sliderValue, minValue, maxValue],
+    );
 
     return (
       <View
@@ -282,7 +301,8 @@ export const Slider = forwardRef<View, Props>(
               style={{
                 position: "absolute",
                 left: `${thumbPosition}%`,
-                transform: [{ translateX: -2 }],
+                transform: [{ translateX: -1 }],
+                marginLeft: -1, // Adjust to center the thumb properly with track
               }}
             >
               <View
