@@ -8,6 +8,7 @@ import {
 import { Icon } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { useTheme } from "../hooks";
+import { Typography } from "../Typography";
 
 /**
  * Props for the Switch component.
@@ -17,6 +18,7 @@ import { useTheme } from "../hooks";
  * @param {IconSource} [props.switchOnIcon="check"] - Icon to display when the switch is in the "on" state. Defaults to "check".
  * @param {IconSource} [props.switchOffIcon] - Icon to display when the switch is in the "off" state.
  * @param {boolean} [props.disabled] - Whether the switch is disabled.
+ * @param {string} [props.label] - Optional label text to display to the right of the switch.
  */
 type SwitchProps = {
   selected: boolean;
@@ -25,6 +27,7 @@ type SwitchProps = {
   switchOnIcon?: IconSource;
   switchOffIcon?: IconSource;
   disabled?: boolean;
+  label?: string;
 };
 
 /**
@@ -42,6 +45,7 @@ export const Switch = ({
   switchOnIcon = "check",
   switchOffIcon,
   disabled,
+  label,
 }: SwitchProps) => {
   const theme = useTheme();
   const position = useState(new Animated.Value(selected ? 10 : -10))[0];
@@ -331,67 +335,85 @@ export const Switch = ({
     init();
   }, [init]);
   return (
-    <View style={{ borderRadius: 20, backgroundColor: theme.colors.surface }}>
-      <View pointerEvents="none" style={styles.stateOuter}>
-        <Animated.View style={getHandleOutlineAnimatedStyle()} key={3} />
-      </View>
-      <Animated.View style={getTrackAnimatedStyle()} key={1}>
-        <GestureHandlerRootView>
-          <GestureDetector gesture={pan}>
-            <Pressable
-              disabled={disabled}
-              style={{
-                justifyContent: "center",
-                height: 32,
-                width: 52,
-                alignItems: "center",
-              }}
-              onLongPress={() => {
-                Animated.timing(handleHeight, {
-                  toValue: 28,
-                  duration: 100,
-                  useNativeDriver: false,
-                }).start();
-                Animated.timing(handleWidth, {
-                  toValue: 28,
-                  duration: 100,
-                  useNativeDriver: false,
-                }).start();
-              }}
-              onPress={() => {
-                setIsPressed(true);
-                changeSwitch(true);
-              }}
-            />
-          </GestureDetector>
-        </GestureHandlerRootView>
-      </Animated.View>
-      <View pointerEvents="none" style={styles.stateOuter}>
-        <Animated.View style={getHandleAnimatedStyle()} key={2}>
-          {switchOnIcon ? (
-            <Animated.View key={10} style={getIconOnAnimatedStyle()}>
-              <Icon
-                source={switchOnIcon}
-                size={16}
-                color={
-                  disabled
-                    ? theme.colors.onSurface
-                    : theme.colors.onPrimaryContainer
-                }
+    <Pressable
+      disabled={disabled}
+      onPress={() => {
+        setIsPressed(true);
+        changeSwitch(true);
+      }}
+      style={{ flexDirection: "row", alignItems: "center", gap: 12 }}
+    >
+      <View style={{ borderRadius: 20 }}>
+        <View pointerEvents="none" style={styles.stateOuter}>
+          <Animated.View style={getHandleOutlineAnimatedStyle()} key={3} />
+        </View>
+        <Animated.View style={getTrackAnimatedStyle()} key={1}>
+          <GestureHandlerRootView>
+            <GestureDetector gesture={pan}>
+              <Pressable
+                disabled={disabled}
+                style={{
+                  justifyContent: "center",
+                  height: 32,
+                  width: 52,
+                  alignItems: "center",
+                }}
+                onLongPress={() => {
+                  Animated.timing(handleHeight, {
+                    toValue: 28,
+                    duration: 100,
+                    useNativeDriver: false,
+                  }).start();
+                  Animated.timing(handleWidth, {
+                    toValue: 28,
+                    duration: 100,
+                    useNativeDriver: false,
+                  }).start();
+                }}
+                onPress={() => {
+                  setIsPressed(true);
+                  changeSwitch(true);
+                }}
               />
-            </Animated.View>
-          ) : null}
-          {switchOffIcon ? (
-            <Animated.View key={9} style={getIconOffAnimatedStyle()}>
-              <Icon
-                source={switchOffIcon}
-                size={16}
-                color={theme.colors.surface}
-              />
-            </Animated.View>
-          ) : null}
+            </GestureDetector>
+          </GestureHandlerRootView>
         </Animated.View>
+        <View pointerEvents="none" style={styles.stateOuter}>
+          <Animated.View style={getHandleAnimatedStyle()} key={2}>
+            {switchOnIcon ? (
+              <Animated.View key={10} style={getIconOnAnimatedStyle()}>
+                <Icon
+                  source={switchOnIcon}
+                  size={16}
+                  color={
+                    disabled
+                      ? theme.colors.onSurface
+                      : theme.colors.onPrimaryContainer
+                  }
+                />
+              </Animated.View>
+            ) : null}
+            {switchOffIcon ? (
+              <Animated.View key={9} style={getIconOffAnimatedStyle()}>
+                <Icon
+                  source={switchOffIcon}
+                  size={16}
+                  color={theme.colors.surface}
+                />
+              </Animated.View>
+            ) : null}
+          </Animated.View>
+        </View>
       </View>
-    </View>
+      {label && (
+        <Typography
+          variant="bodyMedium"
+          color="onSurface"
+          style={{ opacity: disabled ? 0.38 : 1 }}
+        >
+          {label}
+        </Typography>
+      )}
+    </Pressable>
   );
 };
