@@ -27,7 +27,7 @@ export const Grid = ({
   margin = 16,
   children,
   style,
-  variant = "masonry",
+  variant = "standard",
 }: GridProps) => {
   if (variant === "standard") {
     const spacingValue = getSpacingValue(spacing);
