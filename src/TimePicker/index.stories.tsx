@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { View } from "react-native";
 import { TimePicker as Component } from ".";
 
 const meta: Meta<typeof Component> = {
@@ -8,20 +7,6 @@ const meta: Meta<typeof Component> = {
   args: {
     label: "Select Time",
   },
-  decorators: [
-    (Story) => (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          paddingHorizontal: 20,
-        }}
-      >
-        <Story />
-      </View>
-    ),
-  ],
 };
 
 export default meta;

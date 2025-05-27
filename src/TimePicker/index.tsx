@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import type { ComponentProps } from "react";
-import { TouchableOpacity } from "react-native";
 import { TimePickerModal } from "react-native-paper-dates";
 import { TextField } from "../TextField";
 
@@ -9,12 +8,21 @@ const formatTime = (
   minutes: number,
   use24HourClock?: boolean,
 ): string => {
-  if (use24HourClock) {
-    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+  // Guard against invalid numbers
+  if (!Number.isFinite(hours) || !Number.isFinite(minutes)) {
+    return "";
   }
-  const ampm = hours >= 12 ? "PM" : "AM";
-  const h = hours % 12 || 12;
-  return `${String(h).padStart(2, "0")}:${String(minutes).padStart(2, "0")} ${ampm}`;
+
+  // Ensure values are within valid ranges
+  const validHours = Math.max(0, Math.min(23, Math.floor(hours)));
+  const validMinutes = Math.max(0, Math.min(59, Math.floor(minutes)));
+
+  if (use24HourClock) {
+    return `${String(validHours).padStart(2, "0")}:${String(validMinutes).padStart(2, "0")}`;
+  }
+  const ampm = validHours >= 12 ? "PM" : "AM";
+  const h = validHours % 12 || 12;
+  return `${String(h).padStart(2, "0")}:${String(validMinutes).padStart(2, "0")} ${ampm}`;
 };
 
 type TimePickerModalActualProps = ComponentProps<typeof TimePickerModal>;
@@ -49,6 +57,8 @@ type Props = CustomTimePickerModalProps & {
   use24HourClock?: boolean;
   variant?: "outlined" | "filled";
   disabled?: boolean;
+  errorMessage?: string;
+  supportingText?: string;
 };
 
 /**
@@ -72,6 +82,8 @@ export const TimePicker = ({
   inputFontSize,
   variant,
   disabled,
+  errorMessage,
+  supportingText,
   ...rest
 }: Props) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -84,13 +96,25 @@ export const TimePicker = ({
     if (value) {
       const h = value.getHours();
       const m = value.getMinutes();
-      setSelectedHours(h);
-      setSelectedMinutes(m);
-      setDisplayTime(formatTime(h, m, use24HourClock));
+      // Guard against invalid values from Date object
+      const safeH = Number.isFinite(h) ? h : 12;
+      const safeM = Number.isFinite(m) ? m : 0;
+      setSelectedHours(safeH);
+      setSelectedMinutes(safeM);
+      setDisplayTime(formatTime(safeH, safeM, use24HourClock));
     } else {
-      setDisplayTime(formatTime(initialHours, initialMinutes, use24HourClock));
-      setSelectedHours(initialHours);
-      setSelectedMinutes(initialMinutes);
+      // Guard against invalid initial values
+      const safeInitialHours = Number.isFinite(initialHours)
+        ? initialHours
+        : 12;
+      const safeInitialMinutes = Number.isFinite(initialMinutes)
+        ? initialMinutes
+        : 0;
+      setDisplayTime(
+        formatTime(safeInitialHours, safeInitialMinutes, use24HourClock),
+      );
+      setSelectedHours(safeInitialHours);
+      setSelectedMinutes(safeInitialMinutes);
     }
   }, [value, use24HourClock, initialHours, initialMinutes]);
 
@@ -101,15 +125,20 @@ export const TimePicker = ({
   const handleConfirm = useCallback(
     ({ hours, minutes }: { hours: number; minutes: number }) => {
       setModalVisible(false);
-      setSelectedHours(hours);
-      setSelectedMinutes(minutes);
-      const newDisplayTime = formatTime(hours, minutes, use24HourClock);
+
+      // Guard against invalid values from modal
+      const safeHours = Number.isFinite(hours) ? hours : 12;
+      const safeMinutes = Number.isFinite(minutes) ? minutes : 0;
+
+      setSelectedHours(safeHours);
+      setSelectedMinutes(safeMinutes);
+      const newDisplayTime = formatTime(safeHours, safeMinutes, use24HourClock);
       setDisplayTime(newDisplayTime);
 
       if (onChange) {
         const newDate = value ? new Date(value) : new Date();
-        newDate.setHours(hours);
-        newDate.setMinutes(minutes);
+        newDate.setHours(safeHours);
+        newDate.setMinutes(safeMinutes);
         newDate.setSeconds(0);
         newDate.setMilliseconds(0);
         onChange(newDate);
@@ -118,29 +147,44 @@ export const TimePicker = ({
     [onChange, use24HourClock, value],
   );
 
-  const showModal = () => {
+  const showModal = useCallback(() => {
+    if (disabled) return;
+
     if (value) {
-      setSelectedHours(value.getHours());
-      setSelectedMinutes(value.getMinutes());
+      const h = value.getHours();
+      const m = value.getMinutes();
+      // Guard against invalid values when opening modal
+      const safeH = Number.isFinite(h) ? h : 12;
+      const safeM = Number.isFinite(m) ? m : 0;
+      setSelectedHours(safeH);
+      setSelectedMinutes(safeM);
     } else {
-      setSelectedHours(initialHours);
-      setSelectedMinutes(initialMinutes);
+      // Guard against invalid initial values when opening modal
+      const safeInitialHours = Number.isFinite(initialHours)
+        ? initialHours
+        : 12;
+      const safeInitialMinutes = Number.isFinite(initialMinutes)
+        ? initialMinutes
+        : 0;
+      setSelectedHours(safeInitialHours);
+      setSelectedMinutes(safeInitialMinutes);
     }
     setModalVisible(true);
-  };
+  }, [value, initialHours, initialMinutes, disabled]);
 
   return (
     <>
-      <TouchableOpacity onPress={showModal} disabled={disabled}>
-        <TextField
-          startAdornment={{ type: "icon", value: "clock" }}
-          variant={variant}
-          label={label}
-          value={displayTime}
-          readOnly={true}
-          disabled={disabled}
-        />
-      </TouchableOpacity>
+      <TextField
+        startAdornment={{ type: "icon", value: "clock" }}
+        variant={variant}
+        label={label}
+        value={displayTime}
+        readOnly={true}
+        disabled={disabled}
+        errorMessage={errorMessage}
+        supportingText={supportingText}
+        onPress={showModal}
+      />
       <TimePickerModal
         visible={modalVisible}
         onDismiss={handleDismiss}
