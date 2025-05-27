@@ -3,18 +3,16 @@ import type { LayoutChangeEvent, ViewStyle } from "react-native";
 
 /**
  * Props for the `Grid` component.
- * @param {number | "auto"} [columns="auto"] - The number of columns in the grid.
- *        "auto" will determine columns based on screen width.
  * @param {number | "compact" | "comfortable" | "spacious"} [spacing="comfortable"] -
  *        The spacing between grid items. Can be a number or a predefined token.
  * @param {number} [margin=16] - The margin around the entire grid container.
  * @param {ReactNode} children - The content of the grid, typically `GridItem` components.
  * @param {ViewStyle} [style] - Custom style for the grid container.
- * @param {"masonry" | "standard"} [variant="masonry"] - The layout variant of the grid.
+ * @param {"masonry" | "standard"} [variant="standard"] - The layout variant of the grid.
  *        "standard" for a simple row-wrapping grid, "masonry" for a Pinterest-like layout.
+ *        Columns are automatically determined based on Material Design 3 breakpoints.
  */
 export type GridProps = {
-  columns?: number | "auto";
   spacing?: number | "compact" | "comfortable" | "spacious";
   margin?: number;
   children: ReactNode;

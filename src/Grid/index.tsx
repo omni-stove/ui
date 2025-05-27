@@ -16,13 +16,17 @@ export { GridItem } from "./GridItem";
  * where items of varying heights are positioned to minimize gaps.
  * The masonry layout dynamically calculates item positions based on their heights.
  *
+ * Columns are automatically determined based on Material Design 3 breakpoints:
+ * - Mobile (<600px): 4 columns
+ * - Tablet (600-840px): 8 columns
+ * - Desktop (>840px): 12 columns
+ *
  * @param {GridProps} props - The component's props.
  * @returns {JSX.Element} The Grid component.
  * @see {@link GridItem}
  * @see {@link GridProps}
  */
 export const Grid = ({
-  columns = "auto",
   spacing = "comfortable",
   margin = 16,
   children,
@@ -52,7 +56,7 @@ export const Grid = ({
     new Map(),
   );
 
-  const responsiveColumns = useResponsiveColumns(columns);
+  const responsiveColumns = useResponsiveColumns();
   const spacingValue = getSpacingValue(spacing);
 
   const masonryItems = useMemo(() => {

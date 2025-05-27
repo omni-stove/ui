@@ -20,6 +20,7 @@ export * from "./IconButton";
 export * from "./List";
 export * from "./Menu";
 export * from "./Modal";
+export * from "./MonthYearPicker";
 export * from "./Portal";
 export * from "./ProgressBar";
 export * from "./RadioButton";

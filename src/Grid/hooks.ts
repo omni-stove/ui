@@ -9,21 +9,18 @@ import {
 
 /**
  * Custom hook to get the number of columns for a responsive grid layout.
- * If `defaultColumns` is a number, it returns that number.
- * If `defaultColumns` is "auto" or undefined, it calculates the number of columns
- * based on the window width using `getResponsiveColumns`.
+ * Automatically calculates the number of columns based on Material Design 3 breakpoints
+ * and the current window width.
  *
- * @param {number | "auto"} [defaultColumns] - The desired number of columns or "auto" for responsive calculation.
- * @returns {number} The calculated number of columns.
+ * @returns {number} The calculated number of columns based on screen width.
  * @see {@link getResponsiveColumns}
  */
-export const useResponsiveColumns = (defaultColumns?: number | "auto") => {
+export const useResponsiveColumns = () => {
   const { width } = useWindowDimensions();
 
   return useMemo(() => {
-    if (typeof defaultColumns === "number") return defaultColumns;
     return getResponsiveColumns(width);
-  }, [width, defaultColumns]);
+  }, [width]);
 };
 
 /**

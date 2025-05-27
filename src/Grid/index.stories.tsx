@@ -16,11 +16,6 @@ const meta: Meta<typeof Component> = {
     },
   },
   argTypes: {
-    columns: {
-      control: { type: "select" },
-      options: ["auto", 2, 3, 4, 5],
-      description: "カラム数（autoでレスポンシブ）",
-    },
     spacing: {
       control: { type: "select" },
       options: ["compact", "comfortable", "spacious", 8, 16, 24],
@@ -53,7 +48,6 @@ const SampleCard = ({
 );
 
 const args: Story["args"] = {
-  columns: "auto",
   spacing: "comfortable",
   margin: 16,
 };
@@ -72,10 +66,9 @@ export const Default: Story = {
   ),
 };
 
-export const TwoColumns: Story = {
+export const SpacingDemo: Story = {
   args: {
     ...args,
-    columns: 2,
     spacing: "spacious",
   },
   render: (args) => (
@@ -88,10 +81,9 @@ export const TwoColumns: Story = {
   ),
 };
 
-export const ThreeColumns: Story = {
+export const CompactSpacing: Story = {
   args: {
     ...args,
-    columns: 3,
     spacing: "compact",
   },
   render: (args) => (
@@ -112,7 +104,6 @@ export const ThreeColumns: Story = {
 export const MixedHeights: Story = {
   args: {
     ...args,
-    columns: 3,
     spacing: "comfortable",
   },
   render: (args) => (
@@ -134,7 +125,6 @@ export const MixedHeights: Story = {
 export const ResponsiveDemo: Story = {
   args: {
     ...args,
-    columns: "auto",
     spacing: "comfortable",
   },
   render: (args) => (
