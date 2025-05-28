@@ -3,12 +3,15 @@ import {
   type ReactNode,
   type Ref,
   forwardRef,
+  useLayoutEffect,
+  useState,
 } from "react";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
 import { Appbar } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMainContentStyle } from "../Provider";
+import { NavigationRail, type NavigationRailItem } from "../NavigationRail";
 import { Toolbar } from "../Toolbar";
 import { useTheme } from "../hooks";
 
@@ -35,6 +38,15 @@ type AppbarAction = {
  * @param {() => void} props.appbar.backAction.onPress - Function to call when the back action is pressed.
  * @param {string} [props.appbar.backAction.accessibilityLabel] - Accessibility label for the back action.
  * @param {AppbarAction[]} [props.appbar.actions] - An array of action items to display in the Appbar.
+ * @param {object} [props.navigationRail] - Configuration for the NavigationRail. If provided, will be displayed responsively (standard on wide web screens, modal otherwise).
+ * @param {NavigationRailItem[]} props.navigationRail.items - An array of navigation items to display.
+ * @param {string} props.navigationRail.selectedItemKey - The key of the currently selected navigation item.
+ * @param {() => void} [props.navigationRail.onMenuPress] - Callback function invoked when the menu button is pressed.
+ * @param {IconSource} [props.navigationRail.fabIcon] - Icon for the Floating Action Button within the rail.
+ * @param {string} [props.navigationRail.fabLabel] - Label for the FAB (visible when expanded).
+ * @param {() => void} [props.navigationRail.onFabPress] - Callback function invoked when the FAB is pressed.
+ * @param {"collapsed" | "expanded"} [props.navigationRail.initialStatus] - Initial expanded/collapsed status for standard variant.
+ * @param {number} [props.navigationRailBreakpoint=768] - Breakpoint for switching between standard and modal variants (web only).
  * @param {ComponentProps<typeof Toolbar>} [props.toolbar] - Props for the Toolbar component. If provided, a Toolbar will be displayed at the bottom.
  * @param {ReactNode} props.children - The main content to be rendered within the layout.
  * @param {"height" | "position" | "padding"} [props.keyboardBehavior] - Defines how the layout behaves when the keyboard is visible. Defaults to "padding" on iOS and "height" on other platforms.
@@ -54,6 +66,18 @@ type AppLayoutProps = {
     };
     actions?: AppbarAction[];
   };
+  /** NavigationRail configuration - if provided, will be displayed responsively */
+  navigationRail?: {
+    items: NavigationRailItem[];
+    selectedItemKey: string;
+    onMenuPress?: () => void;
+    fabIcon?: IconSource;
+    fabLabel?: string;
+    onFabPress?: () => void;
+    initialStatus?: "collapsed" | "expanded";
+  };
+  /** Breakpoint for switching between standard and modal variants (web only) */
+  navigationRailBreakpoint?: number;
   /** Toolbar component - if provided, will be displayed at the bottom */
   toolbar?: ComponentProps<typeof Toolbar>;
   /** Main content */
@@ -72,19 +96,27 @@ type AppLayoutProps = {
 
 /**
  * AppLayout provides a consistent layout structure for application screens.
- * It can include an Appbar at the top, a Toolbar at the bottom, and handles
- * keyboard avoidance and safe area insets.
+ * It can include an Appbar at the top, a NavigationRail on the left (responsive),
+ * a Toolbar at the bottom, and handles keyboard avoidance and safe area insets.
  * The layout can also automatically adjust for the presence of SideSheets.
+ *
+ * NavigationRail behavior:
+ * - On web platforms with screen width >= breakpoint: displays as standard (persistent) rail
+ * - On mobile or web with narrow screens: displays as modal rail
+ * - Breakpoint defaults to 768px but can be customized
  *
  * @param {AppLayoutProps} props - The component's props.
  * @param {Ref<KeyboardAvoidingView>} ref - Ref for the underlying KeyboardAvoidingView.
  * @returns {JSX.Element} The AppLayout component.
  * @see {@link Toolbar}
+ * @see {@link NavigationRail}
  */
 export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
   (
     {
       appbar,
+      navigationRail,
+      navigationRailBreakpoint = 768,
       toolbar,
       children,
       keyboardBehavior = Platform.OS === "ios" ? "padding" : "height",
@@ -99,6 +131,30 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
     const mainContentStyle = autoAdjustForSideSheet
       ? useMainContentStyle()
       : {};
+
+    // Track screen width for responsive NavigationRail variant
+    const [screenWidth, setScreenWidth] = useState(
+      Platform.OS === "web" ? window.innerWidth : 0,
+    );
+
+    useLayoutEffect(() => {
+      if (Platform.OS !== "web") return;
+
+      const handleResize = () => {
+        setScreenWidth(window.innerWidth);
+      };
+
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    // Determine NavigationRail variant based on platform and screen width
+    const getNavigationRailVariant = () => {
+      if (!navigationRail || Platform.OS !== "web") return "modal";
+      return screenWidth >= navigationRailBreakpoint ? "standard" : "modal";
+    };
+
+    const railVariant = navigationRail ? getNavigationRailVariant() : null;
 
     const topColor = appbar ? theme.colors.surface : theme.colors.background;
     const bottomColor = toolbar
@@ -154,8 +210,39 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
             </Appbar.Header>
           )}
 
-          {/* Main content */}
-          <View style={{ flex: 1 }}>{children}</View>
+          {/* Main content with NavigationRail */}
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            {/* NavigationRail - standard variant */}
+            {navigationRail && railVariant === "standard" && (
+              <NavigationRail
+                variant="standard"
+                items={navigationRail.items}
+                selectedItemKey={navigationRail.selectedItemKey}
+                onMenuPress={navigationRail.onMenuPress}
+                fabIcon={navigationRail.fabIcon}
+                fabLabel={navigationRail.fabLabel}
+                onFabPress={navigationRail.onFabPress}
+                initialStatus={navigationRail.initialStatus}
+              />
+            )}
+
+            {/* Main content */}
+            <View style={{ flex: 1 }}>{children}</View>
+          </View>
+
+          {/* NavigationRail - modal variant */}
+          {navigationRail && railVariant === "modal" && (
+            <NavigationRail
+              variant="modal"
+              items={navigationRail.items}
+              selectedItemKey={navigationRail.selectedItemKey}
+              onMenuPress={navigationRail.onMenuPress}
+              fabIcon={navigationRail.fabIcon}
+              fabLabel={navigationRail.fabLabel}
+              onFabPress={navigationRail.onFabPress}
+              initialModalOpen={false}
+            />
+          )}
 
           {/* Toolbar */}
           {toolbar && <Toolbar {...toolbar} />}

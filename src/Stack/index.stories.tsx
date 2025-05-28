@@ -3,7 +3,6 @@ import { Text, View } from "react-native";
 import { Stack } from "./index";
 
 const meta = {
-  title: "UI/Stack",
   component: Stack,
   args: {
     children: (

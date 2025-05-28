@@ -7,7 +7,6 @@ import { getCanvas } from "../libs/storybook";
 
 const meta: Meta<typeof Component> = {
   component: Component,
-  title: "Components/MonthYearPicker",
   parameters: {
     docs: {
       description: {

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { ScrollView, View } from "react-native";
 import { Button } from "react-native-paper";
+import { useState } from "react";
 import { Typography } from "../Typography";
 import { AppLayout } from "./index";
 
@@ -117,6 +118,106 @@ export const WithToolbar: Story = {
   },
 };
 
+// Sample NavigationRail items
+const sampleNavigationItems = [
+  {
+    key: "home",
+    icon: "home",
+    label: "Home",
+    onPress: () => console.log("Home pressed"),
+  },
+  {
+    key: "search",
+    icon: "magnify",
+    label: "Search",
+    onPress: () => console.log("Search pressed"),
+    badge: { label: "3", size: "small" as const },
+  },
+  {
+    key: "favorites",
+    icon: "heart",
+    label: "Favorites",
+    onPress: () => console.log("Favorites pressed"),
+  },
+  {
+    key: "profile",
+    icon: "account",
+    label: "Profile",
+    onPress: () => console.log("Profile pressed"),
+    badge: { label: "New", size: "large" as const },
+  },
+];
+
+const NavigationRailContent = () => {
+  const [selectedKey, setSelectedKey] = useState("home");
+
+  return (
+    <AppLayout
+      navigationRail={{
+        items: sampleNavigationItems.map((item) => ({
+          ...item,
+          onPress: () => {
+            setSelectedKey(item.key);
+            item.onPress();
+          },
+        })),
+        selectedItemKey: selectedKey,
+        onMenuPress: () => console.log("Menu pressed"),
+        fabIcon: "plus",
+        fabLabel: "Create",
+        onFabPress: () => console.log("FAB pressed"),
+        initialStatus: "collapsed",
+      }}
+      navigationRailBreakpoint={768}
+    >
+      <SampleContent title={`Selected: ${selectedKey}`} />
+    </AppLayout>
+  );
+};
+
+export const WithNavigationRail: Story = {
+  render: () => <NavigationRailContent />,
+};
+
+export const WithNavigationRailAndAppbar: Story = {
+  render: () => {
+    const [selectedKey, setSelectedKey] = useState("home");
+
+    return (
+      <AppLayout
+        appbar={{
+          title: "App with Navigation",
+          actions: [
+            {
+              icon: "dots-vertical",
+              onPress: () => console.log("More pressed"),
+              accessibilityLabel: "More options",
+            },
+          ],
+        }}
+        navigationRail={{
+          items: sampleNavigationItems.map((item) => ({
+            ...item,
+            onPress: () => {
+              setSelectedKey(item.key);
+              item.onPress();
+            },
+          })),
+          selectedItemKey: selectedKey,
+          onMenuPress: () => console.log("Menu pressed"),
+          fabIcon: "plus",
+          fabLabel: "Create",
+          onFabPress: () => console.log("FAB pressed"),
+          initialStatus: "expanded",
+        }}
+        navigationRailBreakpoint={768}
+      >
+        <SampleContent title={`Selected: ${selectedKey}`} />
+      </AppLayout>
+    );
+  },
+};
+
 export const Complete: Story = {
   args: {
     appbar: {
@@ -149,5 +250,63 @@ export const Complete: Story = {
       ],
     },
     children: <ScrollableContent />,
+  },
+};
+
+export const CompleteWithNavigationRail: Story = {
+  render: () => {
+    const [selectedKey, setSelectedKey] = useState("home");
+
+    return (
+      <AppLayout
+        appbar={{
+          title: "Complete Layout",
+          backAction: {
+            onPress: () => console.log("Back pressed"),
+            accessibilityLabel: "Go back",
+          },
+          actions: [
+            {
+              icon: "magnify",
+              onPress: () => console.log("Search pressed"),
+              accessibilityLabel: "Search",
+            },
+          ],
+        }}
+        navigationRail={{
+          items: sampleNavigationItems.map((item) => ({
+            ...item,
+            onPress: () => {
+              setSelectedKey(item.key);
+              item.onPress();
+            },
+          })),
+          selectedItemKey: selectedKey,
+          onMenuPress: () => console.log("Menu pressed"),
+          fabIcon: "plus",
+          fabLabel: "Create",
+          onFabPress: () => console.log("FAB pressed"),
+          initialStatus: "collapsed",
+        }}
+        toolbar={{
+          variant: "docked",
+          actions: [
+            {
+              icon: "home",
+              onPress: () => console.log("Home pressed"),
+              accessibilityLabel: "Home",
+            },
+            {
+              icon: "heart",
+              onPress: () => console.log("Favorites pressed"),
+              accessibilityLabel: "Favorites",
+            },
+          ],
+        }}
+        navigationRailBreakpoint={768}
+      >
+        <ScrollableContent />
+      </AppLayout>
+    );
   },
 };
