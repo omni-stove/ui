@@ -12,7 +12,10 @@ import {
   useMemo,
   useRef,
 } from "react";
-import { type StyleProp, StyleSheet, View, type ViewStyle } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { useTheme } from "react-native-paper";
+import { Divider } from "../Divider";
+import { Portal } from "../Portal";
 import { Typography } from "../Typography";
 
 /**
@@ -40,9 +43,7 @@ export type BottomSheetRef = {
  * @param {number} [props.initialSnapIndex=-1] - The initial snap point index. Defaults to -1 (closed).
  * @param {(index: number) => void} [props.onChange] - Callback function triggered when the snap point changes.
  * @param {BottomSheetProps["backdropComponent"]} [props.backdropComponent] - Custom component for the backdrop. Defaults to `BottomSheetBackdrop`.
- * @param {StyleProp<ViewStyle>} [props.handleIndicatorStyle] - Style for the handle indicator.
- * @param {StyleProp<ViewStyle>} [props.backgroundStyle] - Style for the bottom sheet's background.
- * @param {StyleProp<ViewStyle>} [props.style] - Style for the bottom sheet container.
+ * @param {"standard" | "modal"} [props.variant="standard"] - The variant of the bottom sheet. "standard" allows background interaction, "modal" blocks background interaction.
  */
 type Props = {
   children?: ReactNode;
@@ -52,19 +53,18 @@ type Props = {
   initialSnapIndex?: number;
   onChange?: (index: number) => void;
   backdropComponent?: BottomSheetProps["backdropComponent"];
-  handleIndicatorStyle?: StyleProp<ViewStyle>;
-  backgroundStyle?: StyleProp<ViewStyle>;
-  style?: StyleProp<ViewStyle>;
+  variant?: "standard" | "modal";
 };
 
 /**
- * A customizable BottomSheet component based on `@gorhom/bottom-sheet`.
+ * A customizable BottomSheet component based on `@gorhom/bottom-sheet` with Material Design 3 styling.
  * It allows rendering custom content, defining snap points, and controlling
  * its state (open, close, snap, expand, collapse) via a ref.
+ * The component is wrapped in a Portal to ensure it always appears on top.
  *
- * The `GestureHandlerRootView` should wrap the entire application or Storybook preview
- * for this component to function correctly. It has been removed from this component
- * to avoid nesting issues.
+ * The variant prop controls the interaction behavior:
+ * - "standard": Allows background content interaction (no backdrop)
+ * - "modal": Blocks background content interaction (with backdrop)
  *
  * @param {Props} props - The component's props.
  * @param {Ref<BottomSheetRef>} ref - Ref to control the BottomSheet.
@@ -81,13 +81,12 @@ export const BottomSheet = forwardRef<BottomSheetRef, Props>(
       initialSnapIndex = -1,
       onChange,
       backdropComponent,
-      handleIndicatorStyle,
-      backgroundStyle,
-      style,
+      variant = "standard",
       ...rest
     },
     ref,
   ) => {
+    const theme = useTheme();
     const bottomSheetRef = useRef<BottomSheetOriginal>(null);
 
     const snapPoints = useMemo(
@@ -130,40 +129,65 @@ export const BottomSheet = forwardRef<BottomSheetRef, Props>(
           disappearsOnIndex={-1}
           appearsOnIndex={0}
           pressBehavior={"close"}
+          style={[props.style, { backgroundColor: theme.colors.backdrop }]}
         />
       ),
-      [],
+      [theme.colors.backdrop],
     );
+
+    // variant="standard"の時はbackdropを無効にして背景操作を可能にする
+    const getBackdropComponent = useCallback(() => {
+      if (variant === "standard") {
+        return undefined; // backdropなし = 背景操作可能
+      }
+      return backdropComponent || renderBackdrop;
+    }, [variant, backdropComponent, renderBackdrop]);
 
     const BottomSheetTitle = ({ text }: { text: string }) => (
       <View style={styles.titleContainer}>
-        <Typography variant="titleMedium">{text}</Typography>
+        <Typography variant="titleLarge">{text}</Typography>
+        <Divider />
       </View>
     );
 
+    // M3 compliant styles
+    const m3HandleStyle = [
+      styles.defaultHandleIndicator,
+      { backgroundColor: theme.colors.onSurfaceVariant },
+    ];
+
+    const m3BackgroundStyle = [
+      styles.defaultBackground,
+      { backgroundColor: theme.colors.surface },
+    ];
+
+    const m3SheetStyle = [
+      styles.defaultSheet,
+      { shadowColor: theme.colors.shadow },
+    ];
+
     return (
       <>
-        {children /* Render children directly */}
-        <BottomSheetOriginal
-          ref={bottomSheetRef}
-          index={initialSnapIndex}
-          snapPoints={snapPoints}
-          onChange={onChange}
-          backdropComponent={backdropComponent || renderBackdrop}
-          handleIndicatorStyle={[
-            styles.defaultHandleIndicator,
-            handleIndicatorStyle,
-          ]}
-          backgroundStyle={[styles.defaultBackground, backgroundStyle]}
-          style={[styles.defaultSheet, style]}
-          enablePanDownToClose={true}
-          {...rest}
-        >
-          {title && <BottomSheetTitle text={title} />}
-          <BottomSheetView style={styles.contentContainer}>
-            {content}
-          </BottomSheetView>
-        </BottomSheetOriginal>
+        {children}
+        <Portal>
+          <BottomSheetOriginal
+            ref={bottomSheetRef}
+            index={initialSnapIndex}
+            snapPoints={snapPoints}
+            onChange={onChange}
+            backdropComponent={getBackdropComponent()}
+            handleIndicatorStyle={m3HandleStyle}
+            backgroundStyle={m3BackgroundStyle}
+            style={m3SheetStyle}
+            enablePanDownToClose={true}
+            {...rest}
+          >
+            {title && <BottomSheetTitle text={title} />}
+            <BottomSheetView style={styles.contentContainer}>
+              {content}
+            </BottomSheetView>
+          </BottomSheetOriginal>
+        </Portal>
       </>
     );
   },
@@ -171,37 +195,28 @@ export const BottomSheet = forwardRef<BottomSheetRef, Props>(
 
 const styles = StyleSheet.create({
   titleContainer: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 24,
     paddingTop: 16,
-    paddingBottom: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
-  },
-  titleText: {
-    // fontSize: 18, // Handled by Typography variant
-    // fontWeight: "500", // Removed as per user request to not use style for this
+    paddingBottom: 16,
   },
   contentContainer: {
     flex: 1,
-    padding: 16,
+    padding: 24,
   },
   defaultHandleIndicator: {
-    backgroundColor: "grey",
     width: 32,
     height: 4,
     borderRadius: 2,
   },
   defaultBackground: {
-    backgroundColor: "white",
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
   },
   defaultSheet: {
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -3 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 20,
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 16,
+    elevation: 16,
   },
 });
 

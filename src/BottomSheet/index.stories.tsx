@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { userEvent, within } from "@storybook/test";
-import { useCallback, useMemo, useRef } from "react";
-import { Button as ReactNativeButton, View } from "react-native";
+import { useRef } from "react";
+import { View } from "react-native";
 import { type BottomSheetRef, BottomSheet as Component } from ".";
-import { Button as CustomButton } from "../Button";
+import { Button } from "../Button";
 import { Typography } from "../Typography";
 
 const meta: Meta<typeof Component> = {
@@ -28,10 +28,22 @@ export const Default: Story = {
     return (
       <View style={{ alignItems: "center", paddingTop: 20 }}>
         <Component {...args} ref={ref}>
-          {/* Children are now passed directly and should handle their own press if they are a trigger */}
-          <CustomButton onPress={() => ref.current?.open()}>
-            Open BottomSheet (Default Story Trigger)
-          </CustomButton>
+          <Button onPress={() => ref.current?.open()}>Open BottomSheet</Button>
+        </Component>
+      </View>
+    );
+  },
+};
+
+export const WithTitle: Story = {
+  render: (args) => {
+    const ref = useRef<BottomSheetRef>(null);
+    return (
+      <View style={{ alignItems: "center", paddingTop: 20 }}>
+        <Component {...args} ref={ref} title="選択してください">
+          <Button onPress={() => ref.current?.open()}>
+            Open BottomSheet with Title
+          </Button>
         </Component>
       </View>
     );
@@ -44,9 +56,9 @@ export const Behavior: Story = {
     return (
       <View style={{ alignItems: "center", paddingTop: 20 }}>
         <Component {...args} ref={ref}>
-          <CustomButton onPress={() => ref.current?.open()}>
-            Open BottomSheet (Behavior Story Trigger)
-          </CustomButton>
+          <Button onPress={() => ref.current?.open()}>
+            Open BottomSheet (Behavior Test)
+          </Button>
         </Component>
       </View>
     );
@@ -60,69 +72,131 @@ export const Behavior: Story = {
   },
 };
 
-import GorhomBottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-
-export const DynamicSnapPointsDirect: Story = {
-  render: () => {
-    const sheetRef = useRef<GorhomBottomSheet>(null);
-    const snapPoints = useMemo(() => ["25%", "50%", "90%"], []);
-
-    const handleSheetChange = useCallback((index: number) => {
-      console.log("handleSheetChange", index);
-    }, []);
-
-    const handleSnapPress = useCallback((index: number) => {
-      sheetRef.current?.snapToIndex(index);
-    }, []);
-
-    const handleClosePress = useCallback(() => {
-      sheetRef.current?.close();
-    }, []);
+export const LongContent: Story = {
+  render: (args) => {
+    const ref = useRef<BottomSheetRef>(null);
+    const longContent = (
+      <View style={{ padding: 16 }}>
+        <Typography variant="titleMedium" style={{ marginBottom: 16 }}>
+          長いコンテンツのテスト
+        </Typography>
+        {Array.from({ length: 20 }, (_, i) => {
+          const itemId = `long-content-test-item-${i + 1}`;
+          return (
+            <Typography key={itemId} style={{ marginBottom: 8 }}>
+              これは長いコンテンツのテスト項目 {i + 1}{" "}
+              です。BottomSheetがスクロール可能かどうかを確認するためのテキストです。
+            </Typography>
+          );
+        })}
+      </View>
+    );
 
     return (
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <View style={{ flex: 1, paddingTop: 50, alignItems: "center" }}>
-          <ReactNativeButton
-            title="Snap To 90%"
-            onPress={() => handleSnapPress(2)}
-          />
-          <ReactNativeButton
-            title="Snap To 50%"
-            onPress={() => handleSnapPress(1)}
-          />
-          <ReactNativeButton
-            title="Snap To 25%"
-            onPress={() => handleSnapPress(0)}
-          />
-          <ReactNativeButton title="Close" onPress={handleClosePress} />
-          <GorhomBottomSheet
-            ref={sheetRef}
-            snapPoints={snapPoints}
-            onChange={handleSheetChange}
-            handleIndicatorStyle={{ backgroundColor: "grey" }}
-            backgroundStyle={{ borderRadius: 28, backgroundColor: "white" }}
-            style={{
-              shadowColor: "#000",
-              shadowOffset: { width: 0, height: -3 },
-              shadowOpacity: 0.1,
-              shadowRadius: 3,
-              elevation: 20,
-            }}
-          >
-            <BottomSheetView
-              style={{ flex: 1, padding: 24, alignItems: "center" }}
-            >
-              <Typography variant="titleMedium">Awesome 🔥</Typography>
-              <Typography>
-                This is a direct @gorhom/bottom-sheet implementation.
-              </Typography>
-            </BottomSheetView>
-          </GorhomBottomSheet>
-        </View>
-      </GestureHandlerRootView>
+      <View style={{ alignItems: "center", paddingTop: 20 }}>
+        <Component
+          {...args}
+          ref={ref}
+          content={longContent}
+          title="長いコンテンツ"
+        >
+          <Button onPress={() => ref.current?.open()}>
+            Open Long Content BottomSheet
+          </Button>
+        </Component>
+      </View>
     );
   },
-  args: {},
-  name: "Dynamic Snap Points (Direct @gorhom/bottom-sheet)",
+};
+
+export const StandardVariant: Story = {
+  render: (args) => {
+    const ref = useRef<BottomSheetRef>(null);
+    return (
+      <View style={{ alignItems: "center", paddingTop: 20, gap: 16 }}>
+        <Typography variant="titleMedium">
+          Standard Variant - 背景操作可能
+        </Typography>
+        <Button onPress={() => console.log("背景ボタンがタップされました")}>
+          背景のボタン（タップ可能）
+        </Button>
+        <Component
+          {...args}
+          ref={ref}
+          variant="standard"
+          title="Standard BottomSheet"
+        >
+          <Button onPress={() => ref.current?.open()}>
+            Open Standard BottomSheet
+          </Button>
+        </Component>
+      </View>
+    );
+  },
+};
+
+export const ModalVariant: Story = {
+  render: (args) => {
+    const ref = useRef<BottomSheetRef>(null);
+    return (
+      <View style={{ alignItems: "center", paddingTop: 20, gap: 16 }}>
+        <Typography variant="titleMedium">
+          Modal Variant - 背景操作不可
+        </Typography>
+        <Button onPress={() => console.log("背景ボタンがタップされました")}>
+          背景のボタン（タップ不可になる）
+        </Button>
+        <Component
+          {...args}
+          ref={ref}
+          variant="modal"
+          title="Modal BottomSheet"
+        >
+          <Button onPress={() => ref.current?.open()}>
+            Open Modal BottomSheet
+          </Button>
+        </Component>
+      </View>
+    );
+  },
+};
+
+export const VariantComparison: Story = {
+  render: (args) => {
+    const standardRef = useRef<BottomSheetRef>(null);
+    const modalRef = useRef<BottomSheetRef>(null);
+
+    return (
+      <View style={{ alignItems: "center", paddingTop: 20, gap: 16 }}>
+        <Typography variant="titleMedium">Variant比較テスト</Typography>
+        <Button onPress={() => console.log("背景ボタンがタップされました")}>
+          背景のボタン
+        </Button>
+
+        <View style={{ flexDirection: "row", gap: 16 }}>
+          <Component
+            {...args}
+            ref={standardRef}
+            variant="standard"
+            title="Standard"
+          >
+            <Button onPress={() => standardRef.current?.open()}>
+              Standard
+            </Button>
+          </Component>
+
+          <Component {...args} ref={modalRef} variant="modal" title="Modal">
+            <Button onPress={() => modalRef.current?.open()}>Modal</Button>
+          </Component>
+        </View>
+
+        <Typography
+          variant="bodySmall"
+          style={{ textAlign: "center", marginTop: 16 }}
+        >
+          Standardは背景操作可能、Modalは背景操作不可
+        </Typography>
+      </View>
+    );
+  },
 };
