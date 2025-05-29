@@ -18,7 +18,7 @@ import { Portal } from "react-native-paper";
 import { BottomSheet, type BottomSheetRef } from "../BottomSheet";
 import { Chip } from "../Chip";
 import { Menu } from "../Menu";
-import { Modal } from "../Modal";
+import { Searchbar } from "../Searchbar";
 import { TextField } from "../TextField";
 import { TouchableRipple } from "../TouchableRipple";
 import { Typography } from "../Typography";
@@ -37,10 +37,9 @@ type AutoCompleteOption = {
  * Defines the rendering mode for the AutoComplete component.
  * - `dropdown`: Shows options in a dropdown menu (suitable for web/desktop).
  * - `bottomSheet`: Shows options in a bottom sheet (suitable for mobile).
- * - `modal`: Shows options in a modal dialog.
  * - `auto`: Automatically chooses between dropdown and bottomSheet based on screen size.
  */
-type RenderMode = "dropdown" | "bottomSheet" | "modal" | "auto";
+type RenderMode = "dropdown" | "bottomSheet" | "auto";
 
 /**
  * Props for the AutoComplete component.
@@ -57,7 +56,7 @@ type RenderMode = "dropdown" | "bottomSheet" | "modal" | "auto";
  * @param {boolean} [props.disabled=false] - Whether the AutoComplete is disabled.
  * @param {string} [props.errorMessage] - Error message to display below the TextField.
  * @param {string} [props.supportingText] - Supporting text to display below the TextField.
- * @param {string} [props.searchPlaceholder] - Placeholder text for the search field in bottom sheet/modal.
+ * @param {string} [props.searchPlaceholder] - Placeholder text for the search field in bottom sheet.
  */
 type Props = {
   options: AutoCompleteOption[];
@@ -123,38 +122,48 @@ const SelectedChips = ({
     <View
       style={{
         position: "absolute",
-        top: 12,
+        top: 0,
         bottom: 0,
         left: 16,
         right: 48,
-        flexDirection: "row",
-        flexWrap: "wrap",
-        gap: 4,
         zIndex: 1,
         pointerEvents: "none",
-        alignItems: "center",
-        justifyContent: "flex-start",
+        justifyContent: "center",
       }}
     >
-      {selectedOptions.map((option) => (
-        <View key={option.value} style={{ pointerEvents: "auto" }}>
-          <Chip
-            variant="input"
-            trailingIcon="close"
-            onTrailingIconPress={() => onRemove(option.value)}
-            isDisabled={disabled}
-          >
-            {option.label}
-          </Chip>
-        </View>
-      ))}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{
+          flexDirection: "row",
+          gap: 4,
+          alignItems: "center",
+          paddingRight: 8,
+        }}
+        style={{
+          flex: 1,
+        }}
+      >
+        {selectedOptions.map((option) => (
+          <View key={option.value} style={{ pointerEvents: "auto" }}>
+            <Chip
+              variant="input"
+              trailingIcon="close"
+              onTrailingIconPress={() => onRemove(option.value)}
+              isDisabled={disabled}
+            >
+              {option.label}
+            </Chip>
+          </View>
+        ))}
+      </ScrollView>
     </View>
   );
 };
 
 /**
  * An AutoComplete component that allows users to search and select multiple options.
- * It supports different rendering modes (dropdown, bottom sheet, modal) and automatically
+ * It supports different rendering modes (dropdown, bottom sheet) and automatically
  * adapts to screen size when using "auto" mode.
  *
  * @param {Props} props - The component's props.
@@ -171,12 +180,12 @@ const SelectedChips = ({
  * @param {boolean} [props.disabled=false] - Whether disabled.
  * @param {string} [props.errorMessage] - Error message.
  * @param {string} [props.supportingText] - Supporting text.
- * @param {string} [props.searchPlaceholder] - Search placeholder for bottom sheet/modal.
+ * @param {string} [props.searchPlaceholder] - Search placeholder for bottom sheet.
  * @param {ForwardedRef<TextInput>} ref - Ref to be forwarded to the underlying TextField component.
  * @returns {JSX.Element} The AutoComplete component.
  * @see {@link TextField}
  * @see {@link BottomSheet}
- * @see {@link Modal}
+
  * @see {@link Menu}
  * @see {@link Chip}
  */
@@ -400,15 +409,15 @@ export const AutoComplete = forwardRef<TextInput, Props>(
           <Portal>
             <BottomSheet
               ref={bottomSheetRef}
-              title="項目を選択"
               onChange={handleBottomSheetChange}
+              snapPoints={["60%", "90%"]}
+              variant="modal"
               content={
                 <View style={{ flex: 1 }}>
-                  <TextField
+                  <Searchbar
+                    placeholder={searchPlaceholder}
                     value={inputValue}
                     onChangeText={handleInputChange}
-                    supportingText={inputValue ? undefined : searchPlaceholder}
-                    variant="outlined"
                     style={{ marginBottom: 16 }}
                   />
 
@@ -451,61 +460,6 @@ export const AutoComplete = forwardRef<TextInput, Props>(
                 </View>
               }
             />
-          </Portal>
-        )}
-        {actualRenderMode === "modal" && (
-          <Portal>
-            <Modal visible={isOpen} onDismiss={closePicker}>
-              <View style={{ maxHeight: 400 }}>
-                <TextField
-                  value={inputValue}
-                  onChangeText={handleInputChange}
-                  supportingText={inputValue ? undefined : searchPlaceholder}
-                  variant="outlined"
-                  style={{ marginBottom: 16 }}
-                />
-
-                {selectedOptions.length > 0 && (
-                  <View style={{ marginBottom: 16 }}>
-                    <Typography
-                      variant="labelMedium"
-                      style={{ marginBottom: 8 }}
-                    >
-                      選択済み
-                    </Typography>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        flexWrap: "wrap",
-                        gap: 8,
-                      }}
-                    >
-                      {selectedOptions.map((option) => (
-                        <Chip
-                          key={option.value}
-                          variant="input"
-                          trailingIcon="close"
-                          onTrailingIconPress={() =>
-                            handleRemoveOption(option.value)
-                          }
-                          isDisabled={disabled}
-                        >
-                          {option.label}
-                        </Chip>
-                      ))}
-                    </View>
-                  </View>
-                )}
-
-                <Typography variant="labelMedium" style={{ marginBottom: 8 }}>
-                  候補
-                </Typography>
-                <Options
-                  filteredOptions={filteredOptions}
-                  handleSelectOption={handleSelectOption}
-                />
-              </View>
-            </Modal>
           </Portal>
         )}
       </View>

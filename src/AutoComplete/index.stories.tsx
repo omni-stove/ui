@@ -10,14 +10,14 @@ const meta: Meta<typeof Component> = {
     docs: {
       description: {
         component:
-          "AutoComplete component that allows users to search and select multiple options. Supports different rendering modes (dropdown, bottom sheet, modal) and automatically adapts to screen size.",
+          "AutoComplete component that allows users to search and select multiple options. Supports different rendering modes (dropdown, bottom sheet) and automatically adapts to screen size.",
       },
     },
   },
   argTypes: {
     renderMode: {
       control: { type: "select" },
-      options: ["auto", "dropdown", "bottomSheet", "modal"],
+      options: ["auto", "dropdown", "bottomSheet"],
       description: "The rendering mode for the options display",
     },
     variant: {
@@ -122,7 +122,6 @@ export const RenderModes: Story = {
   render: () => {
     const [dropdownValue, setDropdownValue] = useState<string[]>([]);
     const [bottomSheetValue, setBottomSheetValue] = useState<string[]>([]);
-    const [modalValue, setModalValue] = useState<string[]>([]);
 
     return (
       <View style={{ gap: 24 }}>
@@ -141,14 +140,6 @@ export const RenderModes: Story = {
           label="Bottom Sheet Mode"
           placeholder="果物を選択してください"
           renderMode="bottomSheet"
-        />
-        <Component
-          options={techOptions}
-          value={modalValue}
-          onChange={setModalValue}
-          label="Modal Mode"
-          placeholder="技術を選択してください"
-          renderMode="modal"
         />
       </View>
     );
