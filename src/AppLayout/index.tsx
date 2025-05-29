@@ -156,9 +156,11 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
 
     const railVariant = navigationRail ? getNavigationRailVariant() : null;
 
-    const topColor = appbar ? theme.colors.surface : theme.colors.background;
+    const topColor = appbar
+      ? theme.colors.surfaceContainer
+      : theme.colors.background;
     const bottomColor = toolbar
-      ? theme.colors.surfaceVariant
+      ? theme.colors.surfaceContainer
       : theme.colors.background;
 
     return (
@@ -190,7 +192,9 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
         >
           {/* Appbar */}
           {appbar && (
-            <Appbar.Header>
+            <Appbar.Header
+              style={{ backgroundColor: theme.colors.surfaceContainer }}
+            >
               {appbar.backAction && (
                 <Appbar.BackAction
                   onPress={appbar.backAction.onPress}

@@ -1,31 +1,26 @@
 import { withBackgrounds } from "@storybook/addon-ondevice-backgrounds";
 import type { Preview } from "@storybook/react";
 import React from "react";
-import { UIProvider } from "../src/Provider";
+import { useColorScheme } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { SafeAreaView, ScrollView, useColorScheme } from "react-native";
-import { MD3LightTheme, MD3DarkTheme } from "react-native-paper";
+import { MD3DarkTheme, MD3LightTheme } from "react-native-paper";
+import { UIProvider } from "../src/Provider";
 
 const ThemeAwareDecorator = (Story: any, context: any) => {
 	const colorScheme = useColorScheme();
-	const theme = colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme;
-	
+	const theme = colorScheme === "dark" ? MD3DarkTheme : MD3LightTheme;
+
 	return (
-		<UIProvider>
-			<SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
-			<GestureHandlerRootView style={{ flex: 1 }}>
-			  <Story />
-			</GestureHandlerRootView>
-			</SafeAreaView>
-		</UIProvider>
+		<GestureHandlerRootView style={{ flex: 1 }}>
+			<UIProvider>
+				<Story />
+			</UIProvider>
+		</GestureHandlerRootView>
 	);
 };
 
 const preview: Preview = {
-	decorators: [
-		withBackgrounds,
-		ThemeAwareDecorator,
-	],
+	decorators: [withBackgrounds, ThemeAwareDecorator],
 
 	parameters: {
 		backgrounds: {

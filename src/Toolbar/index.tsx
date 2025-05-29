@@ -152,16 +152,6 @@ export const Toolbar = forwardRef<View, Props>(
     const theme = useTheme();
     const dimensions = getToolbarDimensions(size);
 
-    const colors = {
-      surface: theme.colors.surface,
-      surfaceContainer: theme.colors.surfaceVariant,
-      onSurface: theme.colors.onSurface,
-      onSurfaceVariant: theme.colors.onSurfaceVariant,
-      primary: theme.colors.primary,
-      onPrimary: theme.colors.onPrimary,
-      shadow: theme.colors.shadow,
-    };
-
     const elevationStyles = {
       level0: {
         elevation: 0,
@@ -169,14 +159,14 @@ export const Toolbar = forwardRef<View, Props>(
       },
       level1: {
         elevation: 1,
-        shadowColor: colors.shadow,
+        shadowColor: theme.colors.shadow,
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.05,
         shadowRadius: 2,
       },
       level3: {
         elevation: 3,
-        shadowColor: colors.shadow,
+        shadowColor: theme.colors.shadow,
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.15,
         shadowRadius: 3,
@@ -189,7 +179,7 @@ export const Toolbar = forwardRef<View, Props>(
             borderRadius: 16,
             marginHorizontal: 16,
             marginVertical: 8,
-            backgroundColor: colors.surfaceContainer,
+            backgroundColor: theme.colors.surfaceContainer,
             ...elevationStyles.level3,
           }
         : {};
@@ -197,7 +187,7 @@ export const Toolbar = forwardRef<View, Props>(
     const containerStyle: StyleProp<ViewStyle> = [
       {
         height: dimensions.height,
-        backgroundColor: colors.surfaceContainer,
+        backgroundColor: theme.colors.surfaceContainer,
         paddingHorizontal: dimensions.paddingHorizontal,
         paddingTop:
           Platform.OS === "android" && variant === "docked"
@@ -221,7 +211,7 @@ export const Toolbar = forwardRef<View, Props>(
       width: 56,
       height: 56,
       borderRadius: 16,
-      backgroundColor: colors.primary,
+      backgroundColor: theme.colors.primary,
       justifyContent: "center" as const,
       alignItems: "center" as const,
       ...elevationStyles.level3,
@@ -234,12 +224,16 @@ export const Toolbar = forwardRef<View, Props>(
         <TouchableRipple
           onPress={onNavigationPress}
           style={actionButtonStyle}
-          rippleColor={colors.primary}
+          rippleColor={theme.colors.primary}
           borderless
           accessibilityRole="button"
           accessibilityLabel="Navigate back"
         >
-          <Icon source={navigationIcon} size={24} color={colors.onSurface} />
+          <Icon
+            source={navigationIcon}
+            size={24}
+            color={theme.colors.onSurface}
+          />
         </TouchableRipple>
       );
     };
@@ -254,13 +248,17 @@ export const Toolbar = forwardRef<View, Props>(
               key={`action-${action.icon}-${index}`}
               onPress={action.onPress}
               style={actionButtonStyle}
-              rippleColor={colors.primary}
+              rippleColor={theme.colors.primary}
               borderless
               accessibilityRole="button"
               accessibilityLabel={action.accessibilityLabel}
               testID={action.testID}
             >
-              <Icon source={action.icon} size={24} color={colors.onSurface} />
+              <Icon
+                source={action.icon}
+                size={24}
+                color={theme.colors.onSurface}
+              />
             </TouchableRipple>
           ))}
         </View>
@@ -274,7 +272,7 @@ export const Toolbar = forwardRef<View, Props>(
         <TouchableRipple
           onPress={fab.onPress}
           style={fabStyle}
-          rippleColor={colors.onPrimary}
+          rippleColor={theme.colors.onPrimary}
           borderless
           accessibilityRole="button"
           accessibilityLabel={
@@ -282,7 +280,7 @@ export const Toolbar = forwardRef<View, Props>(
           }
           testID={fab.testID}
         >
-          <Icon source={fab.icon} size={24} color={colors.onPrimary} />
+          <Icon source={fab.icon} size={24} color={theme.colors.onPrimary} />
         </TouchableRipple>
       );
     };
