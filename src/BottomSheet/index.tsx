@@ -7,30 +7,29 @@ import BottomSheetOriginal, {
 import {
   type ReactNode,
   forwardRef,
-  useCallback,
   useImperativeHandle,
-  useMemo,
   useRef,
+  useCallback,
 } from "react";
 import { StyleSheet, View } from "react-native";
-import { useTheme } from "react-native-paper";
-import { Divider } from "../Divider";
+import { useTheme } from "../hooks";
 import { Portal } from "../Portal";
-import { Typography } from "../Typography";
 
 /**
- * Ref methods for controlling the BottomSheet.
- * @param {() => void} open - Opens the bottom sheet. Optionally accepts an index to snap to.
- * @param {() => void} close - Closes the bottom sheet.
- * @param {(index: number) => void} snapToIndex - Snaps the bottom sheet to a specific index.
- * @param {() => void} expand - Expands the bottom sheet to the highest snap point.
- * @param {() => void} collapse - Collapses the bottom sheet to the lowest snap point.
+ * Ref interface for controlling the BottomSheet component.
  */
 export type BottomSheetRef = {
-  open: (index?: number) => void;
+  /** Opens the bottom sheet to the first snap point */
+  open: () => void;
+  /** Closes the bottom sheet */
   close: () => void;
+  /** Snaps to a specific index */
   snapToIndex: (index: number) => void;
+  /** Snaps to a specific position */
+  snapToPosition: (position: string | number) => void;
+  /** Expands the bottom sheet to the highest snap point */
   expand: () => void;
+  /** Collapses the bottom sheet to the lowest snap point */
   collapse: () => void;
 };
 
@@ -39,7 +38,6 @@ export type BottomSheetRef = {
  * @param {ReactNode} [props.children] - Optional trigger element(s) or any other content to render alongside the sheet.
  * @param {ReactNode} props.content - The main content to be displayed inside the bottom sheet.
  * @param {(string | number)[]} [props.snapPoints=["50%", "75%"]] - An array of points to define the height of the bottom sheet when snapped. Defaults to `["50%", "75%"]`.
- * @param {string} [props.title] - An optional title to display at the top of the bottom sheet.
  * @param {number} [props.initialSnapIndex=-1] - The initial snap point index. Defaults to -1 (closed).
  * @param {(index: number) => void} [props.onChange] - Callback function triggered when the snap point changes.
  * @param {BottomSheetProps["backdropComponent"]} [props.backdropComponent] - Custom component for the backdrop. Defaults to `BottomSheetBackdrop`.
@@ -49,7 +47,6 @@ type Props = {
   children?: ReactNode;
   content: ReactNode;
   snapPoints?: (string | number)[];
-  title?: string;
   initialSnapIndex?: number;
   onChange?: (index: number) => void;
   backdropComponent?: BottomSheetProps["backdropComponent"];
@@ -76,95 +73,65 @@ export const BottomSheet = forwardRef<BottomSheetRef, Props>(
     {
       children,
       content,
-      snapPoints: _snapPoints,
-      title,
+      snapPoints = ["50%", "75%"],
       initialSnapIndex = -1,
       onChange,
       backdropComponent,
       variant = "standard",
-      ...rest
     },
     ref,
   ) => {
     const theme = useTheme();
     const bottomSheetRef = useRef<BottomSheetOriginal>(null);
 
-    const snapPoints = useMemo(
-      () => _snapPoints || ["50%", "75%"],
-      [_snapPoints],
-    );
-
-    const openSheet = useCallback((index = 0) => {
-      bottomSheetRef.current?.snapToIndex(index);
-    }, []);
-
-    const closeSheet = useCallback(() => {
-      bottomSheetRef.current?.close();
-    }, []);
-
-    const snapSheetTo = useCallback((index: number) => {
-      bottomSheetRef.current?.snapToIndex(index);
-    }, []);
-
-    const expandSheet = useCallback(() => {
-      bottomSheetRef.current?.expand();
-    }, []);
-
-    const collapseSheet = useCallback(() => {
-      bottomSheetRef.current?.collapse();
-    }, []);
-
+    // Expose methods through ref
     useImperativeHandle(ref, () => ({
-      open: openSheet,
-      close: closeSheet,
-      snapToIndex: snapSheetTo,
-      expand: expandSheet,
-      collapse: collapseSheet,
+      open: () => {
+        bottomSheetRef.current?.snapToIndex(0);
+      },
+      close: () => {
+        bottomSheetRef.current?.close();
+      },
+      snapToIndex: (index: number) => {
+        bottomSheetRef.current?.snapToIndex(index);
+      },
+      snapToPosition: (position: string | number) => {
+        bottomSheetRef.current?.snapToPosition(position);
+      },
+      expand: () => {
+        bottomSheetRef.current?.expand();
+      },
+      collapse: () => {
+        bottomSheetRef.current?.collapse();
+      },
     }));
 
+    // Default backdrop component for modal variant
     const renderBackdrop = useCallback(
       (props: BottomSheetBackdropProps) => (
         <BottomSheetBackdrop
           {...props}
           disappearsOnIndex={-1}
           appearsOnIndex={0}
-          pressBehavior={"close"}
-          style={[props.style, { backgroundColor: theme.colors.backdrop }]}
+          opacity={0.5}
         />
       ),
-      [theme.colors.backdrop],
+      [],
     );
 
-    // variant="standard"の時はbackdropを無効にして背景操作を可能にする
-    const getBackdropComponent = useCallback(() => {
-      if (variant === "standard") {
-        return undefined; // backdropなし = 背景操作可能
-      }
-      return backdropComponent || renderBackdrop;
-    }, [variant, backdropComponent, renderBackdrop]);
+    const backgroundStyle = {
+      backgroundColor: theme.colors.surfaceContainerLow,
+    };
 
-    const BottomSheetTitle = ({ text }: { text: string }) => (
-      <View style={styles.titleContainer}>
-        <Typography variant="titleLarge">{text}</Typography>
-        <Divider />
-      </View>
-    );
+    const handleStyle = {
+      backgroundColor: theme.colors.surfaceContainerHigh,
+      borderTopLeftRadius: 28,
+      borderTopRightRadius: 28,
+    };
 
-    // M3 compliant styles
-    const m3HandleStyle = [
-      styles.defaultHandleIndicator,
-      { backgroundColor: theme.colors.onSurfaceVariant },
-    ];
-
-    const m3BackgroundStyle = [
-      styles.defaultBackground,
-      { backgroundColor: theme.colors.surface },
-    ];
-
-    const m3SheetStyle = [
-      styles.defaultSheet,
-      { shadowColor: theme.colors.shadow },
-    ];
+    const handleIndicatorStyle = {
+      backgroundColor: theme.colors.onSurfaceVariant,
+    };
 
     return (
       <>
@@ -175,16 +142,18 @@ export const BottomSheet = forwardRef<BottomSheetRef, Props>(
             index={initialSnapIndex}
             snapPoints={snapPoints}
             onChange={onChange}
-            backdropComponent={getBackdropComponent()}
-            handleIndicatorStyle={m3HandleStyle}
-            backgroundStyle={m3BackgroundStyle}
-            style={m3SheetStyle}
-            enablePanDownToClose={true}
-            {...rest}
+            enablePanDownToClose
+            backdropComponent={
+              variant === "modal"
+                ? backdropComponent || renderBackdrop
+                : undefined
+            }
+            backgroundStyle={backgroundStyle}
+            handleStyle={handleStyle}
+            handleIndicatorStyle={handleIndicatorStyle}
           >
-            {title && <BottomSheetTitle text={title} />}
-            <BottomSheetView style={styles.contentContainer}>
-              {content}
+            <BottomSheetView style={styles.container}>
+              <View style={styles.content}>{content}</View>
             </BottomSheetView>
           </BottomSheetOriginal>
         </Portal>
@@ -194,29 +163,13 @@ export const BottomSheet = forwardRef<BottomSheetRef, Props>(
 );
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 16,
-  },
-  contentContainer: {
+  container: {
     flex: 1,
-    padding: 24,
   },
-  defaultHandleIndicator: {
-    width: 32,
-    height: 4,
-    borderRadius: 2,
-  },
-  defaultBackground: {
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-  },
-  defaultSheet: {
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 16,
-    elevation: 16,
+  content: {
+    flex: 1,
+    paddingHorizontal: 24,
+    paddingBottom: 24,
   },
 });
 
