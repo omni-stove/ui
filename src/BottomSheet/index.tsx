@@ -7,13 +7,13 @@ import BottomSheetOriginal, {
 import {
   type ReactNode,
   forwardRef,
+  useCallback,
   useImperativeHandle,
   useRef,
-  useCallback,
 } from "react";
 import { StyleSheet, View } from "react-native";
-import { useTheme } from "../hooks";
 import { Portal } from "../Portal";
+import { useTheme } from "../hooks";
 
 /**
  * Ref interface for controlling the BottomSheet component.
@@ -121,16 +121,27 @@ export const BottomSheet = forwardRef<BottomSheetRef, Props>(
 
     const backgroundStyle = {
       backgroundColor: theme.colors.surfaceContainerLow,
-    };
-
-    const handleStyle = {
-      backgroundColor: theme.colors.surfaceContainerHigh,
       borderTopLeftRadius: 28,
       borderTopRightRadius: 28,
     };
 
+    const handleStyle = {
+      backgroundColor: theme.colors.surfaceContainerLow,
+      borderTopLeftRadius: 28,
+      borderTopRightRadius: 28,
+      paddingVertical: 22,
+    };
+
     const handleIndicatorStyle = {
       backgroundColor: theme.colors.onSurfaceVariant,
+      width: 32,
+    };
+
+    // Material Design 3 specifications for bottom sheet sizing
+    const containerStyle = {
+      maxWidth: 640,
+      marginHorizontal: "auto" as const,
+      alignSelf: "center" as const,
     };
 
     return (
@@ -151,6 +162,7 @@ export const BottomSheet = forwardRef<BottomSheetRef, Props>(
             backgroundStyle={backgroundStyle}
             handleStyle={handleStyle}
             handleIndicatorStyle={handleIndicatorStyle}
+            style={containerStyle}
           >
             <BottomSheetView style={styles.container}>
               <View style={styles.content}>{content}</View>

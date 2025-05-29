@@ -35,14 +35,23 @@ export const Default: Story = {
   },
 };
 
-export const WithTitle: Story = {
+export const WithCustomContent: Story = {
   render: (args) => {
     const ref = useRef<BottomSheetRef>(null);
+    const customContent = (
+      <View style={{ padding: 16 }}>
+        <Typography variant="titleMedium" style={{ marginBottom: 16 }}>
+          選択してください
+        </Typography>
+        <Typography>This is custom content with a title!</Typography>
+        <Typography>You can customize the content as needed.</Typography>
+      </View>
+    );
     return (
       <View style={{ alignItems: "center", paddingTop: 20 }}>
-        <Component {...args} ref={ref} title="選択してください">
+        <Component {...args} ref={ref} content={customContent}>
           <Button onPress={() => ref.current?.open()}>
-            Open BottomSheet with Title
+            Open BottomSheet with Custom Content
           </Button>
         </Component>
       </View>
@@ -94,12 +103,7 @@ export const LongContent: Story = {
 
     return (
       <View style={{ alignItems: "center", paddingTop: 20 }}>
-        <Component
-          {...args}
-          ref={ref}
-          content={longContent}
-          title="長いコンテンツ"
-        >
+        <Component {...args} ref={ref} content={longContent}>
           <Button onPress={() => ref.current?.open()}>
             Open Long Content BottomSheet
           </Button>
@@ -112,6 +116,15 @@ export const LongContent: Story = {
 export const StandardVariant: Story = {
   render: (args) => {
     const ref = useRef<BottomSheetRef>(null);
+    const standardContent = (
+      <View style={{ padding: 16 }}>
+        <Typography variant="titleMedium" style={{ marginBottom: 16 }}>
+          Standard BottomSheet
+        </Typography>
+        <Typography>背景操作が可能なBottomSheetです。</Typography>
+        <Typography>背景のボタンをタップできます。</Typography>
+      </View>
+    );
     return (
       <View style={{ alignItems: "center", paddingTop: 20, gap: 16 }}>
         <Typography variant="titleMedium">
@@ -124,7 +137,7 @@ export const StandardVariant: Story = {
           {...args}
           ref={ref}
           variant="standard"
-          title="Standard BottomSheet"
+          content={standardContent}
         >
           <Button onPress={() => ref.current?.open()}>
             Open Standard BottomSheet
@@ -138,6 +151,15 @@ export const StandardVariant: Story = {
 export const ModalVariant: Story = {
   render: (args) => {
     const ref = useRef<BottomSheetRef>(null);
+    const modalContent = (
+      <View style={{ padding: 16 }}>
+        <Typography variant="titleMedium" style={{ marginBottom: 16 }}>
+          Modal BottomSheet
+        </Typography>
+        <Typography>背景操作が不可能なBottomSheetです。</Typography>
+        <Typography>背景のボタンをタップできません。</Typography>
+      </View>
+    );
     return (
       <View style={{ alignItems: "center", paddingTop: 20, gap: 16 }}>
         <Typography variant="titleMedium">
@@ -146,12 +168,7 @@ export const ModalVariant: Story = {
         <Button onPress={() => console.log("背景ボタンがタップされました")}>
           背景のボタン（タップ不可になる）
         </Button>
-        <Component
-          {...args}
-          ref={ref}
-          variant="modal"
-          title="Modal BottomSheet"
-        >
+        <Component {...args} ref={ref} variant="modal" content={modalContent}>
           <Button onPress={() => ref.current?.open()}>
             Open Modal BottomSheet
           </Button>
@@ -166,6 +183,24 @@ export const VariantComparison: Story = {
     const standardRef = useRef<BottomSheetRef>(null);
     const modalRef = useRef<BottomSheetRef>(null);
 
+    const standardContent = (
+      <View style={{ padding: 16 }}>
+        <Typography variant="titleMedium" style={{ marginBottom: 16 }}>
+          Standard
+        </Typography>
+        <Typography>背景操作が可能です。</Typography>
+      </View>
+    );
+
+    const modalContent = (
+      <View style={{ padding: 16 }}>
+        <Typography variant="titleMedium" style={{ marginBottom: 16 }}>
+          Modal
+        </Typography>
+        <Typography>背景操作が不可能です。</Typography>
+      </View>
+    );
+
     return (
       <View style={{ alignItems: "center", paddingTop: 20, gap: 16 }}>
         <Typography variant="titleMedium">Variant比較テスト</Typography>
@@ -178,14 +213,19 @@ export const VariantComparison: Story = {
             {...args}
             ref={standardRef}
             variant="standard"
-            title="Standard"
+            content={standardContent}
           >
             <Button onPress={() => standardRef.current?.open()}>
               Standard
             </Button>
           </Component>
 
-          <Component {...args} ref={modalRef} variant="modal" title="Modal">
+          <Component
+            {...args}
+            ref={modalRef}
+            variant="modal"
+            content={modalContent}
+          >
             <Button onPress={() => modalRef.current?.open()}>Modal</Button>
           </Component>
         </View>
