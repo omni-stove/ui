@@ -10,8 +10,8 @@ import { KeyboardAvoidingView, Platform, View } from "react-native";
 import { Appbar } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useMainContentStyle } from "../Provider";
 import { NavigationRail, type NavigationRailItem } from "../NavigationRail";
+import { useMainContentStyle } from "../Provider";
 import { Toolbar } from "../Toolbar";
 import { useTheme } from "../hooks";
 
