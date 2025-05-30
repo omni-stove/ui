@@ -30,6 +30,8 @@ type Option = {
  * @param {ComponentProps<typeof TextField>["variant"]} [props.variant="filled"] - The variant of the TextField used to display the selected value.
  * @param {string} [props.label] - Label for the TextField.
  * @param {string} [props.errorMessage] - Error message to display below the TextField.
+ * @param {string} [props.supportingText] - Supporting text to display below the TextField.
+ * @param {boolean} [props.required] - Indicates whether the field is required.
  */
 type Props<T extends string | number> = {
   options: Option[];
@@ -39,6 +41,7 @@ type Props<T extends string | number> = {
   label?: string;
   errorMessage?: string;
   supportingText?: string;
+  required?: boolean;
 };
 
 /**
@@ -55,6 +58,7 @@ type Props<T extends string | number> = {
  * @param {string} [props.label] - Label for the TextField.
  * @param {string} [props.errorMessage] - Error message to display below the TextField.
  * @param {string} [props.supportingText] - Supporting text to display below the TextField.
+ * @param {boolean} [props.required] - Indicates whether the field is required.
  * @param {ForwardedRef<TextInput>} ref - Ref to be forwarded to the underlying TextField component.
  * @returns {JSX.Element} The Select component.
  * @see {@link TextField}
@@ -72,6 +76,7 @@ export const Select = forwardRef(function Select<T extends string | number>(
     label,
     errorMessage,
     supportingText,
+    required,
   } = props;
   const [visible, setVisible] = useState(false);
   const [menuWidth, setMenuWidth] = useState(0);
@@ -112,6 +117,7 @@ export const Select = forwardRef(function Select<T extends string | number>(
               readOnly
               errorMessage={errorMessage}
               supportingText={supportingText}
+              required={required}
             />
           </View>
         </Pressable>
