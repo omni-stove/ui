@@ -32,6 +32,8 @@ type Option = {
  * @param {string} [props.errorMessage] - Error message to display below the TextField.
  * @param {string} [props.supportingText] - Supporting text to display below the TextField.
  * @param {boolean} [props.required] - Indicates whether the field is required.
+ * @param {boolean} [props.disabled] - Whether the select is disabled.
+ * @param {boolean} [props.readOnly] - Whether the select is read-only.
  */
 type Props<T extends string | number> = {
   options: Option[];
@@ -42,6 +44,8 @@ type Props<T extends string | number> = {
   errorMessage?: string;
   supportingText?: string;
   required?: boolean;
+  disabled?: boolean;
+  readOnly?: boolean;
 };
 
 /**
@@ -59,6 +63,8 @@ type Props<T extends string | number> = {
  * @param {string} [props.errorMessage] - Error message to display below the TextField.
  * @param {string} [props.supportingText] - Supporting text to display below the TextField.
  * @param {boolean} [props.required] - Indicates whether the field is required.
+ * @param {boolean} [props.disabled] - Whether the select is disabled.
+ * @param {boolean} [props.readOnly] - Whether the select is read-only.
  * @param {ForwardedRef<TextInput>} ref - Ref to be forwarded to the underlying TextField component.
  * @returns {JSX.Element} The Select component.
  * @see {@link TextField}
@@ -77,12 +83,18 @@ export const Select = forwardRef(function Select<T extends string | number>(
     errorMessage,
     supportingText,
     required,
+    disabled,
+    readOnly,
   } = props;
   const [visible, setVisible] = useState(false);
   const [menuWidth, setMenuWidth] = useState(0);
   const anchorRef = useRef<View>(null);
 
-  const openMenu = () => setVisible(true);
+  const openMenu = () => {
+    if (!disabled && !readOnly) {
+      setVisible(true);
+    }
+  };
   const closeMenu = () => setVisible(false);
 
   const handleSelect = (selectedValue: T) => {
@@ -115,6 +127,7 @@ export const Select = forwardRef(function Select<T extends string | number>(
               variant={variant}
               value={selectedLabel}
               readOnly
+              disabled={disabled}
               errorMessage={errorMessage}
               supportingText={supportingText}
               required={required}

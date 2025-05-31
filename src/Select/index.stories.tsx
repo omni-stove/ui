@@ -123,3 +123,43 @@ export const WithErrorAndSupportingText: Story = {
     );
   },
 };
+
+export const DisabledAndReadOnly: Story = {
+  args: {
+    ...commonArgs,
+    label: "Select States",
+  },
+  render: (args) => {
+    const [valueDisabled, setValueDisabled] = useState<string | number>("2");
+    const [valueReadOnly, setValueReadOnly] = useState<string | number>("3");
+    const [valueNormal, setValueNormal] = useState<string | number>("1");
+
+    return (
+      <View style={{ gap: 32 }}>
+        <Component
+          {...args}
+          variant="filled"
+          value={valueNormal}
+          onChange={setValueNormal}
+          label="Normal Select"
+        />
+        <Component
+          {...args}
+          variant="filled"
+          value={valueDisabled}
+          onChange={setValueDisabled}
+          disabled
+          label="Disabled Select"
+        />
+        <Component
+          {...args}
+          variant="filled"
+          value={valueReadOnly}
+          onChange={setValueReadOnly}
+          readOnly
+          label="Read-Only Select"
+        />
+      </View>
+    );
+  },
+};
