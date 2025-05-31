@@ -117,8 +117,8 @@ export const TaskManagerApp: Story = {
               title="完了済みタスクを表示"
               right={() => (
                 <Switch
-                  selected={showCompleted}
-                  onPress={() => setShowCompleted(!showCompleted)}
+                  value={showCompleted}
+                  onValueChange={setShowCompleted}
                 />
               )}
             />

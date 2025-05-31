@@ -440,14 +440,16 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
                         </Badge>
                       )}
                     </View>
-                    <Typography
-                      variant="labelMedium"
-                      color={isActive ? "onSurface" : "onSurfaceVariant"}
-                      style={[styles.label, isActive && styles.activeLabel]} // Keep for marginTop, textAlign
-                      numberOfLines={1}
+                    <View
+                      style={[styles.label, isActive && styles.activeLabel]}
                     >
-                      {item.label}
-                    </Typography>
+                      <Typography
+                        variant="labelMedium"
+                        color={isActive ? "onSurface" : "onSurfaceVariant"}
+                      >
+                        {item.label}
+                      </Typography>
+                    </View>
                   </View>
                 </TouchableRipple>
               </Animated.View>

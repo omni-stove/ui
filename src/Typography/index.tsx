@@ -1,12 +1,11 @@
 import type { ComponentProps, ReactNode } from "react";
-import type { TextProps as NativeTextProps } from "react-native";
 import { Text as PaperText } from "react-native-paper";
 import { useTheme } from "../hooks";
 import type { Material3Colors } from "../hooks/types";
 
 type PaperTextVariant = ComponentProps<typeof PaperText>["variant"];
 
-type TypographyProps = NativeTextProps & {
+type TypographyProps = {
   /**
    * The text variant.
    * Uses the variant from the react-native-paper Text component.
@@ -40,19 +39,13 @@ type TypographyProps = NativeTextProps & {
 export const Typography = ({
   variant = "bodyMedium",
   color = "onSurface",
-  style,
   children,
-  ...rest
 }: TypographyProps) => {
   const theme = useTheme();
   const textColor = theme.colors[color];
 
   return (
-    <PaperText
-      variant={variant}
-      style={[{ color: textColor }, style]}
-      {...rest}
-    >
+    <PaperText variant={variant} style={[{ color: textColor }]}>
       {children}
     </PaperText>
   );

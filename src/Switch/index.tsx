@@ -408,13 +408,11 @@ export const Switch = ({
         </View>
       </View>
       {label && (
-        <Typography
-          variant="bodyMedium"
-          color="onSurface"
-          style={{ opacity: disabled ? 0.38 : 1 }}
-        >
-          {label}
-        </Typography>
+        <View style={{ opacity: disabled ? 0.38 : 1 }}>
+          <Typography variant="bodyMedium" color="onSurface">
+            {label}
+          </Typography>
+        </View>
       )}
     </Pressable>
   );

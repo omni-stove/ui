@@ -156,9 +156,9 @@ export const SideSheet = forwardRef<View, Props>(
       >
         {/* Header */}
         <View style={styles.header}>
-          <Typography variant="headlineSmall" style={styles.headline}>
-            {headline}
-          </Typography>
+          <View style={styles.headline}>
+            <Typography variant="headlineSmall">{headline}</Typography>
+          </View>
           <IconButton
             icon="close"
             size={24}

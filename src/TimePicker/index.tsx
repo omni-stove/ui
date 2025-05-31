@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import type { ComponentProps } from "react";
 import { TimePickerModal } from "react-native-paper-dates";
 import { TextField } from "../TextField";
 
@@ -25,12 +24,23 @@ const formatTime = (
   return `${String(h).padStart(2, "0")}:${String(validMinutes).padStart(2, "0")} ${ampm}`;
 };
 
-type TimePickerModalActualProps = ComponentProps<typeof TimePickerModal>;
-
-type CustomTimePickerModalProps = Omit<
-  TimePickerModalActualProps,
-  "visible" | "onDismiss" | "onConfirm" | "hours" | "minutes"
->;
+/**
+ * Props from TimePickerModal that we want to expose.
+ */
+type CustomTimePickerModalProps = {
+  /**
+   * Locale for the TimePickerModal.
+   */
+  locale?: string;
+  /**
+   * Animation type for the modal.
+   */
+  animationType?: "slide" | "fade" | "none";
+  /**
+   * Font size for the input fields in the modal.
+   */
+  inputFontSize?: number;
+};
 
 /**
  * Props for the TimePicker component.
@@ -45,7 +55,7 @@ type CustomTimePickerModalProps = Omit<
  * @param {"outlined" | "filled"} [props.variant] - The variant of the TextField.
  * @param {boolean} [props.disabled=false] - Whether the TimePicker is disabled.
  * @param {string} [props.locale="en"] - Locale for the TimePickerModal.
- * @param {TimePickerModalActualProps["animationType"]} [props.animationType] - Animation type for the modal.
+ * @param {"slide" | "fade" | "none"} [props.animationType] - Animation type for the modal.
  * @param {number} [props.inputFontSize] - Font size for the input fields in the modal.
  */
 type Props = CustomTimePickerModalProps & {

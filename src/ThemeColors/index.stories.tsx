@@ -42,13 +42,11 @@ const ThemeColors = () => {
                   },
                 ]}
               />
-              <Typography
-                variant="bodyLarge"
-                color="onSurface"
-                style={styles.colorNameTypography}
-              >
-                {name}
-              </Typography>
+              <View style={styles.colorNameTypography}>
+                <Typography variant="bodyLarge" color="onSurface">
+                  {name}
+                </Typography>
+              </View>
               <Typography variant="bodyLarge" color="onSurface">
                 {colorValueText}
               </Typography>

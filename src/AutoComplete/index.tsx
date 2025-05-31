@@ -98,9 +98,11 @@ const Options = ({
       ))}
       {filteredOptions.length === 0 && (
         <View style={{ paddingVertical: 12, paddingHorizontal: 16 }}>
-          <Typography variant="bodyMedium" style={{ opacity: 0.6 }}>
-            該当する項目がありません
-          </Typography>
+          <View style={{ opacity: 0.6 }}>
+            <Typography variant="bodyMedium">
+              該当する項目がありません
+            </Typography>
+          </View>
         </View>
       )}
     </ScrollView>
@@ -337,9 +339,11 @@ export const AutoComplete = forwardRef<TextInput, Props>(
         ))}
         {filteredOptions.length === 0 && (
           <View style={{ paddingVertical: 12, paddingHorizontal: 16 }}>
-            <Typography variant="bodyMedium" style={{ opacity: 0.6 }}>
-              該当する項目がありません
-            </Typography>
+            <View style={{ opacity: 0.6 }}>
+              <Typography variant="bodyMedium">
+                該当する項目がありません
+              </Typography>
+            </View>
           </View>
         )}
       </ScrollView>
@@ -423,12 +427,9 @@ export const AutoComplete = forwardRef<TextInput, Props>(
 
                   {selectedOptions.length > 0 && (
                     <View style={{ marginBottom: 16 }}>
-                      <Typography
-                        variant="labelMedium"
-                        style={{ marginBottom: 8 }}
-                      >
-                        選択済み
-                      </Typography>
+                      <View style={{ marginBottom: 8 }}>
+                        <Typography variant="labelMedium">選択済み</Typography>
+                      </View>
                       <View
                         style={{
                           flexDirection: "row",
@@ -453,9 +454,9 @@ export const AutoComplete = forwardRef<TextInput, Props>(
                     </View>
                   )}
 
-                  <Typography variant="labelMedium" style={{ marginBottom: 8 }}>
-                    候補
-                  </Typography>
+                  <View style={{ marginBottom: 8 }}>
+                    <Typography variant="labelMedium">候補</Typography>
+                  </View>
                   {renderOptionList()}
                 </View>
               }

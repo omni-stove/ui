@@ -105,7 +105,7 @@ export const AllVariants: Story = {
   render: () => (
     <View>
       {textVariants.map((variant) => (
-        <Component key={variant} variant={variant} style={styles.storyItem}>
+        <Component key={variant} variant={variant}>
           {`Variant: ${variant}`}
         </Component>
       ))}
@@ -117,7 +117,7 @@ export const AllColors: Story = {
   render: () => (
     <View>
       {colorKeys.map((colorKey) => (
-        <Component key={colorKey} color={colorKey} style={styles.storyItem}>
+        <Component key={colorKey} color={colorKey}>
           {`Color: ${colorKey}`}
         </Component>
       ))}

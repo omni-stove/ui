@@ -51,9 +51,11 @@ export const UserProfileApp: Story = {
               <Avatar source="https://picsum.photos/200" />
               <View style={styles.profileInfo}>
                 <Typography variant="headlineSmall">春日部つむぎ</Typography>
-                <Typography variant="bodyMedium" style={styles.subtitle}>
-                  ハイパー埼玉ギャル
-                </Typography>
+                <View style={styles.subtitle}>
+                  <Typography variant="bodyMedium">
+                    ハイパー埼玉ギャル
+                  </Typography>
+                </View>
                 <View style={styles.chipContainer}>
                   <Chip>フォロワー 1.2K</Chip>
                   <View style={styles.chipSpacing}>
@@ -62,9 +64,9 @@ export const UserProfileApp: Story = {
                 </View>
               </View>
             </View>
-            <Button variant="filled" style={styles.editButton}>
-              プロフィールを編集
-            </Button>
+            <View style={styles.editButton}>
+              <Button variant="filled">プロフィールを編集</Button>
+            </View>
           </Surface>
 
           {/* 検索バー */}
@@ -85,10 +87,8 @@ export const UserProfileApp: Story = {
                 left={(props) => <List.Icon {...props} icon="bell" />}
                 right={() => (
                   <Switch
-                    selected={notificationsEnabled}
-                    onPress={() =>
-                      setNotificationsEnabled(!notificationsEnabled)
-                    }
+                    value={notificationsEnabled}
+                    onValueChange={(value) => setNotificationsEnabled(value)}
                   />
                 )}
               />

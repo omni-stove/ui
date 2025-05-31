@@ -16,12 +16,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import {
-  Tooltip as PaperTooltip,
-  type TooltipProps as PaperTooltipProps,
-  Portal,
-  Surface,
-} from "react-native-paper";
+import { Tooltip as PaperTooltip, Portal, Surface } from "react-native-paper";
 import { Typography } from "../Typography";
 import { useTheme } from "../hooks";
 
@@ -382,13 +377,11 @@ const RichTooltip = ({
               testID="tooltip-container"
             >
               {subhead ? (
-                <Typography
-                  style={staticStyles.subhead}
-                  color="onSurfaceVariant"
-                  variant="titleSmall"
-                >
-                  {subhead}
-                </Typography>
+                <View style={staticStyles.subhead}>
+                  <Typography color="onSurfaceVariant" variant="titleSmall">
+                    {subhead}
+                  </Typography>
+                </View>
               ) : null}
               <Typography color="onSurfaceVariant" variant="bodyMedium">
                 {supportingText}
@@ -493,23 +486,44 @@ const getDynamicStyles = (theme: ReturnType<typeof useTheme>) =>
   });
 
 /**
+ * Props for the plain tooltip variant.
+ */
+type PlainTooltipProps = {
+  /**
+   * The variant of the tooltip.
+   */
+  variant?: "plain";
+  /**
+   * The title of the tooltip.
+   */
+  title: string;
+  /**
+   * Whether the tooltip is visible.
+   */
+  visible?: boolean;
+  /**
+   * Callback function invoked when the tooltip is dismissed.
+   */
+  onDismiss?: () => void;
+  /**
+   * The child element that will trigger the tooltip.
+   */
+  children: ReactElement;
+};
+
+/**
  * Props for the main Tooltip component.
  * It can render either a "plain" tooltip (using `react-native-paper`'s Tooltip)
  * or a "rich" tooltip (using the custom `RichTooltip` component).
  *
  * @param {"plain" | "rich"} [variant] - The variant of the tooltip to display.
- *                                      If "plain", `PaperTooltipProps` are expected.
- *                                      If "rich", `RichTooltipProps` are expected.
  * @param {ReactElement} children - The child element that will trigger the tooltip.
- *                                  For "rich" variant, it must accept a ref.
- *                                  For "plain" variant, it's passed directly to `PaperTooltip`.
- * @see {@link PaperTooltipProps}
+ * @see {@link PlainTooltipProps}
  * @see {@link RichTooltipProps}
  */
-type TooltipProps = (
-  | ({ variant?: "plain" } & PaperTooltipProps)
-  | ({ variant: "rich" } & RichTooltipProps)
-) & { children: ReactElement };
+type TooltipProps =
+  | PlainTooltipProps
+  | ({ variant: "rich" } & RichTooltipProps);
 
 /**
  * A Tooltip component that can display either a simple "plain" tooltip
@@ -528,6 +542,6 @@ export const Tooltip = (props: TooltipProps) => {
     const { variant, ...rest } = props;
     return <RichTooltip {...rest} />;
   }
-  const { variant, children, ...rest } = props;
-  return <PaperTooltip {...rest}>{children}</PaperTooltip>;
+  const { children, title } = props;
+  return <PaperTooltip title={title}>{children}</PaperTooltip>;
 };

@@ -127,18 +127,14 @@ export const DashboardApp: Story = {
                 <Card style={styles.statCard}>
                   <Card.Content>
                     <Typography variant="titleMedium">{stat.title}</Typography>
-                    <Typography
-                      variant="headlineSmall"
-                      style={styles.statValue}
-                    >
-                      {stat.value}
-                    </Typography>
-                    <Typography
-                      variant="bodySmall"
-                      style={[styles.statChange, { color: stat.color }]}
-                    >
-                      {stat.change}
-                    </Typography>
+                    <View style={styles.statValue}>
+                      <Typography variant="headlineSmall">
+                        {stat.value}
+                      </Typography>
+                    </View>
+                    <View style={styles.statChange}>
+                      <Typography variant="bodySmall">{stat.change}</Typography>
+                    </View>
                   </Card.Content>
                 </Card>
               </GridItem>

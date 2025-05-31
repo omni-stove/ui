@@ -40,9 +40,9 @@ export const WithCustomContent: Story = {
     const ref = useRef<BottomSheetRef>(null);
     const customContent = (
       <View style={{ padding: 16 }}>
-        <Typography variant="titleMedium" style={{ marginBottom: 16 }}>
-          選択してください
-        </Typography>
+        <View style={{ marginBottom: 16 }}>
+          <Typography variant="titleMedium">選択してください</Typography>
+        </View>
         <Typography>This is custom content with a title!</Typography>
         <Typography>You can customize the content as needed.</Typography>
       </View>
@@ -86,16 +86,18 @@ export const LongContent: Story = {
     const ref = useRef<BottomSheetRef>(null);
     const longContent = (
       <View style={{ padding: 16 }}>
-        <Typography variant="titleMedium" style={{ marginBottom: 16 }}>
-          長いコンテンツのテスト
-        </Typography>
+        <View style={{ marginBottom: 16 }}>
+          <Typography variant="titleMedium">長いコンテンツのテスト</Typography>
+        </View>
         {Array.from({ length: 20 }, (_, i) => {
           const itemId = `long-content-test-item-${i + 1}`;
           return (
-            <Typography key={itemId} style={{ marginBottom: 8 }}>
-              これは長いコンテンツのテスト項目 {i + 1}{" "}
-              です。BottomSheetがスクロール可能かどうかを確認するためのテキストです。
-            </Typography>
+            <View key={itemId} style={{ marginBottom: 8 }}>
+              <Typography>
+                これは長いコンテンツのテスト項目 {i + 1}{" "}
+                です。BottomSheetがスクロール可能かどうかを確認するためのテキストです。
+              </Typography>
+            </View>
           );
         })}
       </View>
@@ -118,9 +120,9 @@ export const StandardVariant: Story = {
     const ref = useRef<BottomSheetRef>(null);
     const standardContent = (
       <View style={{ padding: 16 }}>
-        <Typography variant="titleMedium" style={{ marginBottom: 16 }}>
-          Standard BottomSheet
-        </Typography>
+        <View style={{ marginBottom: 16 }}>
+          <Typography variant="titleMedium">Standard BottomSheet</Typography>
+        </View>
         <Typography>背景操作が可能なBottomSheetです。</Typography>
         <Typography>背景のボタンをタップできます。</Typography>
       </View>
@@ -153,9 +155,9 @@ export const ModalVariant: Story = {
     const ref = useRef<BottomSheetRef>(null);
     const modalContent = (
       <View style={{ padding: 16 }}>
-        <Typography variant="titleMedium" style={{ marginBottom: 16 }}>
-          Modal BottomSheet
-        </Typography>
+        <View style={{ marginBottom: 16 }}>
+          <Typography variant="titleMedium">Modal BottomSheet</Typography>
+        </View>
         <Typography>背景操作が不可能なBottomSheetです。</Typography>
         <Typography>背景のボタンをタップできません。</Typography>
       </View>
@@ -185,18 +187,18 @@ export const VariantComparison: Story = {
 
     const standardContent = (
       <View style={{ padding: 16 }}>
-        <Typography variant="titleMedium" style={{ marginBottom: 16 }}>
-          Standard
-        </Typography>
+        <View style={{ marginBottom: 16 }}>
+          <Typography variant="titleMedium">Standard</Typography>
+        </View>
         <Typography>背景操作が可能です。</Typography>
       </View>
     );
 
     const modalContent = (
       <View style={{ padding: 16 }}>
-        <Typography variant="titleMedium" style={{ marginBottom: 16 }}>
-          Modal
-        </Typography>
+        <View style={{ marginBottom: 16 }}>
+          <Typography variant="titleMedium">Modal</Typography>
+        </View>
         <Typography>背景操作が不可能です。</Typography>
       </View>
     );
@@ -230,12 +232,11 @@ export const VariantComparison: Story = {
           </Component>
         </View>
 
-        <Typography
-          variant="bodySmall"
-          style={{ textAlign: "center", marginTop: 16 }}
-        >
-          Standardは背景操作可能、Modalは背景操作不可
-        </Typography>
+        <View style={{ alignItems: "center", marginTop: 16 }}>
+          <Typography variant="bodySmall">
+            Standardは背景操作可能、Modalは背景操作不可
+          </Typography>
+        </View>
       </View>
     );
   },

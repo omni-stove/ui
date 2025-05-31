@@ -90,15 +90,16 @@ export const ShoppingApp: Story = {
                   />
                   <Card.Content style={styles.productContent}>
                     <Typography variant="titleMedium">商品 {item}</Typography>
-                    <Typography
-                      variant="bodySmall"
-                      style={styles.productDescription}
-                    >
-                      高品質な商品の説明文がここに入ります
-                    </Typography>
-                    <Typography variant="titleLarge" style={styles.price}>
-                      ¥{(item * 1000).toLocaleString()}
-                    </Typography>
+                    <View style={styles.productDescription}>
+                      <Typography variant="bodySmall">
+                        高品質な商品の説明文がここに入ります
+                      </Typography>
+                    </View>
+                    <View style={styles.price}>
+                      <Typography variant="titleLarge">
+                        ¥{(item * 1000).toLocaleString()}
+                      </Typography>
+                    </View>
                   </Card.Content>
                   <Card.Actions>
                     <Button onPress={addToCart}>カートに追加</Button>

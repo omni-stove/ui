@@ -352,9 +352,9 @@ export const ComplexFormApp: Story = {
             <Card.Content>
               <Grid variant="standard" spacing="comfortable">
                 <GridItem span={12}>
-                  <Typography variant="bodyMedium" style={styles.label}>
-                    性別 *
-                  </Typography>
+                  <View style={styles.label}>
+                    <Typography variant="bodyMedium">性別 *</Typography>
+                  </View>
                   <RadioButton.Group
                     value={formData.gender}
                     onValueChange={(value) => updateFormData("gender", value)}
@@ -366,9 +366,11 @@ export const ComplexFormApp: Story = {
                     </View>
                   </RadioButton.Group>
                   {errors.gender && (
-                    <Typography variant="bodySmall" style={styles.errorText}>
-                      {errors.gender}
-                    </Typography>
+                    <View style={styles.errorText}>
+                      <Typography variant="bodySmall">
+                        {errors.gender}
+                      </Typography>
+                    </View>
                   )}
                 </GridItem>
                 <GridItem span={6}>
@@ -415,9 +417,9 @@ export const ComplexFormApp: Story = {
                   />
                 </GridItem>
                 <GridItem span={6}>
-                  <Typography variant="bodyMedium" style={styles.label}>
-                    希望連絡時間
-                  </Typography>
+                  <View style={styles.label}>
+                    <Typography variant="bodyMedium">希望連絡時間</Typography>
+                  </View>
                   <TimePicker
                     value={formData.preferredTime || undefined}
                     onChange={(time) =>
@@ -426,9 +428,11 @@ export const ComplexFormApp: Story = {
                   />
                 </GridItem>
                 <GridItem span={6}>
-                  <Typography variant="bodyMedium" style={styles.label}>
-                    予算: ¥{formData.budget.toLocaleString()}
-                  </Typography>
+                  <View style={styles.label}>
+                    <Typography variant="bodyMedium">
+                      予算: ¥{formData.budget.toLocaleString()}
+                    </Typography>
+                  </View>
                   <Slider
                     value={formData.budget}
                     onChange={(value) =>
@@ -444,19 +448,19 @@ export const ComplexFormApp: Story = {
                 </GridItem>
                 <GridItem span={6}>
                   <Switch
-                    selected={formData.newsletter}
+                    value={formData.newsletter}
                     label="メールマガジンを受け取る"
-                    onPress={() =>
-                      updateFormData("newsletter", !formData.newsletter)
+                    onValueChange={(value) =>
+                      updateFormData("newsletter", value)
                     }
                   />
                 </GridItem>
                 <GridItem span={6}>
                   <Switch
-                    selected={formData.notifications}
+                    value={formData.notifications}
                     label="プッシュ通知を受け取る"
-                    onPress={() =>
-                      updateFormData("notifications", !formData.notifications)
+                    onValueChange={(value) =>
+                      updateFormData("notifications", value)
                     }
                   />
                 </GridItem>
@@ -479,9 +483,11 @@ export const ComplexFormApp: Story = {
                     label="利用規約に同意する *"
                   />
                   {errors.termsAccepted && (
-                    <Typography variant="bodySmall" style={styles.errorText}>
-                      {errors.termsAccepted}
-                    </Typography>
+                    <View style={styles.errorText}>
+                      <Typography variant="bodySmall">
+                        {errors.termsAccepted}
+                      </Typography>
+                    </View>
                   )}
                 </GridItem>
                 <GridItem span={12}>
@@ -494,9 +500,11 @@ export const ComplexFormApp: Story = {
                     label="プライバシーポリシーに同意する *"
                   />
                   {errors.privacyAccepted && (
-                    <Typography variant="bodySmall" style={styles.errorText}>
-                      {errors.privacyAccepted}
-                    </Typography>
+                    <View style={styles.errorText}>
+                      <Typography variant="bodySmall">
+                        {errors.privacyAccepted}
+                      </Typography>
+                    </View>
                   )}
                 </GridItem>
                 <GridItem span={12}>

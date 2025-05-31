@@ -270,20 +270,21 @@ const Input = forwardRef<RNTextInput, InputProps>(
             activeUnderlineColor="transparent" // PaperのTextInputのデフォルト下線を消す
             // dense // 少し高さを抑える
           />
-          <IconButton
-            icon="send" // Use string for icon name
-            size="small" //自前のIconButtonは 'small' などの文字列を期待
-            //自前のIconButtonはiconColorではなくcolor propかもしれないので、もしエラーが出たら確認
-            // IconButtonのPropsを見ると、iconColorではなく、variantやselectedに応じて内部で決定される
-            // ここではデフォルトの挙動に任せるか、必要ならvariantを指定
-            // iconColor={
-            //   disabled ? theme.colors.onSurfaceDisabled : theme.colors.primary
-            // }
-            onPress={onSubmit}
-            disabled={disabled}
-            style={styles.sendButton}
-            // variant="standard" // 例えば standard variant を使うなど
-          />
+          <View style={styles.sendButton}>
+            <IconButton
+              icon="send" // Use string for icon name
+              size="small" //自前のIconButtonは 'small' などの文字列を期待
+              //自前のIconButtonはiconColorではなくcolor propかもしれないので、もしエラーが出たら確認
+              // IconButtonのPropsを見ると、iconColorではなく、variantやselectedに応じて内部で決定される
+              // ここではデフォルトの挙動に任せるか、必要ならvariantを指定
+              // iconColor={
+              //   disabled ? theme.colors.onSurfaceDisabled : theme.colors.primary
+              // }
+              onPress={onSubmit}
+              disabled={disabled}
+              // variant="standard" // 例えば standard variant を使うなど
+            />
+          </View>
         </View>
       </Surface>
     );
@@ -320,16 +321,16 @@ const Actions = ({ actions }: ActionsProps) => {
   return (
     <View style={styles.actionsContainer}>
       {actions.map(({ onPress, label }) => (
-        <Button
-          key={label}
-          onPress={onPress}
-          variant="elevated" // 自前のButtonのvariant propを使用
-          size="small" // compactの代わりにsize="small"を使用
-          style={styles.actionButton}
-          // textColor="primary" // variant="elevated" で disabled=false なら textColor は primary になるはず
-        >
-          {label}
-        </Button>
+        <View key={label} style={styles.actionButton}>
+          <Button
+            onPress={onPress}
+            variant="elevated" // 自前のButtonのvariant propを使用
+            size="small" // compactの代わりにsize="small"を使用
+            // textColor="primary" // variant="elevated" で disabled=false なら textColor は primary になるはず
+          >
+            {label}
+          </Button>
+        </View>
       ))}
     </View>
   );
