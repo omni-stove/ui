@@ -12,8 +12,8 @@ export default meta;
 type Story = StoryObj<typeof Component>;
 
 const args: Story["args"] = {
-  selected: false,
-  onPress: () => console.log("Switch pressed!"),
+  value: false,
+  onValueChange: (newValue) => console.log("Switch value changed!", newValue),
   fluid: false,
   switchOnIcon: "check",
   disabled: false,
@@ -22,15 +22,15 @@ const args: Story["args"] = {
 export const Default: Story = {
   args,
   render: function Render(args) {
-    const [isSelected, setIsSelected] = useState(args.selected);
+    const [currentValue, setCurrentValue] = useState(args.value);
 
     return (
       <Component
         {...args}
-        selected={isSelected}
-        onPress={() => {
-          setIsSelected(!isSelected);
-          args.onPress?.();
+        value={currentValue}
+        onValueChange={(newValue) => {
+          setCurrentValue(newValue);
+          args.onValueChange?.(newValue);
         }}
       />
     );

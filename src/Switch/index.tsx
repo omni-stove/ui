@@ -12,17 +12,17 @@ import { useTheme } from "../hooks";
 
 /**
  * Props for the Switch component.
- * @param {boolean} props.selected - The current state of the switch (true for on, false for off).
- * @param {() => void} props.onPress - Callback function invoked when the switch is pressed or its state changes.
+ * @param {boolean} props.value - The current state of the switch (true for on, false for off).
+ * @param {(value: boolean) => void} props.onValueChange - Callback function invoked when the switch's value changes.
  * @param {boolean} [props.fluid] - (Not currently implemented) Intended for a fluid animation style.
  * @param {IconSource} [props.switchOnIcon="check"] - Icon to display when the switch is in the "on" state. Defaults to "check".
  * @param {IconSource} [props.switchOffIcon] - Icon to display when the switch is in the "off" state.
  * @param {boolean} [props.disabled] - Whether the switch is disabled.
  * @param {string} [props.label] - Optional label text to display to the right of the switch.
  */
-type SwitchProps = {
-  selected: boolean;
-  onPress: () => void;
+type Props = {
+  value: boolean;
+  onValueChange: (value: boolean) => void;
   fluid?: boolean;
   switchOnIcon?: IconSource;
   switchOffIcon?: IconSource;
@@ -36,32 +36,34 @@ type SwitchProps = {
  * The component uses `react-native-gesture-handler` for pan gesture detection
  * and `Animated` API for smooth transitions.
  *
- * @param {SwitchProps} props - The component's props.
+ * @param {Props} props - The component's props.
  * @returns {JSX.Element} The Switch component.
  */
 export const Switch = ({
-  selected,
-  onPress,
+  value,
+  onValueChange,
   switchOnIcon = "check",
   switchOffIcon,
   disabled,
   label,
-}: SwitchProps) => {
+}: Props) => {
   const theme = useTheme();
-  const position = useState(new Animated.Value(selected ? 10 : -10))[0];
-  const handleHeight = useState(new Animated.Value(selected ? 24 : 16))[0];
-  const handleWidth = useState(new Animated.Value(selected ? 24 : 16))[0];
-  const [active, setActive] = useState(selected);
+  const position = useState(new Animated.Value(value ? 10 : -10))[0];
+  const handleHeight = useState(new Animated.Value(value ? 24 : 16))[0];
+  const handleWidth = useState(new Animated.Value(value ? 24 : 16))[0];
+  const [active, setActive] = useState(value);
   const [isPressed, setIsPressed] = useState(false);
 
-  const onSwitchPress = useCallback(() => {
-    onPress != null ? onPress() : null;
-  }, [onPress]);
+  const onSwitchChange = useCallback(() => {
+    if (onValueChange) {
+      onValueChange(!active);
+    }
+  }, [onValueChange, active]);
 
   const callbackFunction = useCallback(() => {
-    onSwitchPress();
+    onSwitchChange();
     setIsPressed(false);
-  }, [onSwitchPress]);
+  }, [onSwitchChange]);
 
   const pan = Gesture.Pan()
     .activateAfterLongPress(100)
@@ -316,20 +318,20 @@ export const Switch = ({
   );
 
   const init = useCallback(() => {
-    if (active !== selected) {
+    if (active !== value) {
       changeSwitch(false);
     }
     Animated.timing(handleHeight, {
-      toValue: selected ? 24 : 16,
+      toValue: value ? 24 : 16,
       duration: 100,
       useNativeDriver: false,
     }).start();
     Animated.timing(handleWidth, {
-      toValue: selected ? 24 : 16,
+      toValue: value ? 24 : 16,
       duration: 100,
       useNativeDriver: false,
     }).start();
-  }, [selected, handleHeight, handleWidth, active, changeSwitch]);
+  }, [value, handleHeight, handleWidth, active, changeSwitch]);
 
   useEffect(() => {
     init();
