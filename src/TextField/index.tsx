@@ -3,9 +3,7 @@ import type {
   KeyboardTypeOptions,
   NativeSyntheticEvent,
   ReturnKeyTypeOptions,
-  StyleProp,
   TextInputSubmitEditingEventData,
-  ViewStyle,
 } from "react-native";
 import type { TextInput as RNTextInput } from "react-native";
 import { HelperText, TextInput } from "react-native-paper";
@@ -56,7 +54,6 @@ type Props = {
   required?: boolean;
   onChangeText?: (text: string) => void;
   supportingText?: string;
-  style?: StyleProp<ViewStyle>;
   value?: string;
   disabled?: boolean;
   readOnly?: boolean;
@@ -98,7 +95,6 @@ export const TextField = forwardRef<RNTextInput, Props>(
       required = false,
       onChangeText,
       supportingText,
-      style,
       value,
       disabled,
       readOnly,
@@ -149,7 +145,6 @@ export const TextField = forwardRef<RNTextInput, Props>(
           }
           error={hasError}
           onChangeText={onChangeText}
-          style={style}
           value={value}
           disabled={disabled}
           editable={readOnly === undefined ? undefined : !readOnly}

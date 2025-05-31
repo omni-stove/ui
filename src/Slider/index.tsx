@@ -8,13 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  Animated,
-  type StyleProp,
-  StyleSheet,
-  View,
-  type ViewStyle,
-} from "react-native";
+import { Animated, StyleSheet, View } from "react-native";
 import { Typography } from "../Typography";
 import { useTheme } from "../hooks";
 
@@ -56,8 +50,7 @@ type Props = {
   isDisabled?: boolean;
   /** The orientation of the slider. @default "horizontal" */
   orientation?: "horizontal" | "vertical";
-  /** Custom style for the container */
-  style?: StyleProp<ViewStyle>;
+
   /** Test ID for testing purposes */
   testID?: string;
 };
@@ -168,7 +161,6 @@ export const Slider = forwardRef<View, Props>(
       variant = "number",
       isDisabled = false,
       orientation = "horizontal",
-      style,
       testID,
     },
     ref,
@@ -263,11 +255,7 @@ export const Slider = forwardRef<View, Props>(
     );
 
     return (
-      <View
-        ref={ref}
-        style={[styles.container, style]}
-        testID={testID || "slider"}
-      >
+      <View ref={ref} style={styles.container} testID={testID || "slider"}>
         {label && (
           <Typography variant="bodyMedium" color="onSurface">
             {label}

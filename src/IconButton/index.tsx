@@ -1,4 +1,4 @@
-import { Pressable, type StyleProp, type ViewStyle } from "react-native";
+import { Pressable, type ViewStyle } from "react-native";
 import { Icon, TouchableRipple } from "react-native-paper";
 import { useTheme } from "../hooks";
 
@@ -47,7 +47,7 @@ type WidthType = "default" | "narrow" | "wide";
  * @param {boolean} [props.disabled] - Whether the button is disabled.
  * @param {boolean} [props.selected] - Whether the button is in a selected state (used for toggle buttons). This affects styling for some variants.
  * @param {string} [props.accessibilityLabel] - Accessibility label for the button.
- * @param {StyleProp<ViewStyle>} [props.style] - Custom style for the outer TouchableRipple container, affecting the touchable area.
+
  * @param {string} [props.testID] - Test ID for the button.
  */
 type Props = {
@@ -60,7 +60,7 @@ type Props = {
   disabled?: boolean;
   selected?: boolean;
   accessibilityLabel?: string;
-  style?: StyleProp<ViewStyle>;
+
   testID?: string;
 };
 
@@ -193,7 +193,6 @@ export const IconButton = ({
   disabled,
   selected,
   accessibilityLabel,
-  style,
   testID,
 }: Props) => {
   const theme = useTheme();
@@ -202,7 +201,7 @@ export const IconButton = ({
   const borderRadius = getCornerRadius(shape, size, selected);
 
   const targetSize = 48;
-  const touchableStyle: StyleProp<ViewStyle> = {
+  const touchableStyle: ViewStyle = {
     width: Math.max(
       visualDimensions.width,
       size === "extra-small" || size === "small"
@@ -304,7 +303,7 @@ export const IconButton = ({
       accessibilityLabel={accessibilityLabel}
       accessibilityRole="button"
       accessibilityState={{ disabled, selected }}
-      style={[touchableStyle, style]}
+      style={touchableStyle}
       testID={testID}
     >
       {() => (

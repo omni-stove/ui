@@ -4,7 +4,7 @@ import {
   type Ref,
   forwardRef,
 } from "react";
-import type { StyleProp, ViewStyle } from "react-native";
+import type { ViewStyle } from "react-native";
 import { View } from "react-native";
 import { Icon, TouchableRipple } from "react-native-paper";
 import { Typography } from "../Typography";
@@ -34,7 +34,7 @@ type Size = "extra-small" | "small" | "medium" | "large" | "extra-large";
  * Base props for the Button component.
  * @param {Variant} [props.variant="filled"] - The visual style of the button.
  * @param {Size} [props.size="small"] - The size of the button.
- * @param {StyleProp<ViewStyle>} [props.style] - Custom style for the button's outer View.
+
  * @param {boolean} [props.disabled=false] - Whether the button is disabled.
  * @param {() => void} [props.onPress] - Function to call when the button is pressed.
  * @param {string} [props.testID] - Test ID for the button.
@@ -43,7 +43,7 @@ type Size = "extra-small" | "small" | "medium" | "large" | "extra-large";
 type BaseProps = {
   variant?: Variant;
   size?: Size;
-  style?: StyleProp<ViewStyle>;
+
   disabled?: boolean;
   onPress?: () => void;
   testID?: string;
@@ -122,7 +122,6 @@ export const Button = forwardRef(
     {
       variant = "filled",
       size = "small",
-      style,
       // labelStyle, // Removed as per user request to not use style overrides for Typography
       disabled = false,
       onPress,
@@ -182,28 +181,25 @@ export const Button = forwardRef(
 
     const colors = getButtonColors();
 
-    const buttonStyle: StyleProp<ViewStyle> = [
-      {
-        height: dimensions.height,
-        paddingHorizontal: dimensions.paddingHorizontal,
-        borderRadius: dimensions.height / 2,
-        backgroundColor: colors.backgroundColor,
-        justifyContent: "center",
-        alignItems: "center",
-        borderWidth: variant === "outlined" ? 1 : 0,
-        borderColor: colors.borderColor,
-        opacity: disabled ? 0.38 : 1,
-        ...(variant === "elevated" &&
-          !disabled && {
-            elevation: 1,
-            shadowColor: theme.colors.shadow,
-            shadowOffset: { width: 0, height: 1 },
-            shadowOpacity: 0.2,
-            shadowRadius: 1.41,
-          }),
-      },
-      style,
-    ];
+    const buttonStyle: ViewStyle = {
+      height: dimensions.height,
+      paddingHorizontal: dimensions.paddingHorizontal,
+      borderRadius: dimensions.height / 2,
+      backgroundColor: colors.backgroundColor,
+      justifyContent: "center",
+      alignItems: "center",
+      borderWidth: variant === "outlined" ? 1 : 0,
+      borderColor: colors.borderColor,
+      opacity: disabled ? 0.38 : 1,
+      ...(variant === "elevated" &&
+        !disabled && {
+          elevation: 1,
+          shadowColor: theme.colors.shadow,
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: 0.2,
+          shadowRadius: 1.41,
+        }),
+    };
 
     // const textStyle: StyleProp<TextStyle> = [
     //   {

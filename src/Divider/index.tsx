@@ -1,4 +1,4 @@
-import { type StyleProp, StyleSheet, View, type ViewStyle } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Divider as PaperDivider } from "react-native-paper";
 import type { DividerProps as PaperDividerProps } from "react-native-paper";
 import { useTheme } from "../hooks";
@@ -18,10 +18,6 @@ type Props = PaperDividerProps & {
    * @default false
    */
   inset?: boolean;
-  /**
-   * Optional custom style for the divider.
-   */
-  style?: StyleProp<ViewStyle>;
 };
 
 /**

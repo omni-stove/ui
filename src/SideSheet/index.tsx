@@ -5,13 +5,7 @@ import {
   useEffect,
   useId,
 } from "react";
-import {
-  Dimensions,
-  type StyleProp,
-  StyleSheet,
-  View,
-  type ViewStyle,
-} from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
 import { Button, IconButton, Modal, Portal, Surface } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Divider } from "../Divider";
@@ -46,8 +40,7 @@ type Props = {
     /** Callback function invoked when the action button is clicked. */
     onClick: () => void;
   }[];
-  /** Custom style for the side sheet container */
-  style?: StyleProp<ViewStyle>;
+
   /** Width of the side sheet. @default 400 */
   width?: number;
   /** Position of the side sheet. @default "right" */
@@ -83,7 +76,6 @@ export const SideSheet = forwardRef<View, Props>(
       isOpen = false,
       onOpenChange,
       actions,
-      style,
       width = 400,
       position = "right",
       hasDivider = true,
@@ -152,7 +144,6 @@ export const SideSheet = forwardRef<View, Props>(
         paddingBottom: insets.bottom,
         backgroundColor: theme.colors.surfaceContainerLow,
       },
-      style,
     ];
 
     const backdropStyle = [styles.backdrop];
