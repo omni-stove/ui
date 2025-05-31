@@ -4,11 +4,9 @@ import { type StyleProp, StyleSheet, View, type ViewStyle } from "react-native";
 import {
   Badge,
   Icon,
-  type MD3Theme,
   Modal,
   Portal,
   TouchableRipple,
-  useTheme,
 } from "react-native-paper";
 import { FAB, IconButton } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
@@ -18,6 +16,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { Typography } from "../Typography";
+import { useTheme } from "../hooks";
 
 /**
  * Defines the display variant of the NavigationRail.
@@ -109,7 +108,7 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
     }: Props,
     ref,
   ) => {
-    const theme = useTheme<MD3Theme>();
+    const theme = useTheme();
     const [status, setStatus] = useState<Status>(
       variant === "modal" ? "expanded" : initialStatus,
     );
@@ -137,7 +136,7 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
         borderRadius: theme.roundness * 4,
       },
       container: {
-        backgroundColor: theme.colors.surface,
+        backgroundColor: theme.colors.surfaceContainer,
         paddingTop: 8,
         paddingBottom: 8,
         height: "100%",
@@ -377,7 +376,7 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
                   theme={{ roundness: theme.roundness * 3 }}
                   color={
                     isActive
-                      ? theme.colors.secondary
+                      ? theme.colors.onSecondaryContainer
                       : theme.colors.onSurfaceVariant
                   }
                   accessibilityLabel={item.ariaLabel || item.label}
@@ -443,7 +442,7 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
                     </View>
                     <Typography
                       variant="labelMedium"
-                      color="onSurfaceVariant"
+                      color={isActive ? "onSurface" : "onSurfaceVariant"}
                       style={[styles.label, isActive && styles.activeLabel]} // Keep for marginTop, textAlign
                       numberOfLines={1}
                     >

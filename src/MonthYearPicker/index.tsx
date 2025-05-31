@@ -1,15 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
-import {
-  Button,
-  Modal,
-  Portal,
-  RadioButton,
-  Text,
-  useTheme,
-} from "react-native-paper";
+import { Button, Modal, Portal, RadioButton, Text } from "react-native-paper";
 import { Grid, GridItem } from "../Grid";
 import { TextField } from "../TextField";
+import { useTheme } from "../hooks";
 
 /**
  * Props for the MonthYearPicker component.
