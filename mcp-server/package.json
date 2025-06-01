@@ -24,7 +24,7 @@
   },
   "scripts": {
     "start": "tsx index.ts",
-    "build": "tsc index.ts --outDir dist --target es2022 --module esnext --moduleResolution bundler",
+    "build": "tsc",
     "dev": "tsx watch index.ts",
     "prepublishOnly": "npm run build"
   },
