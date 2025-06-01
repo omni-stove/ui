@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "rn-ui-components": {
+      "command": "npx",
+      "args": [
+        "tsx",
+        "/Users/noguchi.kohki/Documents/JS/rn-ui/mcp-server/index.ts"
+      ],
+      "cwd": "/Users/noguchi.kohki/Documents/JS/rn-ui"
+    }
+  }
+}

@@ -1,0 +1,142 @@
+name: MCP Server Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'mcp-server/**'
+  workflow_dispatch:
+    inputs:
+      force_release:
+        description: 'Force release even without changes'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  build-tag-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    defaults:
+      run:
+        working-directory: ./mcp-server
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: "../.node-version"
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@codynog'
+
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
+
+      - name: Restore npm cache
+        uses: actions/cache/restore@v4
+        id: npm-cache
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-mcp-server-node-${{ hashFiles('mcp-server/package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Save npm cache
+        uses: actions/cache/save@v4
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-mcp-server-node-${{ hashFiles('mcp-server/package-lock.json') }}
+
+      - name: Build package
+        run: npm run build
+
+      - name: Generate CalVer for MCP Server
+        id: calver
+        run: |
+          year=$(date +'%Y')
+          month=$(date +'%-m')
+          
+          current_date="${year}.${month}"
+          echo "Current date: ${current_date}"
+          
+          # Look for existing MCP server tags
+          release_count=$(git tag | grep "^mcp-server-v${current_date}\." | wc -l)
+          echo "Release count: ${release_count}"
+          
+          next_release=$((release_count + 1))
+          echo "Next release: ${next_release}"
+          
+          version="${current_date}.${next_release}"
+          echo "version=${version}" >> $GITHUB_OUTPUT
+          echo "Generated version: ${version}"
+
+      - name: Update version in package.json
+        run: |
+          if jq -e '.version' package.json > /dev/null 2>&1; then
+            # Update existing version
+            jq --arg version "${{ steps.calver.outputs.version }}" '.version = $version' package.json > package.json.tmp
+          else
+            # Add version field if it doesn't exist
+            jq --arg version "${{ steps.calver.outputs.version }}" '. + {version: $version}' package.json > package.json.tmp
+          fi
+          mv package.json.tmp package.json
+          echo "Updated package.json version to ${{ steps.calver.outputs.version }}"
+          cat package.json
+
+      - name: Publish MCP Server package
+        run: |
+          if ! npm publish --no-git-checks; then
+            echo "Failed to publish MCP Server package"
+            exit 1
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_CONFIG_REGISTRY: "https://npm.pkg.github.com"
+
+      - name: Create and push Git tag
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          tag_name="mcp-server-v${{ steps.calver.outputs.version }}"
+          
+          if ! git tag -a $tag_name -m "MCP Server Release ${{ steps.calver.outputs.version }}"; then
+            echo "Failed to create tag"
+            exit 1
+          fi
+          
+          if ! git push origin $tag_name; then
+            echo "Failed to push tag"
+            exit 1
+          fi
+          
+          echo "Successfully created and pushed tag: $tag_name"
+
+      - name: Create GitHub Release
+        run: |
+          gh release create mcp-server-v${{ steps.calver.outputs.version }} \
+            --title "MCP Server v${{ steps.calver.outputs.version }}" \
+            --notes "## MCP Server Release v${{ steps.calver.outputs.version }}
+
+          ### Installation
+          \`\`\`bash
+          npm install @codynog/rn-ui-mcp-server@${{ steps.calver.outputs.version }}
+          \`\`\`
+
+          ### Usage
+          See the [MCP Server README](./mcp-server/README.md) for setup and usage instructions.
+
+          ### Changes
+          This release includes updates to the MCP Server for React Native UI Components."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
