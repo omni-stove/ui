@@ -36,7 +36,7 @@ type StackProps = {
  * @param {number} [props.spacing=0] - The spacing between children (multiplied by 4 for dp, applied as gap).
  * @param {ViewStyle['alignItems']} [props.alignItems] - Align items along the cross axis.
  * @param {ViewStyle['justifyContent']} [props.justifyContent] - Justify content along the main axis.
- * @param {React.ReactNode} props.children - Children to render.
+ * @param {ReactNode} props.children - Children to render.
  */
 export const Stack = ({
   direction = "column",

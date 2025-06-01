@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { type ComponentProps, useState } from "react";
+import type { ComponentProps } from "react";
+import { useState } from "react";
 import { View } from "react-native";
 import { Button } from "react-native-paper";
 import { SideSheet as Component } from ".";

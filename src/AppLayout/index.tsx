@@ -106,7 +106,7 @@ type AppLayoutProps = {
  * - Breakpoint defaults to 768px but can be customized
  *
  * @param {AppLayoutProps} props - The component's props.
- * @param {Ref<KeyboardAvoidingView>} ref - Ref for the underlying KeyboardAvoidingView.
+ * @param {React.Ref<KeyboardAvoidingView>} ref - Ref for the underlying KeyboardAvoidingView.
  * @returns {JSX.Element} The AppLayout component.
  * @see {@link Toolbar}
  * @see {@link NavigationRail}

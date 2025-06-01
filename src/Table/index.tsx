@@ -1,5 +1,6 @@
 import { type ColumnDef, flexRender } from "@tanstack/react-table";
-import { type Ref, forwardRef, useMemo } from "react";
+import type { Ref } from "react";
+import { forwardRef, useMemo } from "react";
 import { View } from "react-native";
 import { DataTable, Menu, Searchbar } from "react-native-paper";
 import { Checkbox } from "../Checkbox";

@@ -114,7 +114,7 @@ type ContentProps = {
  * A component that displays the main content of the chat, typically a list of messages.
  * It's a scrollable view.
  * @param {ContentProps} props - The props for the component.
- * @param {Ref<ScrollView>} ref - The ref for the ScrollView.
+ * @param {React.Ref<ScrollView>} ref - The ref for the ScrollView.
  * @returns {JSX.Element} The rendered content component.
  */
 const Content = forwardRef<ScrollView, ContentProps>(({ children }, ref) => {
@@ -148,7 +148,7 @@ type MessageProps = {
 /**
  * A component to display a single chat message.
  * @param {MessageProps} props - The props for the component.
- * @param {Ref<View>} ref - The ref for the View.
+ * @param {React.Ref<View>} ref - The ref for the View.
  * @returns {JSX.Element} The rendered message component.
  */
 const Message = forwardRef<View, MessageProps>(
@@ -223,7 +223,7 @@ type InputProps = {
 /**
  * A component for text input in the chat interface.
  * @param {InputProps} props - The props for the component.
- * @param {Ref<RNTextInput>} ref - The ref for the TextInput.
+ * @param {React.Ref<RNTextInput>} ref - The ref for the TextInput.
  * @returns {JSX.Element} The rendered input component.
  */
 const Input = forwardRef<RNTextInput, InputProps>(

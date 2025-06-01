@@ -64,7 +64,7 @@ type Props = {
  * - "modal": Blocks background content interaction (with backdrop)
  *
  * @param {Props} props - The component's props.
- * @param {Ref<BottomSheetRef>} ref - Ref to control the BottomSheet.
+ * @param {React.Ref<BottomSheetRef>} ref - Ref to control the BottomSheet.
  * @returns {JSX.Element} The BottomSheet component.
  * @see {@link https://gorhom.github.io/react-native-bottom-sheet/|@gorhom/bottom-sheet Documentation}
  */

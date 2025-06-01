@@ -1,5 +1,6 @@
 "use client";
-import { type ComponentRef, forwardRef, useEffect, useState } from "react";
+import type { ComponentRef } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { type StyleProp, StyleSheet, View, type ViewStyle } from "react-native";
 import {
   Badge,

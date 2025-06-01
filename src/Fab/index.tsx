@@ -1,4 +1,5 @@
-import { type Ref, forwardRef, useCallback, useMemo, useState } from "react";
+import type { Ref } from "react";
+import { forwardRef, useCallback, useMemo, useState } from "react";
 import { Animated, Pressable, StyleSheet, View } from "react-native";
 import { FAB as Fab } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";

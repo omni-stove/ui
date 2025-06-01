@@ -1,12 +1,12 @@
 import {
   type ReactElement,
   type ReactNode,
-  useState,
   useCallback,
   useEffect,
+  useState,
 } from "react";
-import { View, Pressable, StyleSheet, BackHandler } from "react-native";
-import { Dialog as PaperDialog, Icon, Portal } from "react-native-paper";
+import { BackHandler, Pressable, StyleSheet, View } from "react-native";
+import { Icon, Dialog as PaperDialog, Portal } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { Button } from "../Button";
 import { Typography } from "../Typography";

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect } from "@storybook/test";
-import { type ComponentProps, useState } from "react";
+import type { ComponentProps } from "react";
+import { useState } from "react";
 import { View } from "react-native";
 import { Slider as Component } from ".";
 import { getCanvas } from "../libs/storybook";
