@@ -1,10 +1,4 @@
-import {
-  type ReactElement,
-  type ReactNode,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { type ReactNode, useCallback, useEffect, useState } from "react";
 import { BackHandler, Pressable, StyleSheet, View } from "react-native";
 import { Icon, Dialog as PaperDialog, Portal } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
@@ -30,7 +24,7 @@ type DialogVariant = "basic" | "full-screen";
 // Common props shared by all dialog variants
 type CommonDialogProps = {
   headline: string;
-  children: ReactElement;
+  children: ReactNode;
   visible?: boolean;
   onDismiss?: () => void;
 };
@@ -68,7 +62,7 @@ type Props<T extends DialogVariant = "basic"> = CommonDialogProps & {
  *
  * @param {object} props - The component's props.
  * @param {string} props.headline - The dialog title.
- * @param {ReactElement} props.children - The trigger element that opens the dialog.
+ * @param {ReactNode} props.children - The trigger element that opens the dialog.
  * @param {ReactNode} [props.content] - Optional content for basic dialogs, required for fullscreen dialogs. Displayed in a scrollable area.
  * @param {boolean} [props.visible] - Controls dialog visibility externally.
  * @param {() => void} [props.onDismiss] - Function called when dialog is dismissed.
