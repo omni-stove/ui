@@ -296,6 +296,7 @@ export const Button = forwardRef(
             alignItems: "center",
             gap: icon && children ? 8 : 0,
           }}
+          pointerEvents="none"
         >
           {icon && (
             <Icon

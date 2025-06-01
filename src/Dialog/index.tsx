@@ -1,16 +1,18 @@
-import { type ReactElement, useState, useCallback } from "react";
-import { View, Pressable } from "react-native";
+import {
+  type ReactElement,
+  type ReactNode,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
+import { View, Pressable, StyleSheet, BackHandler } from "react-native";
 import { Dialog as PaperDialog, Icon, Portal } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { Button } from "../Button";
 import { Typography } from "../Typography";
+import { useTheme } from "../hooks";
 
-/**
- * Defines the visual style of the dialog.
- * - `basic`: A standard dialog with title, content, and actions.
- * - `full-screen`: A full-screen dialog (not yet implemented).
- */
-type Variant = "basic" | "full-screen";
+// --- Common Type Definitions ---
 
 /**
  * Defines an action button for the dialog.
@@ -22,27 +24,41 @@ type Action = {
   onPress: () => void;
 };
 
-/**
- * Props for the Dialog component.
- * @param {Variant} [props.variant="basic"] - The visual style of the dialog.
- * @param {Action[]} [props.actions] - Array of action buttons to display.
- * @param {string} props.headline - The title/headline of the dialog.
- * @param {string} [props.supportingText] - Optional supporting text/description.
- * @param {IconSource} [props.icon] - Optional icon to display in the title.
- * @param {ReactElement} props.children - Trigger element that opens the dialog when pressed.
- * @param {boolean} [props.visible] - Controls the visibility of the dialog. If undefined, visibility is handled internally.
- * @param {() => void} [props.onDismiss] - Function to call when the dialog is dismissed.
- */
-type Props = {
-  variant?: Variant;
-  actions?: Action[];
+// Dialog variant types
+type DialogVariant = "basic" | "full-screen";
+
+// Common props shared by all dialog variants
+type CommonDialogProps = {
   headline: string;
-  supportingText?: string;
-  icon?: IconSource;
   children: ReactElement;
   visible?: boolean;
   onDismiss?: () => void;
 };
+
+// Variant-specific conditional types
+type ContentType<T extends DialogVariant | undefined> = T extends "full-screen"
+  ? { content: ReactNode }
+  : { content?: ReactNode };
+
+type ActionsType<T extends DialogVariant | undefined> = T extends "full-screen"
+  ? { actions: Action[] }
+  : { actions?: Action[] };
+
+type BasicSpecificProps<T extends DialogVariant | undefined> = T extends
+  | "basic"
+  | undefined
+  ? {
+      supportingText?: string;
+      icon?: IconSource;
+    }
+  : Record<string, never>;
+
+// Main dialog props type with conditional properties
+type Props<T extends DialogVariant = "basic"> = CommonDialogProps & {
+  variant?: T;
+} & ContentType<T> &
+  ActionsType<T> &
+  BasicSpecificProps<T>;
 
 /**
  * A component to display a dialog.
@@ -50,19 +66,30 @@ type Props = {
  * This component extends the Dialog from React Native Paper with custom variants and simplified props.
  * The children prop serves as the trigger element that opens the dialog.
  *
- * @param {Props} props - The component's props.
+ * @param {object} props - The component's props.
+ * @param {string} props.headline - The dialog title.
+ * @param {ReactElement} props.children - The trigger element that opens the dialog.
+ * @param {ReactNode} [props.content] - Optional content for basic dialogs, required for fullscreen dialogs. Displayed in a scrollable area.
+ * @param {boolean} [props.visible] - Controls dialog visibility externally.
+ * @param {() => void} [props.onDismiss] - Function called when dialog is dismissed.
+ * @param {"basic" | "full-screen"} [props.variant] - Dialog variant (default: "basic").
+ * @param {string} [props.supportingText] - Supporting text for basic dialogs only.
+ * @param {IconSource} [props.icon] - Icon for basic dialogs only.
+ * @param {Action[]} [props.actions] - Action buttons (optional for basic, required for fullscreen).
  * @returns {JSX.Element} The Dialog component with trigger.
  */
-export const Dialog = ({
-  variant = "basic",
-  actions,
-  headline,
-  supportingText,
-  icon,
-  children,
-  visible,
-  onDismiss,
-}: Props) => {
+export const Dialog = <T extends DialogVariant = "basic">(props: Props<T>) => {
+  const {
+    variant = "basic",
+    visible,
+    onDismiss,
+    children,
+    headline,
+    actions,
+    content,
+  } = props;
+
+  const theme = useTheme();
   const [internalVisible, setInternalVisible] = useState(false);
 
   const isActuallyVisible = visible !== undefined ? visible : internalVisible;
@@ -84,37 +111,112 @@ export const Dialog = ({
     showDialog();
   }, [showDialog]);
 
+  // Handle back button for full-screen dialog
+  useEffect(() => {
+    if (variant === "full-screen" && isActuallyVisible) {
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        () => {
+          hideDialog();
+          return true;
+        },
+      );
+      return () => backHandler.remove();
+    }
+  }, [variant, isActuallyVisible, hideDialog]);
+
   if (variant === "full-screen") {
-    // TODO: Implement full-screen variant
-    throw new Error("Full-screen variant is not yet implemented");
+    return (
+      <>
+        <Pressable onPress={handlePress}>{children}</Pressable>
+        {isActuallyVisible && (
+          <View
+            style={[StyleSheet.absoluteFillObject, styles.fullscreenOverlay]}
+          >
+            <View
+              style={[
+                styles.fullscreenContainer,
+                { backgroundColor: theme.colors.surface },
+              ]}
+            >
+              {/* Header with title and actions */}
+              <View
+                style={[
+                  styles.fullscreenHeader,
+                  { backgroundColor: theme.colors.surfaceContainer },
+                ]}
+              >
+                <View style={styles.fullscreenTitle}>
+                  <Typography variant="headlineSmall" color="onSurface">
+                    {headline}
+                  </Typography>
+                </View>
+                <View style={styles.fullscreenActions}>
+                  {actions?.map((action, index) => (
+                    <Button
+                      key={`action-${index}-${action.label}`}
+                      variant="text"
+                      onPress={() => {
+                        action.onPress();
+                        hideDialog();
+                      }}
+                    >
+                      {action.label}
+                    </Button>
+                  ))}
+                </View>
+              </View>
+              {/* Content area */}
+              <View style={styles.fullscreenContent}>{content}</View>
+            </View>
+          </View>
+        )}
+      </>
+    );
   }
+
+  const { supportingText, icon } = props;
 
   return (
     <>
       <Pressable onPress={handlePress}>{children}</Pressable>
       <Portal>
-        <PaperDialog visible={isActuallyVisible} onDismiss={hideDialog}>
-          <PaperDialog.Title>
+        <PaperDialog
+          visible={isActuallyVisible}
+          onDismiss={hideDialog}
+          style={{
+            maxWidth: 560,
+            minWidth: 280,
+            alignSelf: "center",
+          }}
+        >
+          <PaperDialog.Content>
+            {icon && (
+              <View style={{ alignItems: "center", marginBottom: 16 }}>
+                <Icon source={icon} size={24} />
+              </View>
+            )}
             <View
               style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: icon ? 16 : 0,
+                alignItems: icon ? "center" : "flex-start",
+                marginBottom: supportingText ? 16 : 0,
               }}
             >
-              {icon && <Icon source={icon} size={24} />}
               <Typography variant="headlineSmall" color="onSurface">
                 {headline}
               </Typography>
             </View>
-          </PaperDialog.Title>
+            {supportingText && (
+              <View style={{ alignItems: icon ? "center" : "flex-start" }}>
+                <Typography variant="bodyMedium" color="onSurfaceVariant">
+                  {supportingText}
+                </Typography>
+              </View>
+            )}
+          </PaperDialog.Content>
 
-          {supportingText && (
-            <PaperDialog.Content>
-              <Typography variant="bodyMedium" color="onSurfaceVariant">
-                {supportingText}
-              </Typography>
-            </PaperDialog.Content>
+          {content && (
+            <PaperDialog.ScrollArea>{content}</PaperDialog.ScrollArea>
           )}
 
           {actions && actions.length > 0 && (
@@ -148,3 +250,35 @@ export const Dialog = ({
 };
 
 Dialog.displayName = "Dialog";
+
+const styles = StyleSheet.create({
+  fullscreenOverlay: {
+    zIndex: 9999,
+    elevation: 24,
+  },
+  fullscreenContainer: {
+    flex: 1,
+  },
+  fullscreenHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    minHeight: 56,
+  },
+  fullscreenTitle: {
+    flex: 1,
+  },
+  fullscreenActions: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  fullscreenContent: {
+    flex: 1,
+    padding: 16,
+  },
+  fullscreenContentContainer: {
+    padding: 0,
+  },
+});
