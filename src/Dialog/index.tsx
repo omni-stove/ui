@@ -113,16 +113,18 @@ export const Dialog = <T extends DialogVariant = "basic">(props: Props<T>) => {
 
   // Handle back button for full-screen dialog
   useEffect(() => {
-    if (variant === "full-screen" && isActuallyVisible) {
-      const backHandler = BackHandler.addEventListener(
-        "hardwareBackPress",
-        () => {
-          hideDialog();
-          return true;
-        },
-      );
-      return () => backHandler.remove();
+    if (variant !== "full-screen" || !isActuallyVisible) {
+      return;
     }
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        hideDialog();
+        return true;
+      },
+    );
+    return () => backHandler.remove();
   }, [variant, isActuallyVisible, hideDialog]);
 
   if (variant === "full-screen") {
