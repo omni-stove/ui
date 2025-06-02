@@ -1,0 +1,1 @@
+export { ActivityIndicator as LoadingIndicator } from '../ActivityIndicator';

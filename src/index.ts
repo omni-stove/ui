@@ -22,6 +22,7 @@ export * from "./HelperText";
 export * from "./Icon";
 export * from "./IconButton";
 export * from "./List";
+export * from "./LoadingIndicator";
 export * from "./Menu";
 export * from "./Modal";
 export * from "./MonthYearPicker";
