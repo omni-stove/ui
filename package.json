@@ -10,10 +10,7 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
-  "files": [
-    "dist",
-    "README.md"
-  ],
+  "files": ["dist", "README.md"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/codynog/rn-ui.git"
@@ -50,9 +47,6 @@
     "@react-native-community/slider": "^4.5.0",
     "@react-native-vector-icons/material-icons": "^12.0.0",
     "@tanstack/react-table": "^8.21.3",
-    "expo": ">=50.0.0 <54.0.0",
-    "expo-constants": "~17.1.5",
-    "expo-status-bar": "~2.2.3",
     "papaparse": "^5.5.3",
     "react-native-paper": "^5.12.0",
     "react-native-paper-dates": "^0.22.42",
@@ -84,6 +78,7 @@
     "@vitejs/plugin-react": "^4.5.0",
     "babel-plugin-react-docgen-typescript": "^1.5.1",
     "cross-env": "^7.0.3",
+    "expo": ">=50.0.0 <54.0.0",
     "knip": "^5.58.1",
     "plop": "^4.0.1",
     "react-native": "0.79.2",
