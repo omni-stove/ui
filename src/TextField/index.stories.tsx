@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect } from "@storybook/test";
 import { useState } from "react";
-import { View } from "react-native";
+import { Grid, GridItem } from "../Grid";
 import { TextField as Component } from ".";
 import { getCanvas } from "../libs/storybook";
 
@@ -38,13 +38,6 @@ const meta: Meta<typeof Component> = {
     value: { control: false },
     onChangeText: { action: "onChangeText" },
   },
-  decorators: [
-    (Story) => (
-      <View style={{ padding: 16, flex: 1 }}>
-        <Story />
-      </View>
-    ),
-  ],
 };
 
 export default meta;
@@ -53,69 +46,90 @@ type Story = StoryObj<typeof Component>;
 
 export const Default: Story = {};
 
-export const Filled: Story = {
-  args: {
-    variant: "filled",
-    label: "Filled TextField",
-  },
-};
-
-export const Outlined: Story = {
-  args: {
-    variant: "outlined",
-    label: "Outlined TextField",
-  },
+export const Variants: Story = {
+  render: () => (
+    <Grid>
+      <GridItem span={6}>
+        <Component
+          variant="filled"
+          label="Filled TextField"
+        />
+      </GridItem>
+      <GridItem span={6}>
+        <Component
+          variant="outlined"
+          label="Outlined TextField"
+        />
+      </GridItem>
+    </Grid>
+  ),
 };
 
 export const WithError: Story = {
-  args: {
-    label: "Field with error",
-    errorMessage: "This field has an error.",
-  },
+  render: () => (
+    <Grid>
+      <GridItem span={6}>
+        <Component
+          variant="filled"
+          label="Filled with error"
+          errorMessage="This field has an error."
+        />
+      </GridItem>
+      <GridItem span={6}>
+        <Component
+          variant="outlined"
+          label="Outlined with error"
+          errorMessage="This field has an error."
+        />
+      </GridItem>
+    </Grid>
+  ),
 };
 
 export const Multiline: Story = {
-  args: {
-    label: "Multiline TextField",
-    multiline: true,
-    maxLines: 5,
-  },
+  render: () => (
+    <Grid>
+      <GridItem span={6}>
+        <Component
+          variant="filled"
+          label="Filled multiline"
+          multiline={true}
+          maxLines={5}
+        />
+      </GridItem>
+      <GridItem span={6}>
+        <Component
+          variant="outlined"
+          label="Outlined multiline"
+          multiline={true}
+          maxLines={5}
+        />
+      </GridItem>
+    </Grid>
+  ),
 };
 
 export const WithAdornments: Story = {
-  args: {
-    label: "Adornments",
-    startAdornment: { type: "icon", value: "currency-usd" },
-    endAdornment: { type: "label", value: "kg" },
-  },
-};
-
-export const RequiredField: Story = {
-  args: {
-    label: "Required Field",
-    required: true,
-  },
-};
-
-export const ReadOnlyField: Story = {
-  args: {
-    label: "Read Only Field",
-    readOnly: true,
-  },
-};
-
-export const DisabledField: Story = {
-  args: {
-    label: "Disabled Field",
-    disabled: true,
-  },
-};
-
-export const WithSupportingText: Story = {
-  args: {
-    label: "Field with Supporting Text",
-    supportingText: "Helper text for this input.",
-  },
+  render: () => (
+    <Grid>
+      <GridItem span={6}>
+        <Component
+          variant="filled"
+          label="Filled adornments"
+          startAdornment={{ type: "icon", value: "currency-usd" }}
+          endAdornment={{ type: "label", value: "kg" }}
+        />
+      </GridItem>
+      <GridItem span={6}>
+        <Component
+          variant="outlined"
+          label="Outlined adornments"
+          startAdornment={{ type: "icon", value: "currency-usd" }}
+          endAdornment={{ type: "label", value: "kg" }}
+        />
+      </GridItem>
+    </Grid>
+  ),
 };
 
 export const WithMaxLength: Story = {

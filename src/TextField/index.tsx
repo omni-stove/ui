@@ -119,6 +119,24 @@ export const TextField = forwardRef<RNTextInput, Props>(
 
     const textFieldLabel = required && label ? `${label}*` : label;
 
+    // multiline時の高さ調整
+    const getContentStyle = () => {
+      if (multiline) {
+        return {
+          minHeight: 80,
+          textAlignVertical: "top" as const,
+        };
+      }
+      return undefined;
+    };
+
+    // variantに関係なく高さを統一
+    const getOuterStyle = () => {
+      return {
+        minHeight: multiline ? undefined : 56, // single lineの最小高さを統一
+      };
+    };
+
     return (
       <>
         <TextInput
@@ -127,6 +145,8 @@ export const TextField = forwardRef<RNTextInput, Props>(
           mode={paperVariant}
           multiline={multiline}
           numberOfLines={multiline ? maxLines : undefined}
+          contentStyle={getContentStyle()}
+          style={getOuterStyle()}
           left={
             startAdornment &&
             (startAdornment.type === "icon" ? (
