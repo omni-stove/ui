@@ -7,6 +7,7 @@ import {
   Button,
   Card,
   Chip,
+  Dialog,
   Divider,
   FAB,
   List,
@@ -14,6 +15,7 @@ import {
   Snackbar,
   Surface,
   Switch,
+  TextField,
   Typography,
 } from ".."; // Path adjusted for new location
 
@@ -35,6 +37,11 @@ export const UserProfileApp: Story = {
     const [notificationsEnabled, setNotificationsEnabled] = useState(true);
     const [snackbarVisible, setSnackbarVisible] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    // プロフィール編集用の状態
+    const [profileName, setProfileName] = useState("春日部つむぎ");
+    const [profileBio, setProfileBio] = useState("ハイパー埼玉ギャル");
+    const [profileLocation, setProfileLocation] = useState("埼玉県春日部市");
+    const [profileWebsite, setProfileWebsite] = useState("https://example.com");
 
     return (
       <AppLayout
@@ -64,9 +71,43 @@ export const UserProfileApp: Story = {
                 </View>
               </View>
             </View>
-            <View style={styles.editButton}>
+            <Dialog
+              variant="full-screen"
+              headline="プロフィールを編集"
+              actions={[
+                { label: "キャンセル", onPress: () => {} },
+                { label: "保存", onPress: () => setSnackbarVisible(true) },
+              ]}
+              content={
+                <ScrollView style={{ flex: 1 }}>
+                  <View style={{ padding: 16, gap: 16 }}>
+                    <TextField
+                      label="名前"
+                      value={profileName}
+                      onChangeText={setProfileName}
+                    />
+                    <TextField
+                      label="自己紹介"
+                      value={profileBio}
+                      onChangeText={setProfileBio}
+                      multiline
+                    />
+                    <TextField
+                      label="場所"
+                      value={profileLocation}
+                      onChangeText={setProfileLocation}
+                    />
+                    <TextField
+                      label="ウェブサイト"
+                      value={profileWebsite}
+                      onChangeText={setProfileWebsite}
+                    />
+                  </View>
+                </ScrollView>
+              }
+            >
               <Button variant="filled">プロフィールを編集</Button>
-            </View>
+            </Dialog>
           </Surface>
 
           {/* 検索バー */}
@@ -133,9 +174,7 @@ export const UserProfileApp: Story = {
             </Card.Content>
           </Card>
         </ScrollView>
-
         <FAB icon="plus" onPress={() => setSnackbarVisible(true)} />
-
         <Snackbar
           visible={snackbarVisible}
           onDismiss={() => setSnackbarVisible(false)}

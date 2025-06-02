@@ -1,6 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
+
+type Task = {
+  id: number;
+  title: string;
+  description: string;
+  completed: boolean;
+  priority: "high" | "medium" | "low";
+  dueDate: string;
+};
 import {
   AppLayout, // Added AppLayout
   Card,
@@ -28,21 +37,39 @@ type Story = StoryObj;
 
 export const TaskManagerApp: Story = {
   render: () => {
-    const [tasks, setTasks] = useState([
+    const [tasks, setTasks] = useState<Task[]>([
       {
         id: 1,
         title: "プロジェクトの企画書作成",
+        description: "新しいプロジェクトの企画書を作成し、チームに共有する",
         completed: false,
         priority: "high",
+        dueDate: "2024-01-15",
       },
       {
         id: 2,
         title: "チームミーティング",
+        description: "週次のチームミーティングに参加",
         completed: true,
         priority: "medium",
+        dueDate: "2024-01-10",
       },
-      { id: 3, title: "コードレビュー", completed: false, priority: "high" },
-      { id: 4, title: "ドキュメント更新", completed: false, priority: "low" },
+      {
+        id: 3,
+        title: "コードレビュー",
+        description: "新機能のコードレビューを実施",
+        completed: false,
+        priority: "high",
+        dueDate: "2024-01-12",
+      },
+      {
+        id: 4,
+        title: "ドキュメント更新",
+        description: "APIドキュメントの更新作業",
+        completed: false,
+        priority: "low",
+        dueDate: "2024-01-20",
+      },
     ]);
     const [newTaskTitle, setNewTaskTitle] = useState("");
     const [showCompleted, setShowCompleted] = useState(true);
@@ -62,8 +89,10 @@ export const TaskManagerApp: Story = {
           {
             id: Date.now(),
             title: newTaskTitle,
+            description: "",
             completed: false,
             priority: "medium",
+            dueDate: "",
           },
         ]);
         setNewTaskTitle("");

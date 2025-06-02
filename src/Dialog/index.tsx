@@ -45,7 +45,10 @@ type BasicSpecificProps<T extends DialogVariant | undefined> = T extends
       supportingText?: string;
       icon?: IconSource;
     }
-  : Record<string, never>;
+  : {
+      supportingText?: never;
+      icon?: never;
+    };
 
 // Main dialog props type with conditional properties
 type Props<T extends DialogVariant = "basic"> = CommonDialogProps & {
@@ -125,48 +128,48 @@ export const Dialog = <T extends DialogVariant = "basic">(props: Props<T>) => {
     return (
       <>
         <Pressable onPress={handlePress}>{children}</Pressable>
-        {isActuallyVisible && (
-          <View
-            style={[StyleSheet.absoluteFillObject, styles.fullscreenOverlay]}
-          >
-            <View
-              style={[
-                styles.fullscreenContainer,
-                { backgroundColor: theme.colors.surface },
-              ]}
-            >
-              {/* Header with title and actions */}
+        <Portal>
+          {isActuallyVisible && (
+            <View style={styles.fullscreenOverlay}>
               <View
                 style={[
-                  styles.fullscreenHeader,
-                  { backgroundColor: theme.colors.surfaceContainer },
+                  styles.fullscreenContainer,
+                  { backgroundColor: theme.colors.surface },
                 ]}
               >
-                <View style={styles.fullscreenTitle}>
-                  <Typography variant="headlineSmall" color="onSurface">
-                    {headline}
-                  </Typography>
+                {/* Header with title and actions */}
+                <View
+                  style={[
+                    styles.fullscreenHeader,
+                    { backgroundColor: theme.colors.surfaceContainer },
+                  ]}
+                >
+                  <View style={styles.fullscreenTitle}>
+                    <Typography variant="headlineSmall" color="onSurface">
+                      {headline}
+                    </Typography>
+                  </View>
+                  <View style={styles.fullscreenActions}>
+                    {actions?.map((action, index) => (
+                      <Button
+                        key={`action-${index}-${action.label}`}
+                        variant="text"
+                        onPress={() => {
+                          action.onPress();
+                          hideDialog();
+                        }}
+                      >
+                        {action.label}
+                      </Button>
+                    ))}
+                  </View>
                 </View>
-                <View style={styles.fullscreenActions}>
-                  {actions?.map((action, index) => (
-                    <Button
-                      key={`action-${index}-${action.label}`}
-                      variant="text"
-                      onPress={() => {
-                        action.onPress();
-                        hideDialog();
-                      }}
-                    >
-                      {action.label}
-                    </Button>
-                  ))}
-                </View>
+                {/* Content area */}
+                <View style={styles.fullscreenContent}>{content}</View>
               </View>
-              {/* Content area */}
-              <View style={styles.fullscreenContent}>{content}</View>
             </View>
-          </View>
-        )}
+          )}
+        </Portal>
       </>
     );
   }
@@ -249,6 +252,11 @@ Dialog.displayName = "Dialog";
 
 const styles = StyleSheet.create({
   fullscreenOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     zIndex: 9999,
     elevation: 24,
   },
