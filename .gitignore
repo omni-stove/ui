@@ -22,6 +22,7 @@ web-build/
 .cursor/rules
 .roomodes
 .roo/rules*
+.claude
 
 # env
 .env
