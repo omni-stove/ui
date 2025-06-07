@@ -1,1 +1,1 @@
-export { ActivityIndicator as LoadingIndicator } from '../ActivityIndicator';
+export { ActivityIndicator as LoadingIndicator } from "../ActivityIndicator";

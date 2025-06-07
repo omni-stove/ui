@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect } from "@storybook/test";
 import { useState } from "react";
-import { Grid, GridItem } from "../Grid";
 import { TextField as Component } from ".";
+import { Grid, GridItem } from "../Grid";
 import { getCanvas } from "../libs/storybook";
 
 const meta: Meta<typeof Component> = {
@@ -50,16 +50,10 @@ export const Variants: Story = {
   render: () => (
     <Grid>
       <GridItem span={6}>
-        <Component
-          variant="filled"
-          label="Filled TextField"
-        />
+        <Component variant="filled" label="Filled TextField" />
       </GridItem>
       <GridItem span={6}>
-        <Component
-          variant="outlined"
-          label="Outlined TextField"
-        />
+        <Component variant="outlined" label="Outlined TextField" />
       </GridItem>
     </Grid>
   ),

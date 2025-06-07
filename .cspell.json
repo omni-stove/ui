@@ -1,0 +1,40 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "ignorePaths": [
+    "**/node_modules/**",
+    "bun.lockb",
+    "cspell.json",
+    "package.json",
+    "**.stories.tsx",
+    "gen/**",
+    "playwright-report/**",
+    "**/tsconfig.tsbuildinfo",
+    "docker/**",
+    "docker-compose.yml",
+    "packages/shared/constants/env/**",
+    "makefile",
+    "dist"
+  ],
+  "allowCompoundWords": true,
+  "dictionaryDefinitions": [],
+  "ignoreRegExpList": ["/\\d+\\.\\d+\\.\\d+/"],
+  "ignoreWords": [
+    "ondevice",
+    "gorhom",
+    "argb",
+    "ARGB",
+    "rnstorybook",
+    "kohki",
+    "pchmn",
+    "HEXA",
+    "RRGGBBAA",
+    "ampm"
+  ],
+  "patterns": [
+    {
+      "name": "camelCase",
+      "pattern": "[a-z]+(?:[A-Z][a-z]+)+"
+    }
+  ]
+}

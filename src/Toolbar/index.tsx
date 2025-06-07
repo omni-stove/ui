@@ -1,11 +1,11 @@
 import type { Ref } from "react";
-import { forwardRef, useState, useLayoutEffect } from "react";
+import { forwardRef, useLayoutEffect, useState } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
-import { Platform, StatusBar, View, Dimensions } from "react-native";
+import { Dimensions, Platform, StatusBar, View } from "react-native";
 import { Icon, TouchableRipple } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
-import { useTheme } from "../hooks";
 import { Menu } from "../Menu";
+import { useTheme } from "../hooks";
 
 /**
  * Defines the visual variant of the Toolbar.
@@ -295,11 +295,7 @@ export const Toolbar = forwardRef<View, Props>(
           accessibilityRole="button"
           accessibilityLabel="Navigate back"
         >
-          <Icon
-            source={navigationIcon}
-            size={24}
-            color={toolbarColors.icon}
-          />
+          <Icon source={navigationIcon} size={24} color={toolbarColors.icon} />
         </TouchableRipple>
       );
     };
@@ -320,11 +316,7 @@ export const Toolbar = forwardRef<View, Props>(
               accessibilityLabel={action.accessibilityLabel}
               testID={action.testID}
             >
-              <Icon
-                source={action.icon}
-                size={24}
-                color={toolbarColors.icon}
-              />
+              <Icon source={action.icon} size={24} color={toolbarColors.icon} />
             </TouchableRipple>
           ))}
           {overflowActions.length > 0 && (

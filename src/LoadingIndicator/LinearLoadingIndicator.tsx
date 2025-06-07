@@ -1,5 +1,6 @@
-import { forwardRef, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { forwardRef, useEffect } from "react";
+import { StyleSheet, View } from "react-native";
+import { useTheme } from "react-native-paper";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -8,8 +9,7 @@ import Animated, {
   withSequence,
   Easing,
   interpolate,
-} from 'react-native-reanimated';
-import { useTheme } from 'react-native-paper';
+} from "react-native-reanimated";
 
 type Props = {
   /**
@@ -37,12 +37,7 @@ type Props = {
 const STANDARD_EASING = Easing.bezier(0.4, 0.0, 0.2, 1);
 
 export const LinearLoadingIndicator = forwardRef<View, Props>((props, ref) => {
-  const {
-    color,
-    visible = true,
-    height = 4,
-    showTrack = true,
-  } = props;
+  const { color, visible = true, height = 4, showTrack = true } = props;
 
   const theme = useTheme();
   const indicatorColor = color || theme.colors.primary;
@@ -62,10 +57,10 @@ export const LinearLoadingIndicator = forwardRef<View, Props>((props, ref) => {
           }),
           withTiming(0, {
             duration: 0,
-          })
+          }),
         ),
         -1,
-        false
+        false,
       );
 
       // Scale animation - bar grows and shrinks
@@ -78,10 +73,10 @@ export const LinearLoadingIndicator = forwardRef<View, Props>((props, ref) => {
           withTiming(0.08, {
             duration: 750,
             easing: STANDARD_EASING,
-          })
+          }),
         ),
         -1,
-        false
+        false,
       );
     }
   }, [visible, position, scale]);
@@ -91,14 +86,11 @@ export const LinearLoadingIndicator = forwardRef<View, Props>((props, ref) => {
       position.value,
       [0, 1],
       [-100, 100],
-      'extend'
+      "extend",
     );
 
     return {
-      transform: [
-        { translateX: `${translateX}%` },
-        { scaleX: scale.value },
-      ],
+      transform: [{ translateX: `${translateX}%` }, { scaleX: scale.value }],
       opacity: withTiming(visible ? 1 : 0, { duration: 200 }),
     };
   });
@@ -112,11 +104,7 @@ export const LinearLoadingIndicator = forwardRef<View, Props>((props, ref) => {
   return (
     <Animated.View
       ref={ref}
-      style={[
-        styles.container,
-        { height },
-        animatedContainerStyle,
-      ]}
+      style={[styles.container, { height }, animatedContainerStyle]}
     >
       {showTrack && (
         <View
@@ -143,23 +131,23 @@ export const LinearLoadingIndicator = forwardRef<View, Props>((props, ref) => {
   );
 });
 
-LinearLoadingIndicator.displayName = 'LinearLoadingIndicator';
+LinearLoadingIndicator.displayName = "LinearLoadingIndicator";
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    overflow: 'hidden',
-    position: 'relative',
+    width: "100%",
+    overflow: "hidden",
+    position: "relative",
   },
   track: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
     opacity: 0.38,
     borderRadius: 2,
   },
   bar: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
     borderRadius: 2,
   },
 });
