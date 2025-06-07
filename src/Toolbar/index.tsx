@@ -14,13 +14,19 @@ import { Menu } from "../Menu";
  */
 type Variant = "docked" | "floating";
 
-
 /**
  * Defines the alignment of the actions within the Toolbar.
  * - `start`: Actions are aligned to the start (left).
  * - `center`: Actions are centered.
  */
 type Alignment = "start" | "center";
+
+/**
+ * Defines the color theme of the Toolbar.
+ * - `standard`: Default Material Design 3 color scheme using surface-container background.
+ * - `vibrant`: High-contrast Material Design 3 color scheme using primary-container background.
+ */
+type Color = "standard" | "vibrant";
 
 /**
  * Represents a single action item in the Toolbar.
@@ -39,6 +45,7 @@ type ActionItem = {
 /**
  * Props for the Toolbar component.
  * @param {Variant} [props.variant="floating"] - The visual variant of the Toolbar.
+ * @param {Color} [props.color="standard"] - The color theme of the Toolbar.
  * @param {Alignment} [props.alignment="center"] - The alignment of action items within the Toolbar.
  * @param {IconSource} [props.navigationIcon] - Icon to display for navigation (e.g., back arrow, menu).
  * @param {() => void} [props.onNavigationPress] - Callback function invoked when the navigation icon is pressed.
@@ -54,6 +61,8 @@ type ActionItem = {
 type Props = {
   /** Toolbar variant */
   variant?: Variant;
+  /** Toolbar color theme */
+  color?: Color;
   /** Action alignment */
   alignment?: Alignment;
   /** Navigation icon */
@@ -94,6 +103,7 @@ export const Toolbar = forwardRef<View, Props>(
   (
     {
       variant = "floating",
+      color = "standard",
       alignment = "center",
       navigationIcon,
       onNavigationPress,
@@ -105,14 +115,19 @@ export const Toolbar = forwardRef<View, Props>(
     ref: Ref<View>,
   ) => {
     const theme = useTheme();
-    const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
+    console.log("Toolbar color:", color);
+    const [screenWidth, setScreenWidth] = useState(
+      Dimensions.get("window").width,
+    );
     const [menuVisible, setMenuVisible] = useState(false);
 
-
     useLayoutEffect(() => {
-      const subscription = Dimensions.addEventListener('change', ({ window }) => {
-        setScreenWidth(window.width);
-      });
+      const subscription = Dimensions.addEventListener(
+        "change",
+        ({ window }) => {
+          setScreenWidth(window.width);
+        },
+      );
       return () => subscription?.remove();
     }, []);
 
@@ -124,33 +139,42 @@ export const Toolbar = forwardRef<View, Props>(
       const navigationToActionsGap = navigationIcon ? 32 : 0; // Gap between navigation and actions
       const fabWidth = fab ? 56 : 0; // FAB width
       const fabPaddingRight = fab ? 16 : 0; // Extra padding when FAB is present (or gap for floating)
-      const floatingMargin = variant === 'floating' ? 32 : 0; // Floating margin (16px each side)
-      
+      const floatingMargin = variant === "floating" ? 32 : 0; // Floating margin (16px each side)
+
       // Calculate available width for actions
-      const usedWidth = paddingHorizontal * 2 + navigationButtonWidth + navigationToActionsGap + fabWidth + fabPaddingRight + floatingMargin;
+      const usedWidth =
+        paddingHorizontal * 2 +
+        navigationButtonWidth +
+        navigationToActionsGap +
+        fabWidth +
+        fabPaddingRight +
+        floatingMargin;
       const availableWidth = screenWidth - usedWidth;
-      
+
       if (actions.length === 0) return 0;
-      
+
       // Calculate width needed for all actions (no gaps before first action)
-      const allActionsWidth = actions.length * actionButtonWidth + (actions.length - 1) * gapBetweenActions;
-      
+      const allActionsWidth =
+        actions.length * actionButtonWidth +
+        (actions.length - 1) * gapBetweenActions;
+
       // If we can fit all actions without menu, show all
       if (allActionsWidth <= availableWidth) {
         return actions.length;
       }
-      
+
       // Otherwise, calculate how many we can fit with menu button
       // Menu button needs same width as action + gap before it
       const menuButtonWidth = actionButtonWidth + gapBetweenActions;
       const availableForActions = availableWidth - menuButtonWidth;
-      
+
       // Calculate how many actions fit: first action (no gap) + additional actions (with gaps)
       let maxActions = 0;
       let currentWidth = 0;
-      
+
       for (let i = 0; i < actions.length; i++) {
-        const nextWidth = currentWidth + actionButtonWidth + (i > 0 ? gapBetweenActions : 0);
+        const nextWidth =
+          currentWidth + actionButtonWidth + (i > 0 ? gapBetweenActions : 0);
         if (nextWidth <= availableForActions) {
           maxActions = i + 1;
           currentWidth = nextWidth;
@@ -158,7 +182,7 @@ export const Toolbar = forwardRef<View, Props>(
           break;
         }
       }
-      
+
       return Math.max(0, maxActions);
     };
 
@@ -166,6 +190,35 @@ export const Toolbar = forwardRef<View, Props>(
     const visibleActions = actions.slice(0, maxVisibleActions);
     const overflowActions = actions.slice(maxVisibleActions);
 
+    const getToolbarColors = () => {
+      if (color === "vibrant") {
+        return {
+          container: theme.colors.primaryContainer,
+          buttonContainer: theme.colors.primaryContainer,
+          selectedButtonContainer: theme.colors.surfaceContainer,
+          icon: theme.colors.onPrimaryContainer,
+          selectedIcon: theme.colors.onSurface,
+          label: theme.colors.onPrimaryContainer,
+          selectedLabel: theme.colors.onSurface,
+          ripple: theme.colors.onPrimaryContainer,
+          selectedRipple: theme.colors.onSurface,
+        };
+      }
+
+      return {
+        container: theme.colors.surfaceContainer,
+        buttonContainer: theme.colors.surfaceContainer,
+        selectedButtonContainer: theme.colors.secondaryContainer,
+        icon: theme.colors.onSurfaceVariant,
+        selectedIcon: theme.colors.onSecondaryContainer,
+        label: theme.colors.onSurfaceVariant,
+        selectedLabel: theme.colors.onSecondaryContainer,
+        ripple: theme.colors.onSurfaceVariant,
+        selectedRipple: theme.colors.onSecondaryContainer,
+      };
+    };
+
+    const toolbarColors = getToolbarColors();
 
     const elevationStyles = {
       level0: {
@@ -192,7 +245,7 @@ export const Toolbar = forwardRef<View, Props>(
       variant === "floating"
         ? {
             borderRadius: 28,
-            backgroundColor: theme.colors.surfaceContainer,
+            backgroundColor: toolbarColors.container,
             ...elevationStyles.level3,
           }
         : {};
@@ -200,7 +253,7 @@ export const Toolbar = forwardRef<View, Props>(
     const containerStyle: StyleProp<ViewStyle> = [
       {
         height: toolbarDimensions.height,
-        backgroundColor: theme.colors.surfaceContainer,
+        backgroundColor: toolbarColors.container,
         paddingHorizontal: toolbarDimensions.paddingHorizontal,
         paddingTop:
           Platform.OS === "android" && variant === "docked"
@@ -237,7 +290,7 @@ export const Toolbar = forwardRef<View, Props>(
         <TouchableRipple
           onPress={onNavigationPress}
           style={actionButtonStyle}
-          rippleColor={theme.colors.primary}
+          rippleColor={toolbarColors.ripple}
           borderless
           accessibilityRole="button"
           accessibilityLabel="Navigate back"
@@ -245,7 +298,7 @@ export const Toolbar = forwardRef<View, Props>(
           <Icon
             source={navigationIcon}
             size={24}
-            color={theme.colors.onSurface}
+            color={toolbarColors.icon}
           />
         </TouchableRipple>
       );
@@ -261,7 +314,7 @@ export const Toolbar = forwardRef<View, Props>(
               key={`action-${action.icon}-${index}`}
               onPress={action.onPress}
               style={actionButtonStyle}
-              rippleColor={theme.colors.primary}
+              rippleColor={toolbarColors.ripple}
               borderless
               accessibilityRole="button"
               accessibilityLabel={action.accessibilityLabel}
@@ -270,7 +323,7 @@ export const Toolbar = forwardRef<View, Props>(
               <Icon
                 source={action.icon}
                 size={24}
-                color={theme.colors.onSurface}
+                color={toolbarColors.icon}
               />
             </TouchableRipple>
           ))}
@@ -282,7 +335,7 @@ export const Toolbar = forwardRef<View, Props>(
                 <TouchableRipple
                   onPress={() => setMenuVisible(true)}
                   style={actionButtonStyle}
-                  rippleColor={theme.colors.primary}
+                  rippleColor={toolbarColors.ripple}
                   borderless
                   accessibilityRole="button"
                   accessibilityLabel="More actions"
@@ -290,7 +343,7 @@ export const Toolbar = forwardRef<View, Props>(
                   <Icon
                     source="dots-vertical"
                     size={24}
-                    color={theme.colors.onSurface}
+                    color={toolbarColors.icon}
                   />
                 </TouchableRipple>
               }
@@ -350,10 +403,10 @@ export const Toolbar = forwardRef<View, Props>(
           <View
             ref={ref}
             style={[
-              containerStyle, 
-              { 
-                alignSelf: 'center'
-              }
+              containerStyle,
+              {
+                alignSelf: "center",
+              },
             ]}
             testID={testID}
             accessibilityLabel={accessibilityLabel}
@@ -391,16 +444,16 @@ export const Toolbar = forwardRef<View, Props>(
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
-          }
+          },
         ]}
       >
         <View
           ref={ref}
           style={[
             containerStyle,
-            variant === "floating" && { 
-              alignSelf: 'center'
-            }
+            variant === "floating" && {
+              alignSelf: "center",
+            },
           ]}
           testID={testID}
           accessibilityLabel={accessibilityLabel}
@@ -421,7 +474,8 @@ export const Toolbar = forwardRef<View, Props>(
                 flexDirection: "row",
                 alignItems: "center",
                 flex: 1,
-                justifyContent: alignment === "center" ? "center" : "flex-start",
+                justifyContent:
+                  alignment === "center" ? "center" : "flex-start",
                 gap: 32,
               }}
             >

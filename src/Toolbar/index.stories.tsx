@@ -11,6 +11,10 @@ const meta: Meta<typeof Component> = {
       control: { type: "radio" },
       options: ["docked", "floating"],
     },
+    color: {
+      control: { type: "radio" },
+      options: ["standard", "vibrant"],
+    },
     alignment: {
       control: { type: "radio" },
       options: ["start", "center"],
@@ -85,6 +89,46 @@ export const AllVariants: Story = {
       />
     </View>
   ),
+};
+
+export const AllColors: Story = {
+  render: () => {
+    console.log("AllColors rendering...");
+    return (
+      <View style={{ gap: 20, padding: 16 }}>
+        <View>
+          <Component
+            color="standard"
+            variant="docked"
+            navigationIcon="menu"
+            onNavigationPress={() => console.log("Standard menu pressed")}
+            actions={[
+              {
+                icon: "magnify",
+                onPress: () => console.log("Standard search pressed"),
+                accessibilityLabel: "Search",
+              },
+            ]}
+          />
+        </View>
+        <View>
+          <Component
+            color="vibrant"
+            variant="docked"
+            navigationIcon="menu"
+            onNavigationPress={() => console.log("Vibrant menu pressed")}
+            actions={[
+              {
+                icon: "magnify",
+                onPress: () => console.log("Vibrant search pressed"),
+                accessibilityLabel: "Search",
+              },
+            ]}
+          />
+        </View>
+      </View>
+    );
+  },
 };
 
 const manyActions = [
