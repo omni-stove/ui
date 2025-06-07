@@ -5,6 +5,7 @@ import {
   forwardRef,
   useLayoutEffect,
   useState,
+  useMemo,
 } from "react";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
 import { Appbar } from "react-native-paper";
@@ -159,9 +160,18 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
     const topColor = appbar
       ? theme.colors.surfaceContainer
       : theme.colors.background;
-    const bottomColor = toolbar
-      ? theme.colors.surfaceContainer
-      : theme.colors.background;
+
+    const bottomColor = useMemo(() => {
+      if (!toolbar) {
+        return theme.colors.background;
+      }
+
+      if (toolbar.color === "vibrant") {
+        return theme.colors.primaryContainer;
+      }
+
+      return theme.colors.surfaceContainer;
+    }, [toolbar, theme.colors]);
 
     return (
       <SafeAreaView

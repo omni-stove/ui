@@ -338,6 +338,17 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
           const isActive = item.key === selectedItemKey;
           const badgeStyles = getBadgeStyleAndSize(item.badge);
 
+          const handleItemPress = () => {
+            item.onPress();
+            // Close modal automatically when item is selected in modal variant
+            if (variant === "modal") {
+              setIsModalOpen(false);
+              if (onDismiss) {
+                onDismiss();
+              }
+            }
+          };
+
           const itemAnimatedStyle = useAnimatedStyle(() => {
             return {
               opacity:
@@ -369,7 +380,7 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
                 <FAB
                   icon={item.icon}
                   label={item.label}
-                  onPress={item.onPress}
+                  onPress={handleItemPress}
                   style={[
                     styles.expandedFab,
                     isActive && styles.activeExpandedFab,
@@ -404,7 +415,7 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
                 ]}
               >
                 <TouchableRipple
-                  onPress={item.onPress}
+                  onPress={handleItemPress}
                   style={[
                     styles.itemContainer,
                     isActive && styles.activeItemBackground,
