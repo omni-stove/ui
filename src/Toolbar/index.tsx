@@ -1,10 +1,11 @@
 import type { Ref } from "react";
-import { forwardRef } from "react";
+import { forwardRef, useState, useLayoutEffect } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
-import { Platform, StatusBar, View } from "react-native";
+import { Platform, StatusBar, View, Dimensions } from "react-native";
 import { Icon, TouchableRipple } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { useTheme } from "../hooks";
+import { Menu } from "../Menu";
 
 /**
  * Defines the visual variant of the Toolbar.
@@ -13,13 +14,6 @@ import { useTheme } from "../hooks";
  */
 type Variant = "docked" | "floating";
 
-/**
- * Defines the size of the Toolbar, affecting its height and internal typography.
- * - `small`
- * - `medium`
- * - `large`
- */
-type Size = "small" | "medium" | "large";
 
 /**
  * Defines the alignment of the actions within the Toolbar.
@@ -44,12 +38,11 @@ type ActionItem = {
 
 /**
  * Props for the Toolbar component.
- * @param {Variant} [props.variant="docked"] - The visual variant of the Toolbar.
- * @param {Size} [props.size="small"] - The size of the Toolbar.
+ * @param {Variant} [props.variant="floating"] - The visual variant of the Toolbar.
  * @param {Alignment} [props.alignment="center"] - The alignment of action items within the Toolbar.
  * @param {IconSource} [props.navigationIcon] - Icon to display for navigation (e.g., back arrow, menu).
  * @param {() => void} [props.onNavigationPress] - Callback function invoked when the navigation icon is pressed.
- * @param {ActionItem[]} [props.actions=[]] - An array of action items to display in the Toolbar (max 3 recommended).
+ * @param {ActionItem[]} [props.actions=[]] - An array of action items to display in the Toolbar.
  * @param {string} [props.testID] - Test ID for the Toolbar.
  * @param {string} [props.accessibilityLabel] - Accessibility label for the Toolbar.
  * @param {object} [props.fab] - Configuration for a Floating Action Button (FAB) to be displayed with the Toolbar.
@@ -61,15 +54,13 @@ type ActionItem = {
 type Props = {
   /** Toolbar variant */
   variant?: Variant;
-  /** Toolbar size */
-  size?: Size;
   /** Action alignment */
   alignment?: Alignment;
   /** Navigation icon */
   navigationIcon?: IconSource;
   /** Navigation icon press handler */
   onNavigationPress?: () => void;
-  /** Action items (max 3 recommended) */
+  /** Action items */
   actions?: ActionItem[];
   /** Test ID */
   testID?: string;
@@ -84,50 +75,14 @@ type Props = {
   };
 };
 
-const getToolbarDimensions = (size: Size) => {
-  switch (size) {
-    case "small":
-      return {
-        height: 64,
-        titleSize: 22,
-        titleLineHeight: 28,
-        paddingHorizontal: 16,
-        fontWeight: "400" as const,
-      };
-    case "medium":
-      return {
-        height: 112,
-        titleSize: 24,
-        titleLineHeight: 32,
-        subtitleSize: 14,
-        subtitleLineHeight: 20,
-        paddingHorizontal: 16,
-        fontWeight: "400" as const,
-      };
-    case "large":
-      return {
-        height: 152,
-        titleSize: 28,
-        titleLineHeight: 36,
-        subtitleSize: 14,
-        subtitleLineHeight: 20,
-        paddingHorizontal: 16,
-        fontWeight: "400" as const,
-      };
-    default:
-      return {
-        height: 64,
-        titleSize: 22,
-        titleLineHeight: 28,
-        paddingHorizontal: 16,
-        fontWeight: "400" as const,
-      };
-  }
+const toolbarDimensions = {
+  height: 64,
+  paddingHorizontal: 16,
 };
 
 /**
  * A Toolbar component adhering to Material Design 3 (M3) specifications.
- * It supports `docked` and `floating` variants, different sizes, and can include
+ * It supports `docked` and `floating` variants and can include
  * a navigation icon, action items, and a Floating Action Button (FAB).
  *
  * @param {Props} props - The component's props.
@@ -138,8 +93,7 @@ const getToolbarDimensions = (size: Size) => {
 export const Toolbar = forwardRef<View, Props>(
   (
     {
-      variant = "docked",
-      size = "small",
+      variant = "floating",
       alignment = "center",
       navigationIcon,
       onNavigationPress,
@@ -151,7 +105,67 @@ export const Toolbar = forwardRef<View, Props>(
     ref: Ref<View>,
   ) => {
     const theme = useTheme();
-    const dimensions = getToolbarDimensions(size);
+    const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
+    const [menuVisible, setMenuVisible] = useState(false);
+
+
+    useLayoutEffect(() => {
+      const subscription = Dimensions.addEventListener('change', ({ window }) => {
+        setScreenWidth(window.width);
+      });
+      return () => subscription?.remove();
+    }, []);
+
+    const calculateMaxVisibleActions = () => {
+      const actionButtonWidth = 48; // Action button width
+      const gapBetweenActions = 32; // Gap between action items
+      const paddingHorizontal = toolbarDimensions.paddingHorizontal; // Container padding (16px)
+      const navigationButtonWidth = navigationIcon ? 48 : 0; // Navigation button width
+      const navigationToActionsGap = navigationIcon ? 32 : 0; // Gap between navigation and actions
+      const fabWidth = fab ? 56 : 0; // FAB width
+      const fabPaddingRight = fab ? 16 : 0; // Extra padding when FAB is present (or gap for floating)
+      const floatingMargin = variant === 'floating' ? 32 : 0; // Floating margin (16px each side)
+      
+      // Calculate available width for actions
+      const usedWidth = paddingHorizontal * 2 + navigationButtonWidth + navigationToActionsGap + fabWidth + fabPaddingRight + floatingMargin;
+      const availableWidth = screenWidth - usedWidth;
+      
+      if (actions.length === 0) return 0;
+      
+      // Calculate width needed for all actions (no gaps before first action)
+      const allActionsWidth = actions.length * actionButtonWidth + (actions.length - 1) * gapBetweenActions;
+      
+      // If we can fit all actions without menu, show all
+      if (allActionsWidth <= availableWidth) {
+        return actions.length;
+      }
+      
+      // Otherwise, calculate how many we can fit with menu button
+      // Menu button needs same width as action + gap before it
+      const menuButtonWidth = actionButtonWidth + gapBetweenActions;
+      const availableForActions = availableWidth - menuButtonWidth;
+      
+      // Calculate how many actions fit: first action (no gap) + additional actions (with gaps)
+      let maxActions = 0;
+      let currentWidth = 0;
+      
+      for (let i = 0; i < actions.length; i++) {
+        const nextWidth = currentWidth + actionButtonWidth + (i > 0 ? gapBetweenActions : 0);
+        if (nextWidth <= availableForActions) {
+          maxActions = i + 1;
+          currentWidth = nextWidth;
+        } else {
+          break;
+        }
+      }
+      
+      return Math.max(0, maxActions);
+    };
+
+    const maxVisibleActions = calculateMaxVisibleActions();
+    const visibleActions = actions.slice(0, maxVisibleActions);
+    const overflowActions = actions.slice(maxVisibleActions);
+
 
     const elevationStyles = {
       level0: {
@@ -177,9 +191,7 @@ export const Toolbar = forwardRef<View, Props>(
     const floatingStyles =
       variant === "floating"
         ? {
-            borderRadius: 16,
-            marginHorizontal: 16,
-            marginVertical: 8,
+            borderRadius: 28,
             backgroundColor: theme.colors.surfaceContainer,
             ...elevationStyles.level3,
           }
@@ -187,14 +199,14 @@ export const Toolbar = forwardRef<View, Props>(
 
     const containerStyle: StyleProp<ViewStyle> = [
       {
-        height: dimensions.height,
+        height: toolbarDimensions.height,
         backgroundColor: theme.colors.surfaceContainer,
-        paddingHorizontal: dimensions.paddingHorizontal,
+        paddingHorizontal: toolbarDimensions.paddingHorizontal,
         paddingTop:
           Platform.OS === "android" && variant === "docked"
             ? StatusBar.currentHeight
             : 0,
-        justifyContent: size === "large" ? "flex-end" : "center",
+        justifyContent: "center",
         ...(variant === "docked" && elevationStyles.level1),
       },
       floatingStyles,
@@ -244,7 +256,7 @@ export const Toolbar = forwardRef<View, Props>(
 
       return (
         <View style={{ flexDirection: "row", alignItems: "center", gap: 32 }}>
-          {actions.slice(0, 3).map((action, index) => (
+          {visibleActions.map((action, index) => (
             <TouchableRipple
               key={`action-${action.icon}-${index}`}
               onPress={action.onPress}
@@ -262,6 +274,40 @@ export const Toolbar = forwardRef<View, Props>(
               />
             </TouchableRipple>
           ))}
+          {overflowActions.length > 0 && (
+            <Menu
+              visible={menuVisible}
+              onDismiss={() => setMenuVisible(false)}
+              anchor={
+                <TouchableRipple
+                  onPress={() => setMenuVisible(true)}
+                  style={actionButtonStyle}
+                  rippleColor={theme.colors.primary}
+                  borderless
+                  accessibilityRole="button"
+                  accessibilityLabel="More actions"
+                >
+                  <Icon
+                    source="dots-vertical"
+                    size={24}
+                    color={theme.colors.onSurface}
+                  />
+                </TouchableRipple>
+              }
+            >
+              {overflowActions.map((action, index) => (
+                <Menu.Item
+                  key={`overflow-action-${action.icon}-${index}`}
+                  onPress={() => {
+                    action.onPress();
+                    setMenuVisible(false);
+                  }}
+                  title={action.accessibilityLabel || `Action ${index + 1}`}
+                  leadingIcon={action.icon}
+                />
+              ))}
+            </Menu>
+          )}
         </View>
       );
     };
@@ -290,14 +336,25 @@ export const Toolbar = forwardRef<View, Props>(
       return (
         <View
           style={{
+            position: "absolute",
+            bottom: 16,
+            left: 0,
+            right: 0,
+            zIndex: 1000,
             flexDirection: "row",
             alignItems: "center",
+            justifyContent: "center",
             gap: 16,
           }}
         >
           <View
             ref={ref}
-            style={containerStyle}
+            style={[
+              containerStyle, 
+              { 
+                alignSelf: 'center'
+              }
+            ]}
             testID={testID}
             accessibilityLabel={accessibilityLabel}
             accessibilityRole="toolbar"
@@ -324,37 +381,57 @@ export const Toolbar = forwardRef<View, Props>(
 
     return (
       <View
-        ref={ref}
-        style={containerStyle}
-        testID={testID}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityRole="toolbar"
+        style={[
+          variant === "floating" && {
+            position: "absolute",
+            bottom: 16,
+            left: 0,
+            right: 0,
+            zIndex: 1000,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }
+        ]}
       >
         <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            height: "100%",
-            paddingRight: fab ? 16 : 0,
-          }}
+          ref={ref}
+          style={[
+            containerStyle,
+            variant === "floating" && { 
+              alignSelf: 'center'
+            }
+          ]}
+          testID={testID}
+          accessibilityLabel={accessibilityLabel}
+          accessibilityRole="toolbar"
         >
-          {/* Left side: Navigation and Actions */}
           <View
             style={{
               flexDirection: "row",
               alignItems: "center",
-              flex: 1,
-              justifyContent: alignment === "center" ? "center" : "flex-start",
-              gap: 32,
+              justifyContent: "space-between",
+              height: "100%",
+              paddingRight: fab ? 16 : 0,
             }}
           >
-            {renderNavigationButton()}
-            {renderActions()}
-          </View>
+            {/* Left side: Navigation and Actions */}
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                flex: 1,
+                justifyContent: alignment === "center" ? "center" : "flex-start",
+                gap: 32,
+              }}
+            >
+              {renderNavigationButton()}
+              {renderActions()}
+            </View>
 
-          {/* Right side: FAB */}
-          {renderFab()}
+            {/* Right side: FAB */}
+            {renderFab()}
+          </View>
         </View>
       </View>
     );
@@ -362,5 +439,3 @@ export const Toolbar = forwardRef<View, Props>(
 );
 
 Toolbar.displayName = "Toolbar";
-
-export default Toolbar;

@@ -11,10 +11,6 @@ const meta: Meta<typeof Component> = {
       control: { type: "radio" },
       options: ["docked", "floating"],
     },
-    size: {
-      control: { type: "radio" },
-      options: ["small", "medium", "large"],
-    },
     alignment: {
       control: { type: "radio" },
       options: ["start", "center"],
@@ -36,9 +32,9 @@ const defaultActions = [
     accessibilityLabel: "Search",
   },
   {
-    icon: "dots-vertical",
-    onPress: () => console.log("Menu pressed"),
-    accessibilityLabel: "Menu",
+    icon: "heart",
+    onPress: () => console.log("Favorite pressed"),
+    accessibilityLabel: "Favorite",
   },
 ];
 
@@ -70,34 +66,6 @@ export const AllAlignments: Story = {
   ),
 };
 
-export const AllSizes: Story = {
-  render: () => (
-    <View style={{ gap: 16 }}>
-      <Component
-        size="small"
-        navigationIcon="arrow-left"
-        onNavigationPress={() => console.log("Back pressed")}
-        actions={defaultActions}
-        fab={defaultFab}
-      />
-      <Component
-        size="medium"
-        navigationIcon="arrow-left"
-        onNavigationPress={() => console.log("Back pressed")}
-        actions={defaultActions}
-        fab={defaultFab}
-      />
-      <Component
-        size="large"
-        navigationIcon="arrow-left"
-        onNavigationPress={() => console.log("Back pressed")}
-        actions={defaultActions}
-        fab={defaultFab}
-      />
-    </View>
-  ),
-};
-
 export const AllVariants: Story = {
   render: () => (
     <View style={{ gap: 16 }}>
@@ -119,10 +87,70 @@ export const AllVariants: Story = {
   ),
 };
 
+const manyActions = [
+  {
+    icon: "magnify",
+    onPress: () => console.log("Search pressed"),
+    accessibilityLabel: "Search",
+  },
+  {
+    icon: "heart",
+    onPress: () => console.log("Favorite pressed"),
+    accessibilityLabel: "Favorite",
+  },
+  {
+    icon: "share",
+    onPress: () => console.log("Share pressed"),
+    accessibilityLabel: "Share",
+  },
+  {
+    icon: "bookmark",
+    onPress: () => console.log("Bookmark pressed"),
+    accessibilityLabel: "Bookmark",
+  },
+  {
+    icon: "download",
+    onPress: () => console.log("Download pressed"),
+    accessibilityLabel: "Download",
+  },
+  {
+    icon: "delete",
+    onPress: () => console.log("Delete pressed"),
+    accessibilityLabel: "Delete",
+  },
+];
+
+export const ResponsiveActions: Story = {
+  render: () => (
+    <View style={{ gap: 16 }}>
+      <Component
+        navigationIcon="menu"
+        onNavigationPress={() => console.log("Menu pressed")}
+        actions={manyActions}
+        fab={defaultFab}
+      />
+      <Component
+        variant="docked"
+        navigationIcon="menu"
+        onNavigationPress={() => console.log("Menu pressed")}
+        actions={manyActions}
+        fab={defaultFab}
+      />
+    </View>
+  ),
+};
+
+export const WithoutFab: Story = {
+  args: {
+    navigationIcon: "menu",
+    onNavigationPress: () => console.log("Menu pressed"),
+    actions: manyActions,
+  },
+};
+
 export const Behavior: Story = {
   args: {
     variant: "docked",
-    size: "small",
     navigationIcon: "arrow-left",
     onNavigationPress: () => console.log("Navigation (Behavior)"),
     actions: [

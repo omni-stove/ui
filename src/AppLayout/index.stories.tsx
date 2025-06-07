@@ -100,7 +100,6 @@ export const WithAppbar: Story = {
 export const WithToolbar: Story = {
   args: {
     toolbar: {
-      variant: "docked",
       actions: [
         {
           icon: "home",
@@ -235,7 +234,6 @@ export const Complete: Story = {
       ],
     },
     toolbar: {
-      variant: "docked",
       actions: [
         {
           icon: "home",
@@ -289,7 +287,6 @@ export const CompleteWithNavigationRail: Story = {
           initialStatus: "collapsed",
         }}
         toolbar={{
-          variant: "docked",
           actions: [
             {
               icon: "home",
