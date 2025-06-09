@@ -157,9 +157,6 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
 
     const railVariant = navigationRail ? getNavigationRailVariant() : null;
 
-    const topColor = appbar
-      ? theme.colors.surfaceContainer
-      : theme.colors.background;
 
     const bottomColor = useMemo(() => {
       if (!toolbar) {
@@ -175,13 +172,6 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
 
     return (
       <>
-        {/* Top safe area */}
-        {appbar && (
-          <SafeAreaView
-            style={{ backgroundColor: topColor }}
-            edges={["top"]}
-          />
-        )}
         
         <SafeAreaView
           style={[
