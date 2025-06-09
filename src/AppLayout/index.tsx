@@ -174,26 +174,31 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
     }, [toolbar, theme.colors]);
 
     return (
-      <SafeAreaView
-        style={[
-          {
-            flex: 1,
-            backgroundColor: theme.colors.background,
-          },
-          mainContentStyle,
-        ]}
-        edges={
-          appbar || toolbar
-            ? ["left", "right"]
-            : ["top", "left", "right", "bottom"]
-        }
-        testID={testID}
-        accessibilityLabel={accessibilityLabel}
-      >
-        {/* Top safe area for AppBar */}
+      <>
+        {/* Top safe area */}
         {appbar && (
-          <SafeAreaView style={{ backgroundColor: topColor }} edges={["top"]} />
+          <SafeAreaView
+            style={{ backgroundColor: topColor }}
+            edges={["top"]}
+          />
         )}
+        
+        <SafeAreaView
+          style={[
+            {
+              flex: 1,
+              backgroundColor: theme.colors.background,
+            },
+            mainContentStyle,
+          ]}
+          edges={
+            appbar || toolbar
+              ? ["left", "right"]
+              : ["top", "left", "right", "bottom"]
+          }
+          testID={testID}
+          accessibilityLabel={accessibilityLabel}
+        >
         <KeyboardAvoidingView
           ref={ref}
           style={{ flex: 1 }}
@@ -262,6 +267,8 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
           {toolbar && <Toolbar {...toolbar} />}
         </KeyboardAvoidingView>
 
+        </SafeAreaView>
+        
         {/* Bottom safe area for Toolbar */}
         {toolbar && (
           <SafeAreaView
@@ -269,7 +276,7 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
             edges={["bottom"]}
           />
         )}
-      </SafeAreaView>
+      </>
     );
   },
 );
