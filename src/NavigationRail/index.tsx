@@ -474,16 +474,22 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
           {/* Button to toggle modal visibility, only visible when modal is closed */}
           {variant === "modal" && !isModalOpen && (
             <Portal>
-              <SafeAreaView edges={["top"]} style={{ position: "absolute", zIndex: 1002 }}>
-                <View style={{ marginTop: 8, marginLeft: 16 }}>
-                  <IconButton
-                    icon={"menu"}
-                    onPress={toggleModalVisibility}
-                    style={styles.fixedGlobalMenuButton}
-                    size={24}
-                    accessibilityLabel={"Open navigation modal"}
-                  />
-                </View>
+              <SafeAreaView 
+                edges={["top"]} 
+                style={{ 
+                  position: "absolute", 
+                  zIndex: 1002,
+                  paddingTop: 8,
+                  paddingLeft: 16 
+                }}
+              >
+                <IconButton
+                  icon={"menu"}
+                  onPress={toggleModalVisibility}
+                  style={styles.fixedGlobalMenuButton}
+                  size={24}
+                  accessibilityLabel={"Open navigation modal"}
+                />
               </SafeAreaView>
             </Portal>
           )}
@@ -501,9 +507,7 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
                 contentContainerStyle={styles.modalContentContainer}
                 style={{ alignItems: "flex-start" }}
               >
-                <SafeAreaView edges={["top", "bottom"]} style={{ flex: 1 }}>
-                  {railContent}
-                </SafeAreaView>
+                {railContent}
               </Modal>
             </Portal>
           )}
