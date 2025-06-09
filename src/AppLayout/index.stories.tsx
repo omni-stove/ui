@@ -112,6 +112,11 @@ export const WithToolbar: Story = {
           accessibilityLabel: "Favorites",
         },
       ],
+      fab: {
+        icon: "plus",
+        onPress: () => console.log("FAB pressed"),
+        accessibilityLabel: "Add new item",
+      },
     },
     children: <SampleContent title="Layout with Toolbar" />,
   },

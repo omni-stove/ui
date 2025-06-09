@@ -130,7 +130,9 @@ export const Toolbar = forwardRef<View, Props>(
       const paddingHorizontal = toolbarDimensions.paddingHorizontal;
       const fabWidth = fab ? 56 : 0;
       const fabPaddingRight = fab ? 16 : 0;
-      const floatingMargin = variant === "floating" ? 32 : 0;
+      // Floating variant needs margin regardless of FAB presence
+      // Double the margin for floating without FAB since it's centered
+      const floatingMargin = variant === "floating" ? (fab ? 32 : 64) : 0;
 
       const usedWidth =
         paddingHorizontal * 2 + fabWidth + fabPaddingRight + floatingMargin;
@@ -381,7 +383,7 @@ export const Toolbar = forwardRef<View, Props>(
       );
     };
 
-    if (variant === "floating" && fab) {
+    if (variant === "floating") {
       return (
         <View
           style={{
@@ -422,34 +424,17 @@ export const Toolbar = forwardRef<View, Props>(
             </View>
           </View>
           {/* FAB outside the floating toolbar */}
-          {renderFab()}
+          {fab && renderFab()}
         </View>
       );
     }
 
+    // Docked variant
     return (
-      <View
-        style={[
-          variant === "floating" && {
-            position: "absolute",
-            bottom: 16,
-            left: 0,
-            right: 0,
-            zIndex: 1000,
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-          },
-        ]}
-      >
+      <View>
         <View
           ref={ref}
-          style={[
-            containerStyle,
-            variant === "floating" && {
-              alignSelf: "center",
-            },
-          ]}
+          style={containerStyle}
           testID={testID}
           accessibilityLabel={accessibilityLabel}
           accessibilityRole="toolbar"
