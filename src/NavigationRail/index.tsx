@@ -2,6 +2,7 @@
 import type { ComponentRef } from "react";
 import { forwardRef, useEffect, useState } from "react";
 import { type StyleProp, StyleSheet, View, type ViewStyle } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
   Badge,
   Icon,
@@ -129,10 +130,6 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
 
     const styles = StyleSheet.create({
       fixedGlobalMenuButton: {
-        position: "absolute",
-        top: 8,
-        left: 16,
-        zIndex: 1002,
         backgroundColor: "transparent",
         borderRadius: theme.roundness * 4,
       },
@@ -477,13 +474,17 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
           {/* Button to toggle modal visibility, only visible when modal is closed */}
           {variant === "modal" && !isModalOpen && (
             <Portal>
-              <IconButton
-                icon={"menu"}
-                onPress={toggleModalVisibility}
-                style={styles.fixedGlobalMenuButton}
-                size={24}
-                accessibilityLabel={"Open navigation modal"}
-              />
+              <SafeAreaView edges={["top"]} style={{ position: "absolute", zIndex: 1002 }}>
+                <View style={{ marginTop: 8, marginLeft: 16 }}>
+                  <IconButton
+                    icon={"menu"}
+                    onPress={toggleModalVisibility}
+                    style={styles.fixedGlobalMenuButton}
+                    size={24}
+                    accessibilityLabel={"Open navigation modal"}
+                  />
+                </View>
+              </SafeAreaView>
             </Portal>
           )}
 
@@ -500,7 +501,9 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
                 contentContainerStyle={styles.modalContentContainer}
                 style={{ alignItems: "flex-start" }}
               >
-                {railContent}
+                <SafeAreaView edges={["top", "bottom"]} style={{ flex: 1 }}>
+                  {railContent}
+                </SafeAreaView>
               </Modal>
             </Portal>
           )}
