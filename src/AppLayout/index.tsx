@@ -244,8 +244,8 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
             <View style={{ flex: 1 }}>{children}</View>
           </View>
 
-          {/* NavigationRail - modal variant */}
-          {navigationRail && railVariant === "modal" && (
+          {/* NavigationRail - modal variant (hidden when BackAction is present) */}
+          {navigationRail && railVariant === "modal" && !appbar?.backAction && (
             <NavigationRail
               variant="modal"
               items={navigationRail.items}
