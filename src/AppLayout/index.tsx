@@ -39,6 +39,7 @@ type AppbarAction = {
  * @param {() => void} props.appbar.backAction.onPress - Function to call when the back action is pressed.
  * @param {string} [props.appbar.backAction.accessibilityLabel] - Accessibility label for the back action.
  * @param {AppbarAction[]} [props.appbar.actions] - An array of action items to display in the Appbar.
+ * @param {ReactNode} [props.appbar.content] - Additional content to render in the Appbar after the Content component.
  * @param {object} [props.navigationRail] - Configuration for the NavigationRail. If provided, will be displayed responsively (standard on wide web screens, modal otherwise).
  * @param {NavigationRailItem[]} props.navigationRail.items - An array of navigation items to display.
  * @param {string} props.navigationRail.selectedItemKey - The key of the currently selected navigation item.
@@ -66,6 +67,7 @@ type AppLayoutProps = {
       accessibilityLabel?: string;
     };
     actions?: AppbarAction[];
+    content?: ReactNode;
   };
   /** NavigationRail configuration - if provided, will be displayed responsively */
   navigationRail?: {
@@ -206,7 +208,17 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
                   accessibilityLabel={appbar.backAction.accessibilityLabel}
                 />
               )}
-              <Appbar.Content title={appbar.title} subtitle={appbar.subtitle} />
+              {(appbar.title || appbar.subtitle) && (
+                <Appbar.Content title={appbar.title} subtitle={appbar.subtitle} />
+              )}
+              {appbar.content && (
+                <View style={{ 
+                  flex: 1, 
+                  marginLeft: 56 // 常にアイコン分の余白を追加
+                }}>
+                  {appbar.content}
+                </View>
+              )}
               {appbar.actions?.map((action, index) => (
                 <Appbar.Action
                   key={`appbar-action-${action.icon}-${index}`}

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Button } from "react-native-paper";
+import { Searchbar } from "../Searchbar";
 import { Typography } from "../Typography";
 import { AppLayout } from "./index";
 
@@ -94,6 +95,55 @@ export const WithAppbar: Story = {
       ],
     },
     children: <SampleContent title="Layout with Appbar" />,
+  },
+};
+
+export const WithAppbarContent: Story = {
+  render: () => {
+    const [searchQuery, setSearchQuery] = useState("");
+    const [selectedKey, setSelectedKey] = useState("home");
+    
+    return (
+      <AppLayout
+        appbar={{
+          content: (
+            <View style={{ flex: 1, paddingHorizontal: 8 }}>
+              <Searchbar
+                placeholder="検索..."
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+                style={{ marginVertical: 4 }}
+              />
+            </View>
+          ),
+          actions: [
+            {
+              icon: "filter-variant",
+              onPress: () => console.log("Filter pressed"),
+              accessibilityLabel: "Filter",
+            },
+          ],
+        }}
+        navigationRail={{
+          items: sampleNavigationItems.map((item) => ({
+            ...item,
+            onPress: () => {
+              setSelectedKey(item.key);
+              item.onPress();
+            },
+          })),
+          selectedItemKey: selectedKey,
+          onMenuPress: () => console.log("Menu pressed"),
+          fabIcon: "plus",
+          fabLabel: "Create",
+          onFabPress: () => console.log("FAB pressed"),
+          initialStatus: "collapsed",
+        }}
+        navigationRailBreakpoint={768}
+      >
+        <SampleContent title={`Search: "${searchQuery}" | Selected: ${selectedKey}`} />
+      </AppLayout>
+    );
   },
 };
 
