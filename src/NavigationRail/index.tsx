@@ -518,9 +518,7 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
                   flex: 1
                 }}
               >
-                <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
-                  {railContent}
-                </SafeAreaView>
+                {railContent}
               </Modal>
             </Portal>
           )}
