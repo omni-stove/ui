@@ -1,7 +1,7 @@
 "use client";
 import type { ComponentRef } from "react";
 import { forwardRef, useEffect, useState } from "react";
-import { type StyleProp, StyleSheet, View, type ViewStyle } from "react-native";
+import { type StyleProp, StyleSheet, View, type ViewStyle, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   Badge,
@@ -111,6 +111,7 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
     ref,
   ) => {
     const theme = useTheme();
+    const screenHeight = Dimensions.get('window').height;
     const [status, setStatus] = useState<Status>(
       variant === "modal" ? "expanded" : initialStatus,
     );
@@ -217,6 +218,11 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
         overflow: "hidden",
       },
     });
+
+    const dynamicModalContentStyle = {
+      ...styles.modalContentContainer,
+      height: screenHeight,
+    };
 
     const getBadgeStyleAndSize = (
       badge?: NavigationRailItem["badge"],
@@ -504,10 +510,17 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
                     onDismiss();
                   }
                 }}
-                contentContainerStyle={styles.modalContentContainer}
-                style={{ alignItems: "flex-start" }}
+                contentContainerStyle={dynamicModalContentStyle}
+                style={{ 
+                  alignItems: "flex-start",
+                  margin: 0,
+                  justifyContent: "flex-start",
+                  flex: 1
+                }}
               >
-                {railContent}
+                <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
+                  {railContent}
+                </SafeAreaView>
               </Modal>
             </Portal>
           )}
