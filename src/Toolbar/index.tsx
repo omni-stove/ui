@@ -34,6 +34,7 @@ type Color = "standard" | "vibrant";
  * @param {IconSource} [icon] - The icon to display for the action.
  * @param {string} [label] - The text label to display for the action.
  * @param {() => void} onPress - Function to call when the action is pressed.
+ * @param {boolean} [selected] - Whether the action is in a selected state.
  * @param {string} [accessibilityLabel] - Accessibility label for the action.
  * @param {string} [testID] - Test ID for the action.
  */
@@ -41,6 +42,7 @@ type ActionItem = {
   icon?: IconSource;
   label?: string;
   onPress: () => void;
+  selected?: boolean;
   accessibilityLabel?: string;
   testID?: string;
 };
@@ -286,8 +288,15 @@ export const Toolbar = forwardRef<View, Props>(
             <TouchableRipple
               key={`action-${action.icon || action.label}-${index}`}
               onPress={action.onPress}
-              style={actionButtonStyle}
-              rippleColor={toolbarColors.ripple}
+              style={[
+                actionButtonStyle,
+                action.selected && {
+                  backgroundColor: toolbarColors.selectedButtonContainer,
+                },
+              ]}
+              rippleColor={
+                action.selected ? toolbarColors.selectedRipple : toolbarColors.ripple
+              }
               borderless
               accessibilityRole="button"
               accessibilityLabel={action.accessibilityLabel}
@@ -304,15 +313,23 @@ export const Toolbar = forwardRef<View, Props>(
                   <Icon
                     source={action.icon}
                     size={24}
-                    color={toolbarColors.icon}
+                    color={
+                      action.selected
+                        ? toolbarColors.selectedIcon
+                        : toolbarColors.icon
+                    }
                   />
                 ) : action.label ? (
                   <Typography
                     variant="labelLarge"
                     color={
-                      color === "vibrant"
-                        ? "onPrimaryContainer"
-                        : "onSurfaceVariant"
+                      action.selected
+                        ? color === "vibrant"
+                          ? "onSurface"
+                          : "onSecondaryContainer"
+                        : color === "vibrant"
+                          ? "onPrimaryContainer"
+                          : "onSurfaceVariant"
                     }
                   >
                     {action.label}

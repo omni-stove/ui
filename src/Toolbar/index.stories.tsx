@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect } from "@storybook/test";
+import { useState } from "react";
 import { View } from "react-native";
 import { Toolbar as Component } from ".";
 import { getCanvas } from "../libs/storybook";
@@ -288,6 +289,88 @@ export const MixedIconsAndLabels: Story = {
       />
     </View>
   ),
+};
+
+export const WithSelectedStates: Story = {
+  render: () => {
+    const [selectedActions, setSelectedActions] = useState<string[]>(['home']);
+    const [selectedTextActions, setSelectedTextActions] = useState<string[]>(['bold']);
+    
+    const toggleIconSelection = (actionId: string) => {
+      setSelectedActions(prev => 
+        prev.includes(actionId) 
+          ? prev.filter(id => id !== actionId)
+          : [...prev, actionId]
+      );
+    };
+
+    const toggleTextSelection = (actionId: string) => {
+      setSelectedTextActions(prev => 
+        prev.includes(actionId) 
+          ? prev.filter(id => id !== actionId)
+          : [...prev, actionId]
+      );
+    };
+
+    return (
+      <View style={{ gap: 16, height: 200, position: "relative" }}>
+        <Component
+          variant="floating"
+          actions={[
+            {
+              icon: "home",
+              onPress: () => toggleIconSelection('home'),
+              accessibilityLabel: "Home",
+              selected: selectedActions.includes('home'),
+            },
+            {
+              icon: "magnify",
+              onPress: () => toggleIconSelection('magnify'),
+              accessibilityLabel: "Search",
+              selected: selectedActions.includes('magnify'),
+            },
+            {
+              icon: "heart",
+              onPress: () => toggleIconSelection('heart'),
+              accessibilityLabel: "Favorite",
+              selected: selectedActions.includes('heart'),
+            },
+            {
+              icon: "bookmark",
+              onPress: () => toggleIconSelection('bookmark'),
+              accessibilityLabel: "Bookmark",
+              selected: selectedActions.includes('bookmark'),
+            },
+          ]}
+        />
+        <View style={{ height: 100 }} />
+        <Component
+          variant="floating"
+          color="vibrant"
+          actions={[
+            {
+              label: "Bold",
+              onPress: () => toggleTextSelection('bold'),
+              accessibilityLabel: "Bold",
+              selected: selectedTextActions.includes('bold'),
+            },
+            {
+              label: "Italic",
+              onPress: () => toggleTextSelection('italic'),
+              accessibilityLabel: "Italic",
+              selected: selectedTextActions.includes('italic'),
+            },
+            {
+              label: "Underline",
+              onPress: () => toggleTextSelection('underline'),
+              accessibilityLabel: "Underline",
+              selected: selectedTextActions.includes('underline'),
+            },
+          ]}
+        />
+      </View>
+    );
+  },
 };
 
 export const Behavior: Story = {
