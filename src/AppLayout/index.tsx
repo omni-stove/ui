@@ -34,7 +34,6 @@ type AppbarAction = {
  * Props for the AppLayout component.
  * @param {object} [props.appbar] - Configuration for the Appbar. If provided, an Appbar will be displayed at the top.
  * @param {string} [props.appbar.title] - The title to display in the Appbar.
- * @param {string} [props.appbar.subtitle] - The subtitle to display in the Appbar.
  * @param {object} [props.appbar.backAction] - Configuration for the back action in the Appbar.
  * @param {() => void} props.appbar.backAction.onPress - Function to call when the back action is pressed.
  * @param {string} [props.appbar.backAction.accessibilityLabel] - Accessibility label for the back action.
@@ -61,7 +60,6 @@ type AppLayoutProps = {
   /** Appbar configuration - if provided, will be displayed at the top */
   appbar?: {
     title?: string;
-    subtitle?: string;
     backAction?: {
       onPress: () => void;
       accessibilityLabel?: string;
@@ -208,16 +206,18 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
                   accessibilityLabel={appbar.backAction.accessibilityLabel}
                 />
               )}
-              {(appbar.title || appbar.subtitle) && (
-                <Appbar.Content title={appbar.title} subtitle={appbar.subtitle} />
-              )}
-              {appbar.content && (
+              {appbar.title ? (
+                <Appbar.Content title={appbar.title} />
+              ) : appbar.content ? (
                 <View style={{ 
-                  flex: 1, 
+                  flexGrow: 1, 
+                  flexShrink: 1,
                   marginLeft: 56 // 常にアイコン分の余白を追加
                 }}>
                   {appbar.content}
                 </View>
+              ) : (
+                <Appbar.Content title="" />
               )}
               {appbar.actions?.map((action, index) => (
                 <Appbar.Action

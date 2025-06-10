@@ -98,6 +98,31 @@ export const WithAppbar: Story = {
   },
 };
 
+export const WithAppbarActionsOnly: Story = {
+  args: {
+    appbar: {
+      actions: [
+        {
+          icon: "magnify",
+          onPress: () => console.log("Search pressed"),
+          accessibilityLabel: "Search",
+        },
+        {
+          icon: "filter-variant",
+          onPress: () => console.log("Filter pressed"),
+          accessibilityLabel: "Filter",
+        },
+        {
+          icon: "dots-vertical",
+          onPress: () => console.log("More pressed"),
+          accessibilityLabel: "More options",
+        },
+      ],
+    },
+    children: <SampleContent title="Layout with Actions Only" />,
+  },
+};
+
 export const WithAppbarContent: Story = {
   render: () => {
     const [searchQuery, setSearchQuery] = useState("");
