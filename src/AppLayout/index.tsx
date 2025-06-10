@@ -251,25 +251,25 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
             <View style={{ flex: 1 }}>{children}</View>
           </View>
 
-          {/* NavigationRail - modal variant (hidden when BackAction is present) */}
-          {navigationRail && railVariant === "modal" && !appbar?.backAction && (
-            <NavigationRail
-              variant="modal"
-              items={navigationRail.items}
-              selectedItemKey={navigationRail.selectedItemKey}
-              onMenuPress={navigationRail.onMenuPress}
-              fabIcon={navigationRail.fabIcon}
-              fabLabel={navigationRail.fabLabel}
-              onFabPress={navigationRail.onFabPress}
-              initialModalOpen={false}
-            />
-          )}
-
           {/* Toolbar */}
           {toolbar && <Toolbar {...toolbar} />}
         </KeyboardAvoidingView>
 
         </SafeAreaView>
+        
+        {/* NavigationRail - modal variant (hidden when BackAction is present) */}
+        {navigationRail && railVariant === "modal" && !appbar?.backAction && (
+          <NavigationRail
+            variant="modal"
+            items={navigationRail.items}
+            selectedItemKey={navigationRail.selectedItemKey}
+            onMenuPress={navigationRail.onMenuPress}
+            fabIcon={navigationRail.fabIcon}
+            fabLabel={navigationRail.fabLabel}
+            onFabPress={navigationRail.onFabPress}
+            initialModalOpen={false}
+          />
+        )}
         
         {/* Bottom safe area for Toolbar */}
         {toolbar && (
