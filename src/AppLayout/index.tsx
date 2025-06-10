@@ -271,8 +271,8 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
           />
         )}
         
-        {/* Bottom safe area for Toolbar */}
-        {toolbar && (
+        {/* Bottom safe area for Toolbar - only show for docked variant */}
+        {toolbar && toolbar.variant === "docked" && (
           <SafeAreaView
             style={{ backgroundColor: bottomColor }}
             edges={["bottom"]}
