@@ -9,6 +9,7 @@ import { Select } from "../Select";
 import { Switch } from "../Switch";
 import { TextField } from "../TextField";
 import { Typography } from "../Typography";
+import { IconButton } from "../IconButton";
 
 const meta: Meta<typeof Component> = {
   component: Component,
@@ -39,7 +40,7 @@ export const Default: Story = {
     headline: "Dialog Title",
     supportingText:
       "This is a supporting text that provides more information about the dialog content.",
-    children: <Button>Open Dialog</Button>,
+    children: <IconButton icon="plus" />,
   },
   render: (args) => (
     <View style={{ padding: 20 }}>

@@ -1,4 +1,5 @@
-import { Pressable, type ViewStyle } from "react-native";
+import { forwardRef, type Ref } from "react";
+import type { ViewStyle, View } from "react-native";
 import { Icon, TouchableRipple } from "react-native-paper";
 import { useTheme } from "../hooks";
 
@@ -183,144 +184,138 @@ const getCornerRadius = (
  * @returns {JSX.Element} The IconButton component.
  * @see {@link https://m3.material.io/components/icon-buttons/specs|Material Design 3 - Icon buttons}
  */
-export const IconButton = ({
-  icon,
-  size = "small",
-  shape = "round",
-  variant = "filled",
-  widthType = "default",
-  onPress,
-  disabled,
-  selected,
-  accessibilityLabel,
-  testID,
-}: Props) => {
-  const theme = useTheme();
-  const iconSize = getM3IconSize(size);
-  const visualDimensions = getVisualContainerDimensions(size, widthType);
-  const borderRadius = getCornerRadius(shape, size, selected);
+export const IconButton = forwardRef(
+  (
+    {
+      icon,
+      size = "small",
+      shape = "round",
+      variant = "filled",
+      widthType = "default",
+      onPress,
+      disabled,
+      selected,
+      accessibilityLabel,
+      testID,
+    }: Props,
+    ref: Ref<View>,
+  ) => {
+    const theme = useTheme();
+    const iconSize = getM3IconSize(size);
+    const visualDimensions = getVisualContainerDimensions(size, widthType);
+    const borderRadius = getCornerRadius(shape, size, selected);
 
-  const targetSize = 48;
-  const touchableStyle: ViewStyle = {
-    width: Math.max(
-      visualDimensions.width,
-      size === "extra-small" || size === "small"
-        ? targetSize
-        : visualDimensions.width,
-    ),
-    height: Math.max(
-      visualDimensions.height,
-      size === "extra-small" || size === "small"
-        ? targetSize
-        : visualDimensions.height,
-    ),
-    justifyContent: "center",
-    alignItems: "center",
-  };
+    const targetSize = 48;
 
-  const containerStyle: ViewStyle = {
-    ...visualDimensions,
-    borderRadius,
-    justifyContent: "center",
-    alignItems: "center",
-    overflow: "hidden",
-  };
+    const containerStyle: ViewStyle = {
+      width: Math.max(
+        visualDimensions.width,
+        size === "extra-small" || size === "small"
+          ? targetSize
+          : visualDimensions.width,
+      ),
+      height: Math.max(
+        visualDimensions.height,
+        size === "extra-small" || size === "small"
+          ? targetSize
+          : visualDimensions.height,
+      ),
+      borderRadius,
+      justifyContent: "center",
+      alignItems: "center",
+      overflow: "hidden",
+    };
 
-  let iconColor: string = theme.colors.primary;
-  let backgroundColor: string | undefined = "transparent";
+    let iconColor: string = theme.colors.primary;
+    let backgroundColor: string | undefined = "transparent";
 
-  if (disabled) {
-    iconColor = theme.colors.outline;
-    backgroundColor =
-      variant === "filled" || variant === "tonal"
-        ? theme.colors.surfaceVariant
-        : "transparent";
-    if (variant === "outlined") {
-      containerStyle.borderColor = theme.colors.outline;
-      containerStyle.borderWidth = 1;
-    }
-  } else {
-    switch (variant) {
-      case "filled":
-        if (selected === true) {
-          backgroundColor = theme.colors.primary;
-          iconColor = theme.colors.onPrimary;
-        } else if (selected === false) {
-          backgroundColor = theme.colors.surfaceContainerHighest;
-          iconColor = theme.colors.primary;
-        } else {
-          backgroundColor = theme.colors.primary;
-          iconColor = theme.colors.onPrimary;
-        }
-        break;
-      case "tonal":
-        if (selected === true) {
-          backgroundColor = theme.colors.secondaryContainer;
-          iconColor = theme.colors.onSecondaryContainer;
-        } else if (selected === false) {
-          backgroundColor = theme.colors.surfaceContainerHighest;
-          iconColor = theme.colors.onSurfaceVariant;
-        } else {
-          backgroundColor = theme.colors.secondaryContainer;
-          iconColor = theme.colors.onSecondaryContainer;
-        }
-        break;
-      case "outlined":
-        if (selected === true) {
-          backgroundColor = theme.colors.inverseSurface;
-          iconColor = theme.colors.inverseOnSurface;
-          containerStyle.borderWidth = 0;
-        } else if (selected === false) {
-          iconColor = theme.colors.onSurfaceVariant;
-          containerStyle.borderColor = theme.colors.outlineVariant;
-          containerStyle.borderWidth = 1;
-          backgroundColor = "transparent";
-        } else {
-          iconColor = theme.colors.onSurfaceVariant;
-          containerStyle.borderColor = theme.colors.outlineVariant;
-          containerStyle.borderWidth = 1;
-          backgroundColor = "transparent";
-        }
-        break;
-      case "standard":
-        if (selected === true) {
-          iconColor = theme.colors.primary;
-        } else if (selected === false) {
-          iconColor = theme.colors.onSurfaceVariant;
-        } else {
-          iconColor = theme.colors.onSurfaceVariant;
-        }
-        backgroundColor = "transparent";
-        break;
-    }
-  }
-  containerStyle.backgroundColor = backgroundColor;
-  const rippleBorderless = shape === "round";
-
-  return (
-    <Pressable
-      disabled={disabled}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole="button"
-      accessibilityState={{ disabled, selected }}
-      style={touchableStyle}
-      testID={testID}
-    >
-      {() => (
-        <TouchableRipple
-          onPress={onPress}
-          style={containerStyle}
-          rippleColor={
-            variant === "filled" || variant === "tonal"
-              ? theme.colors.onPrimary
-              : theme.colors.primary
+    if (disabled) {
+      iconColor = theme.colors.outline;
+      backgroundColor =
+        variant === "filled" || variant === "tonal"
+          ? theme.colors.surfaceVariant
+          : "transparent";
+      if (variant === "outlined") {
+        containerStyle.borderColor = theme.colors.outline;
+        containerStyle.borderWidth = 1;
+      }
+    } else {
+      switch (variant) {
+        case "filled":
+          if (selected === true) {
+            backgroundColor = theme.colors.primary;
+            iconColor = theme.colors.onPrimary;
+          } else if (selected === false) {
+            backgroundColor = theme.colors.surfaceContainerHighest;
+            iconColor = theme.colors.primary;
+          } else {
+            backgroundColor = theme.colors.primary;
+            iconColor = theme.colors.onPrimary;
           }
-          borderless={rippleBorderless}
-          disabled={disabled}
-        >
-          <Icon source={icon} size={iconSize} color={iconColor} />
-        </TouchableRipple>
-      )}
-    </Pressable>
-  );
-};
+          break;
+        case "tonal":
+          if (selected === true) {
+            backgroundColor = theme.colors.secondaryContainer;
+            iconColor = theme.colors.onSecondaryContainer;
+          } else if (selected === false) {
+            backgroundColor = theme.colors.surfaceContainerHighest;
+            iconColor = theme.colors.onSurfaceVariant;
+          } else {
+            backgroundColor = theme.colors.secondaryContainer;
+            iconColor = theme.colors.onSecondaryContainer;
+          }
+          break;
+        case "outlined":
+          if (selected === true) {
+            backgroundColor = theme.colors.inverseSurface;
+            iconColor = theme.colors.inverseOnSurface;
+            containerStyle.borderWidth = 0;
+          } else if (selected === false) {
+            iconColor = theme.colors.onSurfaceVariant;
+            containerStyle.borderColor = theme.colors.outlineVariant;
+            containerStyle.borderWidth = 1;
+            backgroundColor = "transparent";
+          } else {
+            iconColor = theme.colors.onSurfaceVariant;
+            containerStyle.borderColor = theme.colors.outlineVariant;
+            containerStyle.borderWidth = 1;
+            backgroundColor = "transparent";
+          }
+          break;
+        case "standard":
+          if (selected === true) {
+            iconColor = theme.colors.primary;
+          } else if (selected === false) {
+            iconColor = theme.colors.onSurfaceVariant;
+          } else {
+            iconColor = theme.colors.onSurfaceVariant;
+          }
+          backgroundColor = "transparent";
+          break;
+      }
+    }
+    containerStyle.backgroundColor = backgroundColor;
+    const rippleBorderless = shape === "round";
+
+    return (
+      <TouchableRipple
+        ref={ref}
+        onPress={onPress}
+        style={containerStyle}
+        rippleColor={
+          variant === "filled" || variant === "tonal"
+            ? theme.colors.onPrimary
+            : theme.colors.primary
+        }
+        borderless={rippleBorderless}
+        disabled={disabled}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole="button"
+        accessibilityState={{ disabled, selected }}
+        testID={testID}
+      >
+        <Icon source={icon} size={iconSize} color={iconColor} />
+      </TouchableRipple>
+    );
+  },
+);
