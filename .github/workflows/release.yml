@@ -7,25 +7,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-tag-publish:
+  generate-version:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: write
+    outputs:
+      version: ${{ steps.calver.outputs.version }}
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
-      - name: Setup
-        uses: ./.github/actions/setup
-
-
-      - name: Set main field for build
-        run: node scripts/set-main-for-build.js
-
-      - name: Build package
-        run: npm run build
 
       - name: Generate CalVer
         id: calver
@@ -47,14 +36,33 @@ jobs:
           echo "version=${version}" >> $GITHUB_OUTPUT
           echo "Generated version: ${version}"
 
+  build-main-package:
+    needs: generate-version
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Set main field for build
+        run: node scripts/set-main-for-build.js
+
+      - name: Build package
+        run: npm run build
+
       - name: Update or add version to package.json
         run: |
           if jq -e '.version' package.json > /dev/null 2>&1; then
             # Update existing version
-            jq --arg version "${{ steps.calver.outputs.version }}" '.version = $version' package.json > package.json.tmp
+            jq --arg version "${{ needs.generate-version.outputs.version }}" '.version = $version' package.json > package.json.tmp
           else
             # Add version field if it doesn't exist
-            jq --arg version "${{ steps.calver.outputs.version }}" '. + {version: $version}' package.json > package.json.tmp
+            jq --arg version "${{ needs.generate-version.outputs.version }}" '. + {version: $version}' package.json > package.json.tmp
           fi
           mv package.json.tmp package.json
           cat package.json
@@ -70,17 +78,92 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_REGISTRY: "https://npm.pkg.github.com"
 
+  build-mcp-server:
+    needs: generate-version
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    defaults:
+      run:
+        working-directory: ./mcp-server
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".node-version"
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@codynog'
+
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
+
+      - name: Restore npm cache
+        uses: actions/cache/restore@v4
+        id: npm-cache
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-mcp-server-node-${{ hashFiles('mcp-server/package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Save npm cache
+        uses: actions/cache/save@v4
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-mcp-server-node-${{ hashFiles('mcp-server/package-lock.json') }}
+
+      - name: Update MCP Server version
+        run: |
+          if jq -e '.version' package.json > /dev/null 2>&1; then
+            # Update existing version
+            jq --arg version "${{ needs.generate-version.outputs.version }}" '.version = $version' package.json > package.json.tmp
+          else
+            # Add version field if it doesn't exist
+            jq --arg version "${{ needs.generate-version.outputs.version }}" '. + {version: $version}' package.json > package.json.tmp
+          fi
+          mv package.json.tmp package.json
+          echo "Updated MCP Server package.json version to ${{ needs.generate-version.outputs.version }}"
+
+      - name: Build and publish MCP Server
+        run: |
+          npm run build
+          if ! npm publish --no-git-checks; then
+            echo "Failed to publish MCP Server package"
+            exit 1
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_CONFIG_REGISTRY: "https://npm.pkg.github.com"
+
+  create-release:
+    needs: [generate-version, build-main-package, build-mcp-server]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
       - name: Create and push Git tag
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          if ! git tag -a v${{ steps.calver.outputs.version }} -m "Release ${{ steps.calver.outputs.version }}"; then
+          if ! git tag -a v${{ needs.generate-version.outputs.version }} -m "Release ${{ needs.generate-version.outputs.version }}"; then
             echo "Failed to create tag"
             exit 1
           fi
           
-          if ! git push origin v${{ steps.calver.outputs.version }}; then
+          if ! git push origin v${{ needs.generate-version.outputs.version }}; then
             echo "Failed to push tag"
             exit 1
           fi
