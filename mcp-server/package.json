@@ -34,12 +34,17 @@
     "tsx": "^4.0.0"
   },
   "devDependencies": {
+    "@types/node": "^24.0.3",
     "typescript": "^5.0.0"
   },
   "bin": {
     "rn-ui-mcp-server": "./dist/index.js"
   },
-  "files": ["index.ts", "dist/", "README.md"],
+  "files": [
+    "index.ts",
+    "dist/",
+    "README.md"
+  ],
   "engines": {
     "node": ">=18.0.0"
   }
