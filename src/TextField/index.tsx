@@ -123,7 +123,7 @@ export const TextField = forwardRef<RNTextInput, Props>(
     const getContentStyle = () => {
       if (multiline) {
         return {
-          minHeight: 80,
+          minHeight: 120,
           textAlignVertical: "top" as const,
         };
       }
