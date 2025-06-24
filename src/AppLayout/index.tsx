@@ -195,45 +195,8 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
           behavior={keyboardBehavior}
           keyboardVerticalOffset={keyboardVerticalOffset}
         >
-          {/* Appbar */}
-          {appbar && (
-            <Appbar.Header
-              style={{ backgroundColor: theme.colors.surfaceContainer }}
-            >
-              {appbar.backAction && (
-                <Appbar.BackAction
-                  onPress={appbar.backAction.onPress}
-                  accessibilityLabel={appbar.backAction.accessibilityLabel}
-                />
-              )}
-              {appbar.title ? (
-                <Appbar.Content title={appbar.title} />
-              ) : appbar.content ? (
-                <View style={{ 
-                  flexGrow: 1, 
-                  flexShrink: 1,
-                  marginLeft: 56 // 常にアイコン分の余白を追加
-                }}>
-                  {appbar.content}
-                </View>
-              ) : (
-                <Appbar.Content title="" />
-              )}
-              {appbar.actions?.map((action, index) => (
-                <Appbar.Action
-                  key={`appbar-action-${action.icon}-${index}`}
-                  icon={action.icon}
-                  onPress={action.onPress}
-                  accessibilityLabel={action.accessibilityLabel}
-                  testID={action.testID}
-                />
-              ))}
-            </Appbar.Header>
-          )}
-
-          {/* Main content with NavigationRail */}
           <View style={{ flex: 1, flexDirection: "row" }}>
-            {/* NavigationRail - standard variant */}
+            {/* NavigationRail - standard variant (full height) */}
             {navigationRail && railVariant === "standard" && (
               <NavigationRail
                 variant="standard"
@@ -247,12 +210,51 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
               />
             )}
 
-            {/* Main content */}
-            <View style={{ flex: 1 }}>{children}</View>
-          </View>
+            {/* Main content area with Appbar */}
+            <View style={{ flex: 1 }}>
+              {/* Appbar */}
+              {appbar && (
+                <Appbar.Header
+                  style={{ backgroundColor: theme.colors.surfaceContainer }}
+                >
+                  {appbar.backAction && (
+                    <Appbar.BackAction
+                      onPress={appbar.backAction.onPress}
+                      accessibilityLabel={appbar.backAction.accessibilityLabel}
+                    />
+                  )}
+                  {appbar.title ? (
+                    <Appbar.Content title={appbar.title} />
+                  ) : appbar.content ? (
+                    <View style={{ 
+                      flexGrow: 1, 
+                      flexShrink: 1,
+                      marginLeft: 56 // 常にアイコン分の余白を追加
+                    }}>
+                      {appbar.content}
+                    </View>
+                  ) : (
+                    <Appbar.Content title="" />
+                  )}
+                  {appbar.actions?.map((action, index) => (
+                    <Appbar.Action
+                      key={`appbar-action-${action.icon}-${index}`}
+                      icon={action.icon}
+                      onPress={action.onPress}
+                      accessibilityLabel={action.accessibilityLabel}
+                      testID={action.testID}
+                    />
+                  ))}
+                </Appbar.Header>
+              )}
 
-          {/* Toolbar */}
-          {toolbar && <Toolbar {...toolbar} />}
+              {/* Main content */}
+              <View style={{ flex: 1 }}>{children}</View>
+
+              {/* Toolbar */}
+              {toolbar && <Toolbar {...toolbar} />}
+            </View>
+          </View>
         </KeyboardAvoidingView>
 
         </SafeAreaView>
