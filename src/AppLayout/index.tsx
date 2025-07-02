@@ -8,9 +8,9 @@ import {
   useState,
 } from "react";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
-import { Appbar } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Appbar } from "../Appbar";
 import { NavigationRail, type NavigationRailItem } from "../NavigationRail";
 import { useMainContentStyle } from "../Provider";
 import { Toolbar } from "../Toolbar";
@@ -214,38 +214,16 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
             <View style={{ flex: 1 }}>
               {/* Appbar */}
               {appbar && (
-                <Appbar.Header
-                  style={{ backgroundColor: theme.colors.surfaceContainer }}
-                >
-                  {appbar.backAction && (
-                    <Appbar.BackAction
-                      onPress={appbar.backAction.onPress}
-                      accessibilityLabel={appbar.backAction.accessibilityLabel}
-                    />
-                  )}
-                  {appbar.title ? (
-                    <Appbar.Content title={appbar.title} />
-                  ) : appbar.content ? (
-                    <View style={{ 
-                      flexGrow: 1, 
-                      flexShrink: 1,
-                      marginLeft: 56 // 常にアイコン分の余白を追加
-                    }}>
-                      {appbar.content}
-                    </View>
-                  ) : (
-                    <Appbar.Content title="" />
-                  )}
-                  {appbar.actions?.map((action, index) => (
-                    <Appbar.Action
-                      key={`appbar-action-${action.icon}-${index}`}
-                      icon={action.icon}
-                      onPress={action.onPress}
-                      accessibilityLabel={action.accessibilityLabel}
-                      testID={action.testID}
-                    />
-                  ))}
-                </Appbar.Header>
+                <Appbar
+                  title={appbar.title}
+                  onBack={appbar.backAction?.onPress}
+                  actions={appbar.actions?.map(action => ({
+                    icon: action.icon as string,
+                    onPress: action.onPress,
+                    accessibilityLabel: action.accessibilityLabel
+                  }))}
+                  content={appbar.content}
+                />
               )}
 
               {/* Main content */}

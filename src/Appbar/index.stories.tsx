@@ -1,28 +1,31 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { expect } from "@storybook/test";
-import { Appbar as Component } from ".";
+import type { Meta, StoryObj } from '@storybook/react';
+import { Appbar as Component } from '.';
 import { getCanvas } from "../libs/storybook";
+import { expect } from "@storybook/test";
 
 const meta: Meta<typeof Component> = {
   component: Component,
-};
+  }
 
-export default meta;
+  export default meta;
 
-type Story = StoryObj<typeof Component>;
+  type Story = StoryObj<typeof Component>;
 
-const args: Story["args"] = {};
+    const args: Story["args"] = {}
 
-export const Default: Story = {
-  args,
-  render: (args) => <Component {...args} />,
-};
+    export const Default: Story = {
+    args,
+    render: (args) =>
+    <Component {...args} />
+    }
 
-export const Behavior: Story = {
-  args,
-  render: (args) => <Component {...args} />,
-  play: async ({ canvasElement }) => {
+    export const Behavior: Story = {
+    args,
+    render: (args) =>
+    <Component {...args} />
+    ,
+    play: async ({ canvasElement }) => {
     const canvas = getCanvas(canvasElement);
     expect(canvas).toBeTruthy();
-  },
-};
+    },
+    }

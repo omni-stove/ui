@@ -1,7 +1,34 @@
-/**
- * A component to display an app bar.
- * This component is a re-export of the Appbar from React Native Paper.
- *
- * @see {@link https://callstack.github.io/react-native-paper/docs/components/Appbar/|React Native Paper Appbar}
- */
-export { Appbar } from "react-native-paper";
+import { forwardRef, type ReactNode } from "react";
+import type { View } from "react-native";
+import { Appbar as AppbarPrimitive } from "react-native-paper";
+
+type Props = {
+  content?: ReactNode;
+  onBack?: () => void;
+  actions?: {
+    icon: string;
+    onPress: () => void;
+    accessibilityLabel?: string;
+  }[];
+  title?: string;
+};
+
+export const Appbar = forwardRef<View, Props>(
+  ({ content, onBack, actions, title }, ref) => {
+    return (
+      <AppbarPrimitive.Header ref={ref}>
+        {onBack && <AppbarPrimitive.BackAction onPress={onBack} />}
+        {title && <AppbarPrimitive.Content title={title} />}
+        {content}
+        {actions?.map((action) => (
+          <AppbarPrimitive.Action
+            key={JSON.stringify(action)}
+            icon={action.icon}
+            onPress={action.onPress}
+            accessibilityLabel={action.accessibilityLabel}
+          />
+        ))}
+      </AppbarPrimitive.Header>
+    );
+  },
+);
