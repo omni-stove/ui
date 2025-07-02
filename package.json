@@ -16,7 +16,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/codynog/rn-ui.git"
+    "url": "git+https://github.com/codyNog/rn-ui.git"
   },
   "keywords": [
     "react-native",
