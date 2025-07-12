@@ -10,10 +10,7 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
-  "files": [
-    "dist",
-    "README.md"
-  ],
+  "files": ["dist", "README.md"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/omni-stove/ui.git"
@@ -30,7 +27,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "storybook:web": "storybook dev -p 6006",
+    "storybook:web": "run-p watch:css \"storybook dev -p 6006\"",
     "build-storybook": "storybook build",
     "storybook-generate": "sb-rn-get-stories --config-path .rnstorybook",
     "storybook": "cross-env EXPO_PUBLIC_STORYBOOK_ENABLED='true' expo start",
@@ -44,7 +41,9 @@
     "knip": "knip",
     "lint": "npx run-p lint:*",
     "lint:script": "biome check .",
-    "lint:spell": "cspell . --no-progress"
+    "lint:spell": "cspell . --no-progress",
+    "gen": "tcm src --pattern '**/*.module.css'",
+    "watch:css": "tcm src --pattern '**/*.module.css' --watch"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^5.1.2",
@@ -55,11 +54,12 @@
     "@react-native-vector-icons/material-icons": "^12.0.0",
     "@tanstack/react-table": "^8.21.3",
     "papaparse": "^5.5.3",
+    "react-aria-components": "^1.10.1",
     "react-native-paper": "^5.12.0",
     "react-native-paper-dates": "^0.22.42",
     "react-native-paper-tabs": "^0.11.4",
-    "zod": "^3.25.23",
-    "react-native-reanimated": "~3.17.4"
+    "react-native-reanimated": ">=3.6.0",
+    "zod": "^3.25.23"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
@@ -96,6 +96,7 @@
     "react-native-web": "^0.20.0",
     "storybook": "^8.6.12",
     "ts-morph": "^26.0.0",
+    "typed-css-modules": "^0.9.1",
     "typescript": "~5.8.3",
     "vite": "^6.0.11",
     "vite-plugin-babel": "^1.3.1",
