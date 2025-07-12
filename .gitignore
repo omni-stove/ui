@@ -23,6 +23,7 @@ web-build/
 .roomodes
 .roo/rules*
 .claude
+CLAUDE.personal.md
 
 # env
 .env

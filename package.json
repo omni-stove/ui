@@ -25,6 +25,7 @@
     "material-design"
   ],
   "scripts": {
+    "preinstall": "npx -y only-allow npm",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
