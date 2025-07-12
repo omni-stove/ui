@@ -76,6 +76,38 @@ src/Select/
 - Web環境では`index.tsx`が自動選択
 - Native環境では`index.native.tsx`が自動選択
 
+## Props共通化の指針
+
+プラットフォーム固有の実装に移行する際は、以下の手順でPropsを共通化してください：
+
+### types/index.tsでの共通化
+
+1. **Native側を優先**: React Native用の既存Props定義を基準とする
+2. **Web側の追加**: Web用で必要な追加のPropsがあれば統合する
+3. **共通インターフェース**: `types/index.ts`で統一されたPropsを定義
+4. **スタイル系Props除外**: `className`や`style`などのスタイル系Propsは渡さない
+
+### 実装例
+
+```typescript
+// types/index.ts
+export type Props = {
+  // Native側のProps（優先）
+  value?: string;
+  onValueChange?: (value: string) => void;
+  disabled?: boolean;
+  // Web側で必要な追加Props（スタイル系除く）
+  placeholder?: string;
+};
+```
+
+### 移行手順でのProps統合
+
+1. Native側のProps定義を確認
+2. Web側で必要な追加Propsを特定（スタイル系を除く）
+3. `types/index.ts`で統合されたPropsを作成
+4. 両プラットフォームの実装で共通のPropsを使用
+
 ## 関連ドキュメント
 
 - [プラットフォーム固有コンポーネント](./architecture/platform-specific-components.md)
