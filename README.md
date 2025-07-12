@@ -55,4 +55,4 @@ build react native web storybook:
 ```sh
 yarn build-storybook
 ```
-# rn-ui
+# omni-stove-ui

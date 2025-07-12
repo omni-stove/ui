@@ -2,7 +2,7 @@
 
 ## 背景と課題
 
-現在のrn-uiライブラリは、React NativeとWeb向けに異なる実装を提供していますが、いくつかの課題に直面しています。
+現在のomni-stove-uiライブラリは、React NativeとWeb向けに異なる実装を提供していますが、いくつかの課題に直面しています。
 
 ### 現在の課題
 
@@ -65,10 +65,10 @@ ComponentName/
 
 ```bash
 # コンポーネントをプロジェクトにコピー
-npx @codynog/rn-ui add button select
+npx @omni-stove/ui add button select
 
 # React Native版を指定してコピー
-npx @codynog/rn-ui add button --platform native
+npx @omni-stove/ui add button --platform native
 ```
 
 ### コンポーネントのメタデータ
@@ -165,4 +165,4 @@ shadcn/ui方式への移行により、以下の利点が期待できます：
 3. **メンテナンス性の向上**: プラットフォーム固有のコードが明確に分離
 4. **エコシステムの拡大**: React Native以外のフレームワークでも利用可能に
 
-この移行により、rn-uiはより柔軟で強力なコンポーネントライブラリとして進化します。
+この移行により、omni-stove-uiはより柔軟で強力なコンポーネントライブラリとして進化します。

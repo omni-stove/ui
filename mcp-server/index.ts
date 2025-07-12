@@ -12,7 +12,7 @@ import { Project, TypeFormatFlags } from "ts-morph";
 
 const server = new Server(
   {
-    name: "rn-ui-components",
+    name: "omni-stove-ui-components",
     version: "1.0.0",
   },
   {
@@ -33,8 +33,8 @@ function findUILibraryRoot(): string {
   const nodeModulesPath = path.join(
     process.cwd(),
     "node_modules",
-    "@codynog",
-    "rn-ui",
+    "@omni-stove",
+    "ui",
   );
   if (fs.existsSync(nodeModulesPath)) {
     return nodeModulesPath;
@@ -62,8 +62,8 @@ function findUILibraryRoot(): string {
           fs.readFileSync(packageJsonPath, "utf-8"),
         );
         if (
-          packageJson.name === "@codynog/rn-ui" ||
-          packageJson.name === "rn-ui"
+          packageJson.name === "@omni-stove/ui" ||
+          packageJson.name === "omni-stove-ui"
         ) {
           return currentDir;
         }
@@ -420,7 +420,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("RN-UI Components MCP Server running on stdio");
+  console.error("Omni Stove UI Components MCP Server running on stdio");
 }
 
 main().catch((error) => {

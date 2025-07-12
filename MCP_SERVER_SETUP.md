@@ -1,4 +1,4 @@
-# React Native UI Components MCP Server
+# Omni Stove UI Components MCP Server
 
 このプロジェクトには、React Native UIコンポーネントライブラリ用のMCP (Model Context Protocol) Serverが含まれています。
 
@@ -40,10 +40,10 @@ Claude DesktopやClineの設定ファイルに以下を追加：
 ```json
 {
   "mcpServers": {
-    "rn-ui-components": {
+    "omni-stove-ui-components": {
       "command": "npx",
       "args": [
-        "@codynog/rn-ui-mcp-server"
+        "@omni-stove/ui-mcp-server"
       ]
     }
   }
@@ -57,7 +57,7 @@ Claude Desktopの設定ファイル（通常 `~/Library/Application Support/Clau
 ```json
 {
   "mcpServers": {
-    "rn-ui-components": {
+    "omni-stove-ui-components": {
       "command": "npx",
       "args": [
         "tsx",

@@ -1,4 +1,4 @@
-# RN-UI Components MCP Server
+# Omni Stove UI Components MCP Server
 
 React Native UI Component Library用のMCP (Model Context Protocol) Serverです。
 
@@ -44,7 +44,7 @@ MCP Clientの設定ファイル（例：Claude Desktop）に以下を追加：
 ```json
 {
   "mcpServers": {
-    "rn-ui-components": {
+    "omni-stove-ui-components": {
       "command": "node",
       "args": ["/path/to/your/project/mcp-server/index.ts"],
       "cwd": "/path/to/your/project"
@@ -58,7 +58,7 @@ MCP Clientの設定ファイル（例：Claude Desktop）に以下を追加：
 ```json
 {
   "mcpServers": {
-    "rn-ui-components": {
+    "omni-stove-ui-components": {
       "command": "npx",
       "args": ["tsx", "/path/to/your/project/mcp-server/index.ts"],
       "cwd": "/path/to/your/project"
