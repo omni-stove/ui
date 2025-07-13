@@ -1,65 +1,11 @@
 import {
-  type ComponentProps,
-  type ReactNode,
-  type Ref,
+  type CSSProperties,
+  type ForwardedRef,
   forwardRef,
+  type MouseEvent,
 } from "react";
-import type { ViewStyle } from "react-native";
-import { View } from "react-native";
-import { Icon, TouchableRipple } from "react-native-paper";
-import { Typography } from "../Typography";
 import { useTheme } from "../hooks";
-
-/**
- * Defines the visual style of the button.
- * - `filled`: A contained button with a background color.
- * - `tonal`: A contained button with a secondary background color.
- * - `outlined`: A button with a transparent background and a border.
- * - `text`: A button with a transparent background and no border.
- * - `elevated`: A contained button with a shadow.
- */
-type Variant = "filled" | "tonal" | "outlined" | "text" | "elevated";
-
-/**
- * Defines the size of the button, affecting its height, padding, and font size.
- * - `extra-small`
- * - `small`
- * - `medium`
- * - `large`
- * - `extra-large`
- */
-type Size = "extra-small" | "small" | "medium" | "large" | "extra-large";
-
-/**
- * Base props for the Button component.
- * @param {Variant} [props.variant="filled"] - The visual style of the button.
- * @param {Size} [props.size="small"] - The size of the button.
-
- * @param {boolean} [props.disabled=false] - Whether the button is disabled.
- * @param {() => void} [props.onPress] - Function to call when the button is pressed.
- * @param {string} [props.testID] - Test ID for the button.
- * @param {string} [props.accessibilityLabel] - Accessibility label for the button.
- */
-type BaseProps = {
-  variant?: Variant;
-  size?: Size;
-
-  disabled?: boolean;
-  onPress?: () => void;
-  testID?: string;
-  accessibilityLabel?: string;
-};
-
-/**
- * Props for the Button component. It must have either `children` (label) or an `icon`, or both.
- * @param {ReactNode} [props.children] - The text or ReactNode to display as the button's label.
- * @param {string} [props.icon] - The name of the icon to display.
- */
-type Props = BaseProps &
-  (
-    | { children: ReactNode; icon?: string }
-    | { children?: ReactNode; icon: string }
-  );
+import type { Props, Size, Variant } from "./types";
 
 const getButtonDimensions = (size: Size) => {
   switch (size) {
@@ -109,215 +55,161 @@ const getButtonDimensions = (size: Size) => {
 };
 
 /**
- * A customizable Button component adhering to Material Design 3 (M3) specifications.
+ * A customizable Button component adhering to Material Design 3 (M3) specifications for Web.
+ * It uses native HTML button element with CSS-in-JS styling for optimal accessibility and performance.
  * It supports different visual variants, sizes, and can include an icon and/or a label.
- * The button uses `TouchableRipple` for press feedback.
  *
  * @param {Props} props - The component's props.
- * @param {Ref<View>} ref - Ref for the underlying TouchableRipple component.
+ * @param {ForwardedRef<HTMLButtonElement>} ref - Ref for the underlying button element.
  * @returns {JSX.Element} The Button component.
  */
-export const Button = forwardRef(
-  (
-    {
-      variant = "filled",
-      size = "small",
-      // labelStyle, // Removed as per user request to not use style overrides for Typography
-      disabled = false,
-      onPress,
-      children,
-      icon,
-      testID,
-      accessibilityLabel,
-    }: Props,
-    ref: Ref<View>,
-  ) => {
-    const theme = useTheme();
-    const dimensions = getButtonDimensions(size);
+export const Button = forwardRef(function Button(
+  {
+    variant = "filled",
+    size = "small",
+    type = "button",
+    disabled = false,
+    onPress,
+    children,
+    icon,
+    testID,
+    accessibilityLabel,
+    ariaLabel,
+  }: Props,
+  ref: ForwardedRef<HTMLButtonElement>,
+) {
+  const theme = useTheme();
+  const dimensions = getButtonDimensions(size);
 
-    const getButtonColors = () => {
-      if (disabled) {
+  const getButtonColors = () => {
+    if (disabled) {
+      return {
+        backgroundColor: theme.colors.surfaceVariant,
+        textColor: theme.colors.outline,
+        borderColor: theme.colors.outline,
+      };
+    }
+
+    switch (variant) {
+      case "filled":
         return {
-          backgroundColor: theme.colors.surfaceVariant,
-          textColor: theme.colors.outline,
+          backgroundColor: theme.colors.primary,
+          textColor: theme.colors.onPrimary,
+        };
+      case "tonal":
+        return {
+          backgroundColor: theme.colors.secondaryContainer,
+          textColor: theme.colors.onSecondaryContainer,
+        };
+      case "outlined":
+        return {
+          backgroundColor: "transparent",
+          textColor: theme.colors.primary,
           borderColor: theme.colors.outline,
         };
-      }
+      case "text":
+        return {
+          backgroundColor: "transparent",
+          textColor: theme.colors.primary,
+        };
+      case "elevated":
+        return {
+          backgroundColor: theme.colors.surfaceContainerLow,
+          textColor: theme.colors.primary,
+        };
+      default:
+        return {
+          backgroundColor: theme.colors.primary,
+          textColor: theme.colors.onPrimary,
+        };
+    }
+  };
 
-      switch (variant) {
-        case "filled":
-          return {
-            backgroundColor: theme.colors.primary,
-            textColor: theme.colors.onPrimary,
-          };
-        case "tonal":
-          return {
-            backgroundColor: theme.colors.secondaryContainer,
-            textColor: theme.colors.onSecondaryContainer,
-          };
-        case "outlined":
-          return {
-            backgroundColor: "transparent",
-            textColor: theme.colors.primary,
-            borderColor: theme.colors.outline,
-          };
-        case "text":
-          return {
-            backgroundColor: "transparent",
-            textColor: theme.colors.primary,
-          };
-        case "elevated":
-          return {
-            backgroundColor: theme.colors.surfaceContainerLow,
-            textColor: theme.colors.primary,
-          };
-        default:
-          return {
-            backgroundColor: theme.colors.primary,
-            textColor: theme.colors.onPrimary,
-          };
-      }
-    };
+  const colors = getButtonColors();
 
-    const colors = getButtonColors();
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    if (onPress && !disabled) {
+      onPress();
+    }
+  };
 
-    const buttonStyle: ViewStyle = {
-      height: dimensions.height,
-      paddingHorizontal: dimensions.paddingHorizontal,
-      borderRadius: dimensions.height / 2,
-      backgroundColor: colors.backgroundColor,
-      justifyContent: "center",
-      alignItems: "center",
-      borderWidth: variant === "outlined" ? 1 : 0,
-      borderColor: colors.borderColor,
-      opacity: disabled ? 0.38 : 1,
-      ...(variant === "elevated" &&
-        !disabled && {
-          elevation: 1,
-          shadowColor: theme.colors.shadow,
-          shadowOffset: { width: 0, height: 1 },
-          shadowOpacity: 0.2,
-          shadowRadius: 1.41,
-        }),
-    };
+  const buttonStyle: CSSProperties = {
+    height: dimensions.height,
+    paddingLeft: dimensions.paddingHorizontal,
+    paddingRight: dimensions.paddingHorizontal,
+    borderRadius: dimensions.height / 2,
+    backgroundColor: colors.backgroundColor,
+    color: colors.textColor,
+    fontSize: dimensions.fontSize,
+    fontWeight: 500,
+    lineHeight: `${dimensions.fontSize * 1.2}px`,
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: icon && children ? 8 : 0,
+    border: variant === "outlined" ? `1px solid ${colors.borderColor}` : "none",
+    opacity: disabled ? 0.38 : 1,
+    cursor: disabled ? "not-allowed" : "pointer",
+    textDecoration: "none",
+    outline: "none",
+    transition: "all 0.2s ease",
+    fontFamily: "inherit",
+    userSelect: "none",
+    position: "relative",
+    overflow: "hidden",
+    ...(variant === "elevated" &&
+      !disabled && {
+        boxShadow: `0 1px 2px ${theme.colors.shadow}33`,
+      }),
+  };
 
-    // const textStyle: StyleProp<TextStyle> = [
-    //   {
-    //     fontSize: dimensions.fontSize,
-    //     lineHeight: dimensions.fontSize * 1.2,
-    //     color: colors.textColor,
-    //     fontWeight: "500",
-    //     textAlign: "center",
-    //   },
-    //   labelStyle,
-    // ];
+  const iconStyle: CSSProperties = {
+    width: dimensions.iconSize,
+    height: dimensions.iconSize,
+    fontSize: dimensions.iconSize,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  };
 
-    const getTypographyVariantForSize = (
-      currentSize: Size,
-    ): ComponentProps<typeof Typography>["variant"] => {
-      switch (currentSize) {
-        case "extra-small":
-          return "labelLarge"; // 14px
-        case "small":
-          return "labelLarge"; // 14px
-        case "medium":
-          return "bodyLarge"; // 16px
-        case "large":
-          return "headlineSmall"; // 24px
-        case "extra-large":
-          return "displaySmall"; // 32px
-        default:
-          return "labelLarge";
-      }
-    };
-
-    const getTypographyColorForVariant = (
-      currentVariant: Variant,
-      isDisabled: boolean,
-    ): ComponentProps<typeof Typography>["color"] => {
-      if (isDisabled) {
-        return "outline";
-      }
-      switch (currentVariant) {
-        case "filled":
-          return "onPrimary";
-        case "tonal":
-          return "onSecondaryContainer";
-        case "outlined":
-        case "text":
-        case "elevated":
-          return "primary";
-        default:
-          return "onPrimary";
-      }
-    };
-
-    const getRippleColor = () => {
-      if (disabled) {
-        return theme.colors.outline;
-      }
-
-      switch (variant) {
-        case "filled":
-          return theme.colors.onPrimary;
-        case "tonal":
-          return theme.colors.onSecondaryContainer;
-        case "outlined":
-          return theme.colors.primary;
-        case "text":
-          return theme.colors.primary;
-        case "elevated":
-          return theme.colors.primary;
-        default:
-          return theme.colors.onPrimary;
-      }
-    };
-
-    const rippleColor = getRippleColor();
-
-    return (
-      <TouchableRipple
-        ref={ref}
-        onPress={onPress}
-        disabled={disabled}
-        style={buttonStyle}
-        rippleColor={rippleColor}
-        borderless={false}
-        testID={testID}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityRole="button"
-        accessibilityState={{ disabled }}
-      >
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: icon && children ? 8 : 0,
-          }}
-          pointerEvents="none"
-        >
-          {icon && (
-            <Icon
-              source={icon}
-              size={dimensions.iconSize}
-              color={colors.textColor}
-            />
-          )}
-          {children && (
-            <Typography
-              variant={getTypographyVariantForSize(size)}
-              color={getTypographyColorForVariant(variant, disabled)}
-              // labelStyle is intentionally not applied here as per user request to use variant/color
-            >
-              {children}
-            </Typography>
-          )}
-        </View>
-      </TouchableRipple>
-    );
-  },
-);
+  return (
+    <button
+      ref={ref}
+      type={type}
+      onClick={handleClick}
+      disabled={disabled}
+      style={buttonStyle}
+      data-testid={testID}
+      aria-label={ariaLabel || accessibilityLabel}
+      onMouseEnter={(e) => {
+        if (!disabled) {
+          e.currentTarget.style.backgroundColor = colors.backgroundColor + "E6"; // Add hover effect
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!disabled) {
+          e.currentTarget.style.backgroundColor = colors.backgroundColor;
+        }
+      }}
+      onFocus={(e) => {
+        if (!disabled) {
+          e.currentTarget.style.outline = `2px solid ${theme.colors.primary}66`;
+          e.currentTarget.style.outlineOffset = "2px";
+        }
+      }}
+      onBlur={(e) => {
+        e.currentTarget.style.outline = "none";
+      }}
+    >
+      {icon && (
+        <span style={iconStyle} aria-hidden="true">
+          {/* Icon placeholder - in a real implementation, you'd use an icon library */}
+          {icon}
+        </span>
+      )}
+      {children && <span>{children}</span>}
+    </button>
+  );
+});
 
 Button.displayName = "Button";
