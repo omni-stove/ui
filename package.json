@@ -10,7 +10,7 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
-  "files": ["dist", "README.md", "bin", "mcp-server"],
+  "files": ["dist", "README.md", "bin", "mcp-server", "src"],
   "bin": {
     "omni-stove-ui": "./bin/omni-stove-ui-cli.js"
   },
