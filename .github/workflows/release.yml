@@ -83,75 +83,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_REGISTRY: "https://npm.pkg.github.com"
 
-  build-mcp-server:
-    needs: generate-version
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    defaults:
-      run:
-        working-directory: ./mcp-server
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: ".node-version"
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@codynog'
-
-      - name: Get npm cache directory
-        id: npm-cache-dir
-        run: echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
-
-      - name: Restore npm cache
-        uses: actions/cache/restore@v4
-        id: npm-cache
-        with:
-          path: ${{ steps.npm-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-mcp-server-node-${{ hashFiles('mcp-server/package-lock.json') }}
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Save npm cache
-        uses: actions/cache/save@v4
-        if: steps.npm-cache.outputs.cache-hit != 'true'
-        with:
-          path: ${{ steps.npm-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-mcp-server-node-${{ hashFiles('mcp-server/package-lock.json') }}
-
-      - name: Update MCP Server version
-        run: |
-          if jq -e '.version' package.json > /dev/null 2>&1; then
-            # Update existing version
-            jq --arg version "${{ needs.generate-version.outputs.version }}" '.version = $version' package.json > package.json.tmp
-          else
-            # Add version field if it doesn't exist
-            jq --arg version "${{ needs.generate-version.outputs.version }}" '. + {version: $version}' package.json > package.json.tmp
-          fi
-          mv package.json.tmp package.json
-          echo "Updated MCP Server package.json version to ${{ needs.generate-version.outputs.version }}"
-
-      - name: Build and publish MCP Server
-        run: |
-          npm run build
-          if ! npm publish --no-git-checks; then
-            echo "Failed to publish MCP Server package"
-            exit 1
-          fi
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_CONFIG_REGISTRY: "https://npm.pkg.github.com"
-
   create-release:
-    needs: [generate-version, build-main-package, build-mcp-server]
+    needs: [generate-version, build-main-package]
     runs-on: ubuntu-latest
     permissions:
       contents: write

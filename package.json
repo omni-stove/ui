@@ -10,7 +10,10 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
-  "files": ["dist", "README.md"],
+  "files": ["dist", "README.md", "bin", "mcp-server"],
+  "bin": {
+    "omni-stove-ui": "./bin/omni-stove-ui-cli.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/omni-stove/ui.git"
@@ -96,6 +99,7 @@
     "react-native-web": "^0.20.0",
     "storybook": "^8.6.12",
     "ts-morph": "^26.0.0",
+    "tsx": "^4.0.0",
     "typed-css-modules": "^0.9.1",
     "typescript": "~5.8.3",
     "vite": "^6.0.11",
@@ -122,19 +126,9 @@
       "optional": true
     }
   },
-  "resolutions": {
-    "react-docgen-typescript": "2.2.2",
-    "react-native-web": "^0.20.0"
-  },
   "overrides": {
     "react-docgen-typescript": "2.2.2",
     "react-native-web": "^0.20.0"
-  },
-  "pnpm": {
-    "overrides": {
-      "react-docgen-typescript": "2.2.2",
-      "react-native-web": "^0.20.0"
-    }
   },
   "react-native-builder-bob": {
     "source": "src",
