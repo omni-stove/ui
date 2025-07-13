@@ -1,146 +1,136 @@
 import {
-  type ComponentProps,
-  type ReactNode,
-  type Ref,
+  type ButtonHTMLAttributes,
+  type ForwardedRef,
+  type MouseEvent,
   forwardRef,
+  useCallback,
+  useEffect,
+  useState,
 } from "react";
-import type { ViewStyle } from "react-native";
-import { View } from "react-native";
-import { Icon, TouchableRipple } from "react-native-paper";
-import { Typography } from "../Typography";
 import { useTheme } from "../hooks";
+import type { WebButtonProps } from "./types";
+import { getButtonDimensions } from "./types";
+// Import CSS Modules if available, fallback to empty object
+let styles: Record<string, string> = {};
+try {
+  styles = require("./Button.module.css");
+} catch {
+  // Fallback: if CSS Modules aren't supported, we'll use inline styles
+  styles = {
+    button: "",
+    extraSmall: "",
+    small: "",
+    medium: "",
+    large: "",
+    extraLarge: "",
+    filled: "",
+    tonal: "",
+    outlined: "",
+    text: "",
+    elevated: "",
+    icon: "",
+    content: "",
+    ripple: "",
+    rippleAnimation: "",
+  };
+}
 
-/**
- * Defines the visual style of the button.
- * - `filled`: A contained button with a background color.
- * - `tonal`: A contained button with a secondary background color.
- * - `outlined`: A button with a transparent background and a border.
- * - `text`: A button with a transparent background and no border.
- * - `elevated`: A contained button with a shadow.
- */
-type Variant = "filled" | "tonal" | "outlined" | "text" | "elevated";
-
-/**
- * Defines the size of the button, affecting its height, padding, and font size.
- * - `extra-small`
- * - `small`
- * - `medium`
- * - `large`
- * - `extra-large`
- */
-type Size = "extra-small" | "small" | "medium" | "large" | "extra-large";
-
-/**
- * Base props for the Button component.
- * @param {Variant} [props.variant="filled"] - The visual style of the button.
- * @param {Size} [props.size="small"] - The size of the button.
-
- * @param {boolean} [props.disabled=false] - Whether the button is disabled.
- * @param {() => void} [props.onPress] - Function to call when the button is pressed.
- * @param {string} [props.testID] - Test ID for the button.
- * @param {string} [props.accessibilityLabel] - Accessibility label for the button.
- */
-type BaseProps = {
-  variant?: Variant;
-  size?: Size;
-
-  disabled?: boolean;
-  onPress?: () => void;
-  testID?: string;
-  accessibilityLabel?: string;
-};
-
-/**
- * Props for the Button component. It must have either `children` (label) or an `icon`, or both.
- * @param {ReactNode} [props.children] - The text or ReactNode to display as the button's label.
- * @param {string} [props.icon] - The name of the icon to display.
- */
-type Props = BaseProps &
-  (
-    | { children: ReactNode; icon?: string }
-    | { children?: ReactNode; icon: string }
-  );
-
-const getButtonDimensions = (size: Size) => {
-  switch (size) {
-    case "extra-small":
-      return {
-        height: 32,
-        paddingHorizontal: 12,
-        fontSize: 14,
-        iconSize: 16,
-      };
-    case "small":
-      return {
-        height: 40,
-        paddingHorizontal: 16,
-        fontSize: 14,
-        iconSize: 18,
-      };
-    case "medium":
-      return {
-        height: 56,
-        paddingHorizontal: 24,
-        fontSize: 16,
-        iconSize: 20,
-      };
-    case "large":
-      return {
-        height: 96,
-        paddingHorizontal: 48,
-        fontSize: 24,
-        iconSize: 28,
-      };
-    case "extra-large":
-      return {
-        height: 136,
-        paddingHorizontal: 64,
-        fontSize: 32,
-        iconSize: 36,
-      };
-    default:
-      return {
-        height: 40,
-        paddingHorizontal: 16,
-        fontSize: 14,
-        iconSize: 18,
-      };
+// Add ripple animation keyframes if not available
+const injectRippleKeyframes = () => {
+  const styleId = "button-ripple-keyframes";
+  if (!document.getElementById(styleId)) {
+    const style = document.createElement("style");
+    style.id = styleId;
+    style.textContent = `
+      @keyframes rippleEffect {
+        0% {
+          transform: scale(0);
+          opacity: 0.7;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
   }
 };
 
+// Icon component for web - simplified version
+const WebIcon = ({ 
+  name, 
+  size, 
+  color, 
+  className 
+}: { 
+  name: string; 
+  size: number; 
+  color: string;
+  className?: string;
+}) => (
+  <span 
+    className={`${styles.icon} ${className || ""}`}
+    style={{ 
+      fontSize: size, 
+      color,
+      width: size,
+      height: size,
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+    aria-hidden="true"
+  >
+    {/* This would be replaced with actual icon implementation */}
+    ◆
+  </span>
+);
+
 /**
- * A customizable Button component adhering to Material Design 3 (M3) specifications.
- * It supports different visual variants, sizes, and can include an icon and/or a label.
- * The button uses `TouchableRipple` for press feedback.
- *
- * @param {Props} props - The component's props.
- * @param {Ref<View>} ref - Ref for the underlying TouchableRipple component.
- * @returns {JSX.Element} The Button component.
+ * A web Button component using CSS Modules and HTML button element.
+ * Adheres to Material Design 3 specifications while providing optimal web accessibility.
+ * 
+ * @param props - The component's props including web-specific props
+ * @param ref - Ref for the underlying button element
+ * @returns The Button component
  */
-export const Button = forwardRef(
+export const Button = forwardRef<HTMLButtonElement, WebButtonProps>(
   (
     {
       variant = "filled",
       size = "small",
-      // labelStyle, // Removed as per user request to not use style overrides for Typography
       disabled = false,
       onPress,
       children,
       icon,
       testID,
       accessibilityLabel,
-    }: Props,
-    ref: Ref<View>,
+      type = "button",
+      ariaLabel,
+      ...htmlProps
+    },
+    ref: ForwardedRef<HTMLButtonElement>,
   ) => {
     const theme = useTheme();
     const dimensions = getButtonDimensions(size);
+    const [ripples, setRipples] = useState<Array<{ id: number; x: number; y: number }>>([]);
+
+    // Inject ripple keyframes on mount
+    useEffect(() => {
+      if (typeof document !== "undefined") {
+        injectRippleKeyframes();
+      }
+    }, []);
 
     const getButtonColors = () => {
       if (disabled) {
         return {
           backgroundColor: theme.colors.surfaceVariant,
-          textColor: theme.colors.outline,
+          color: theme.colors.outline,
           borderColor: theme.colors.outline,
+          hoverBackgroundColor: theme.colors.surfaceVariant,
+          focusOutlineColor: theme.colors.outline,
         };
       }
 
@@ -148,174 +138,199 @@ export const Button = forwardRef(
         case "filled":
           return {
             backgroundColor: theme.colors.primary,
-            textColor: theme.colors.onPrimary,
+            color: theme.colors.onPrimary,
+            hoverBackgroundColor: `color-mix(in srgb, ${theme.colors.primary} 92%, ${theme.colors.onPrimary} 8%)`,
+            focusOutlineColor: theme.colors.primary,
           };
         case "tonal":
           return {
             backgroundColor: theme.colors.secondaryContainer,
-            textColor: theme.colors.onSecondaryContainer,
+            color: theme.colors.onSecondaryContainer,
+            hoverBackgroundColor: `color-mix(in srgb, ${theme.colors.secondaryContainer} 92%, ${theme.colors.onSecondaryContainer} 8%)`,
+            focusOutlineColor: theme.colors.secondary,
           };
         case "outlined":
           return {
             backgroundColor: "transparent",
-            textColor: theme.colors.primary,
+            color: theme.colors.primary,
             borderColor: theme.colors.outline,
+            hoverBackgroundColor: `color-mix(in srgb, transparent 92%, ${theme.colors.primary} 8%)`,
+            focusOutlineColor: theme.colors.primary,
           };
         case "text":
           return {
             backgroundColor: "transparent",
-            textColor: theme.colors.primary,
+            color: theme.colors.primary,
+            hoverBackgroundColor: `color-mix(in srgb, transparent 92%, ${theme.colors.primary} 8%)`,
+            focusOutlineColor: theme.colors.primary,
           };
         case "elevated":
           return {
             backgroundColor: theme.colors.surfaceContainerLow,
-            textColor: theme.colors.primary,
+            color: theme.colors.primary,
+            hoverBackgroundColor: `color-mix(in srgb, ${theme.colors.surfaceContainerLow} 92%, ${theme.colors.primary} 8%)`,
+            focusOutlineColor: theme.colors.primary,
           };
         default:
           return {
             backgroundColor: theme.colors.primary,
-            textColor: theme.colors.onPrimary,
+            color: theme.colors.onPrimary,
+            hoverBackgroundColor: `color-mix(in srgb, ${theme.colors.primary} 92%, ${theme.colors.onPrimary} 8%)`,
+            focusOutlineColor: theme.colors.primary,
           };
       }
     };
 
     const colors = getButtonColors();
 
-    const buttonStyle: ViewStyle = {
-      height: dimensions.height,
-      paddingHorizontal: dimensions.paddingHorizontal,
-      borderRadius: dimensions.height / 2,
-      backgroundColor: colors.backgroundColor,
-      justifyContent: "center",
+    // Handle ripple effect
+    const createRipple = useCallback((event: MouseEvent<HTMLButtonElement>) => {
+      const button = event.currentTarget;
+      const rect = button.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      
+      const newRipple = {
+        id: Date.now(),
+        x,
+        y,
+      };
+      
+      setRipples((prev) => [...prev, newRipple]);
+      
+      // Remove ripple after animation
+      setTimeout(() => {
+        setRipples((prev) => prev.filter((ripple) => ripple.id !== newRipple.id));
+      }, 600);
+    }, []);
+
+    const handleClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
+      if (!disabled) {
+        createRipple(event);
+        onPress?.();
+      }
+    }, [disabled, onPress, createRipple]);
+
+    // Combine CSS classes or use fallback
+    const sizeClass = {
+      "extra-small": styles.extraSmall,
+      "small": styles.small,
+      "medium": styles.medium,
+      "large": styles.large,
+      "extra-large": styles.extraLarge,
+    }[size];
+
+    const variantClass = styles[variant];
+
+    const buttonClasses = [
+      styles.button,
+      sizeClass,
+      variantClass,
+    ].filter(Boolean).join(" ");
+
+    // Base styles for when CSS Modules aren't available
+    const baseStyles: React.CSSProperties = {
+      display: "inline-flex",
       alignItems: "center",
-      borderWidth: variant === "outlined" ? 1 : 0,
-      borderColor: colors.borderColor,
+      justifyContent: "center",
+      gap: 8,
+      border: variant === "outlined" ? `1px solid ${colors.borderColor}` : "none",
+      cursor: disabled ? "not-allowed" : "pointer",
+      fontFamily: "inherit",
+      fontWeight: 500,
+      textDecoration: "none",
+      transition: "all 0.2s ease",
+      position: "relative",
+      overflow: "hidden",
+      height: dimensions.height,
+      padding: `0 ${dimensions.paddingHorizontal}px`,
+      fontSize: dimensions.fontSize,
+      lineHeight: `${dimensions.iconSize}px`,
+    };
+
+    // Dynamic styles based on theme
+    const buttonStyle = {
+      ...baseStyles,
+      "--button-bg-color": colors.backgroundColor,
+      "--button-text-color": colors.color,
+      "--button-border-color": colors.borderColor,
+      "--button-hover-bg": colors.hoverBackgroundColor,
+      "--button-focus-outline": colors.focusOutlineColor,
+      borderRadius: `${dimensions.height / 2}px`,
+      backgroundColor: colors.backgroundColor,
+      color: colors.color,
+      borderColor: variant === "outlined" ? colors.borderColor : "transparent",
       opacity: disabled ? 0.38 : 1,
-      ...(variant === "elevated" &&
-        !disabled && {
-          elevation: 1,
-          shadowColor: theme.colors.shadow,
-          shadowOffset: { width: 0, height: 1 },
-          shadowOpacity: 0.2,
-          shadowRadius: 1.41,
-        }),
-    };
-
-    // const textStyle: StyleProp<TextStyle> = [
-    //   {
-    //     fontSize: dimensions.fontSize,
-    //     lineHeight: dimensions.fontSize * 1.2,
-    //     color: colors.textColor,
-    //     fontWeight: "500",
-    //     textAlign: "center",
-    //   },
-    //   labelStyle,
-    // ];
-
-    const getTypographyVariantForSize = (
-      currentSize: Size,
-    ): ComponentProps<typeof Typography>["variant"] => {
-      switch (currentSize) {
-        case "extra-small":
-          return "labelLarge"; // 14px
-        case "small":
-          return "labelLarge"; // 14px
-        case "medium":
-          return "bodyLarge"; // 16px
-        case "large":
-          return "headlineSmall"; // 24px
-        case "extra-large":
-          return "displaySmall"; // 32px
-        default:
-          return "labelLarge";
-      }
-    };
-
-    const getTypographyColorForVariant = (
-      currentVariant: Variant,
-      isDisabled: boolean,
-    ): ComponentProps<typeof Typography>["color"] => {
-      if (isDisabled) {
-        return "outline";
-      }
-      switch (currentVariant) {
-        case "filled":
-          return "onPrimary";
-        case "tonal":
-          return "onSecondaryContainer";
-        case "outlined":
-        case "text":
-        case "elevated":
-          return "primary";
-        default:
-          return "onPrimary";
-      }
-    };
-
-    const getRippleColor = () => {
-      if (disabled) {
-        return theme.colors.outline;
-      }
-
-      switch (variant) {
-        case "filled":
-          return theme.colors.onPrimary;
-        case "tonal":
-          return theme.colors.onSecondaryContainer;
-        case "outlined":
-          return theme.colors.primary;
-        case "text":
-          return theme.colors.primary;
-        case "elevated":
-          return theme.colors.primary;
-        default:
-          return theme.colors.onPrimary;
-      }
-    };
-
-    const rippleColor = getRippleColor();
+      ...(variant === "elevated" && !disabled && {
+        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
+      }),
+    } as React.CSSProperties;
 
     return (
-      <TouchableRipple
+      <button
         ref={ref}
-        onPress={onPress}
-        disabled={disabled}
+        type={type}
+        className={buttonClasses}
         style={buttonStyle}
-        rippleColor={rippleColor}
-        borderless={false}
-        testID={testID}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityRole="button"
-        accessibilityState={{ disabled }}
+        disabled={disabled}
+        onClick={handleClick}
+        data-testid={testID}
+        aria-label={ariaLabel || accessibilityLabel}
+        {...htmlProps}
       >
-        <View
+        <div 
+          className={styles.content}
           style={{
-            flex: 1,
-            flexDirection: "row",
-            justifyContent: "center",
+            display: "flex",
             alignItems: "center",
-            gap: icon && children ? 8 : 0,
+            justifyContent: "center",
+            gap: 8,
           }}
-          pointerEvents="none"
         >
           {icon && (
-            <Icon
-              source={icon}
+            <WebIcon
+              name={icon}
               size={dimensions.iconSize}
-              color={colors.textColor}
+              color={colors.color}
             />
           )}
-          {children && (
-            <Typography
-              variant={getTypographyVariantForSize(size)}
-              color={getTypographyColorForVariant(variant, disabled)}
-              // labelStyle is intentionally not applied here as per user request to use variant/color
-            >
-              {children}
-            </Typography>
-          )}
-        </View>
-      </TouchableRipple>
+          {children && <span>{children}</span>}
+        </div>
+        
+        {/* Ripple effect container */}
+        <div 
+          className={styles.ripple}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            borderRadius: "inherit",
+            overflow: "hidden",
+            pointerEvents: "none",
+          }}
+        >
+          {ripples.map((ripple) => (
+            <div
+              key={ripple.id}
+              className={styles.rippleAnimation}
+              style={{
+                position: "absolute",
+                left: ripple.x - 10,
+                top: ripple.y - 10,
+                width: 20,
+                height: 20,
+                backgroundColor: colors.color,
+                borderRadius: "50%",
+                opacity: 0.7,
+                animation: "rippleEffect 0.6s ease-out",
+                pointerEvents: "none",
+              }}
+            />
+          ))}
+        </div>
+      </button>
     );
   },
 );

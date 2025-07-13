@@ -1,0 +1,168 @@
+/* Base button styles */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border-radius: 9999px; /* Will be overridden by dynamic calculation */
+  position: relative;
+  overflow: hidden;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
+}
+
+.button:focus {
+  outline: none;
+}
+
+.button:focus-visible {
+  outline: 2px solid;
+  outline-offset: 2px;
+}
+
+/* Size variants */
+.extraSmall {
+  height: 32px;
+  padding: 0 12px;
+  font-size: 14px;
+  line-height: 16px;
+}
+
+.small {
+  height: 40px;
+  padding: 0 16px;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.medium {
+  height: 56px;
+  padding: 0 24px;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.large {
+  height: 96px;
+  padding: 0 48px;
+  font-size: 24px;
+  line-height: 28px;
+}
+
+.extraLarge {
+  height: 136px;
+  padding: 0 64px;
+  font-size: 32px;
+  line-height: 36px;
+}
+
+/* Variant styles - filled (default) */
+.filled {
+  /* Background and text colors will be set via CSS custom properties */
+}
+
+.filled:hover:not(:disabled) {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.filled:active:not(:disabled) {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16), 0 2px 4px rgba(0, 0, 0, 0.23);
+}
+
+/* Tonal variant */
+.tonal {
+  /* Background and text colors will be set via CSS custom properties */
+}
+
+.tonal:hover:not(:disabled) {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+/* Outlined variant */
+.outlined {
+  background-color: transparent;
+  border: 1px solid;
+  /* Border and text colors will be set via CSS custom properties */
+}
+
+.outlined:hover:not(:disabled) {
+  /* Hover background will be set via CSS custom properties */
+}
+
+/* Text variant */
+.text {
+  background-color: transparent;
+}
+
+.text:hover:not(:disabled) {
+  /* Hover background will be set via CSS custom properties */
+}
+
+/* Elevated variant */
+.elevated {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  /* Background and text colors will be set via CSS custom properties */
+}
+
+.elevated:hover:not(:disabled) {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.elevated:active:not(:disabled) {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25), 0 4px 8px rgba(0, 0, 0, 0.22);
+}
+
+/* Icon styles */
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Content wrapper */
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Ripple effect container */
+.ripple {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Ripple animation */
+@keyframes rippleEffect {
+  0% {
+    transform: scale(0);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+.rippleAnimation {
+  position: absolute;
+  border-radius: 50%;
+  animation: rippleEffect 0.6s ease-out;
+  pointer-events: none;
+}
