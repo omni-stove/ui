@@ -34,7 +34,7 @@ mv src/ComponentName/index.tsx src/ComponentName/index.native.tsx
 
 Web用コンポーネントを作成する際は以下を参考にしてください：
 
-1. **cody-ui**: https://github.com/codyogden/cody-ui
+1. **cody-ui**: https://github.com/codynog/cody-ui
    - 対応するコンポーネントの実装パターンを参考
    - HTML要素ベースの実装を採用
 
