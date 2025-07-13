@@ -56,3 +56,27 @@ build react native web storybook:
 yarn build-storybook
 ```
 # omni-stove-ui
+
+## CLI Usage
+
+This package includes a CLI tool that provides additional functionality:
+
+### MCP Server
+
+Start the Model Context Protocol (MCP) server for AI-assisted component analysis:
+
+```sh
+npx @omni-stove/ui --mcp
+```
+
+This starts an MCP server that allows AI assistants (like Claude Desktop) to analyze and understand the component library structure.
+
+### Extract Components
+
+Extract the source components to a local directory:
+
+```sh
+npx @omni-stove/ui --extract ./my-components
+```
+
+This copies all components from the `src` directory to your specified location, useful for customization or reference.
