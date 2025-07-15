@@ -73,11 +73,7 @@ export const Default: Story = {
 export const AllAlignments: Story = {
   render: () => (
     <View style={{ gap: 16, height: 200, position: "relative" }}>
-      <Component
-        alignment="start"
-        actions={defaultActions}
-        fab={defaultFab}
-      />
+      <Component alignment="start" actions={defaultActions} fab={defaultFab} />
       <View style={{ height: 100 }} />
       <Component alignment="center" actions={defaultActions} fab={defaultFab} />
     </View>
@@ -87,17 +83,9 @@ export const AllAlignments: Story = {
 export const AllVariants: Story = {
   render: () => (
     <View style={{ gap: 16, height: 200, position: "relative" }}>
-      <Component
-        variant="docked"
-        actions={defaultActions}
-        fab={defaultFab}
-      />
+      <Component variant="docked" actions={defaultActions} fab={defaultFab} />
       <View style={{ height: 100 }} />
-      <Component
-        variant="floating"
-        actions={defaultActions}
-        fab={defaultFab}
-      />
+      <Component variant="floating" actions={defaultActions} fab={defaultFab} />
     </View>
   ),
 };
@@ -195,16 +183,9 @@ const manyActions = [
 export const ResponsiveActions: Story = {
   render: () => (
     <View style={{ gap: 16, height: 200, position: "relative" }}>
-      <Component
-        actions={manyActions}
-        fab={defaultFab}
-      />
+      <Component actions={manyActions} fab={defaultFab} />
       <View style={{ height: 100 }} />
-      <Component
-        variant="docked"
-        actions={manyActions}
-        fab={defaultFab}
-      />
+      <Component variant="docked" actions={manyActions} fab={defaultFab} />
     </View>
   ),
 };
@@ -293,22 +274,24 @@ export const MixedIconsAndLabels: Story = {
 
 export const WithSelectedStates: Story = {
   render: () => {
-    const [selectedActions, setSelectedActions] = useState<string[]>(['home']);
-    const [selectedTextActions, setSelectedTextActions] = useState<string[]>(['bold']);
-    
+    const [selectedActions, setSelectedActions] = useState<string[]>(["home"]);
+    const [selectedTextActions, setSelectedTextActions] = useState<string[]>([
+      "bold",
+    ]);
+
     const toggleIconSelection = (actionId: string) => {
-      setSelectedActions(prev => 
-        prev.includes(actionId) 
-          ? prev.filter(id => id !== actionId)
-          : [...prev, actionId]
+      setSelectedActions((prev) =>
+        prev.includes(actionId)
+          ? prev.filter((id) => id !== actionId)
+          : [...prev, actionId],
       );
     };
 
     const toggleTextSelection = (actionId: string) => {
-      setSelectedTextActions(prev => 
-        prev.includes(actionId) 
-          ? prev.filter(id => id !== actionId)
-          : [...prev, actionId]
+      setSelectedTextActions((prev) =>
+        prev.includes(actionId)
+          ? prev.filter((id) => id !== actionId)
+          : [...prev, actionId],
       );
     };
 
@@ -319,27 +302,27 @@ export const WithSelectedStates: Story = {
           actions={[
             {
               icon: "home",
-              onPress: () => toggleIconSelection('home'),
+              onPress: () => toggleIconSelection("home"),
               accessibilityLabel: "Home",
-              selected: selectedActions.includes('home'),
+              selected: selectedActions.includes("home"),
             },
             {
               icon: "magnify",
-              onPress: () => toggleIconSelection('magnify'),
+              onPress: () => toggleIconSelection("magnify"),
               accessibilityLabel: "Search",
-              selected: selectedActions.includes('magnify'),
+              selected: selectedActions.includes("magnify"),
             },
             {
               icon: "heart",
-              onPress: () => toggleIconSelection('heart'),
+              onPress: () => toggleIconSelection("heart"),
               accessibilityLabel: "Favorite",
-              selected: selectedActions.includes('heart'),
+              selected: selectedActions.includes("heart"),
             },
             {
               icon: "bookmark",
-              onPress: () => toggleIconSelection('bookmark'),
+              onPress: () => toggleIconSelection("bookmark"),
               accessibilityLabel: "Bookmark",
-              selected: selectedActions.includes('bookmark'),
+              selected: selectedActions.includes("bookmark"),
             },
           ]}
         />
@@ -350,21 +333,21 @@ export const WithSelectedStates: Story = {
           actions={[
             {
               label: "Bold",
-              onPress: () => toggleTextSelection('bold'),
+              onPress: () => toggleTextSelection("bold"),
               accessibilityLabel: "Bold",
-              selected: selectedTextActions.includes('bold'),
+              selected: selectedTextActions.includes("bold"),
             },
             {
               label: "Italic",
-              onPress: () => toggleTextSelection('italic'),
+              onPress: () => toggleTextSelection("italic"),
               accessibilityLabel: "Italic",
-              selected: selectedTextActions.includes('italic'),
+              selected: selectedTextActions.includes("italic"),
             },
             {
               label: "Underline",
-              onPress: () => toggleTextSelection('underline'),
+              onPress: () => toggleTextSelection("underline"),
               accessibilityLabel: "Underline",
-              selected: selectedTextActions.includes('underline'),
+              selected: selectedTextActions.includes("underline"),
             },
           ]}
         />

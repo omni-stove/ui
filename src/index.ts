@@ -7,7 +7,7 @@ export * from "./Badge";
 export * from "./Banner";
 export * from "./BottomNavigation";
 export * from "./BottomSheet";
-export * from "./Button";
+export * from "./Button/index.native";
 export * from "./Card";
 export * from "./Chat";
 export * from "./Checkbox";

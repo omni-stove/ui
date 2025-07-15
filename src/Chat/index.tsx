@@ -20,7 +20,7 @@ import {
   View,
 } from "react-native";
 import { TextInput } from "react-native-paper"; // Keep TextInput from paper
-import { Button } from "../Button"; // Import local Button
+import { Button } from "../Button/index.native"; // Import local Button
 import { IconButton } from "../IconButton"; // Import local IconButton
 import { Surface } from "../Surface"; // Import local Surface
 import { Typography } from "../Typography";

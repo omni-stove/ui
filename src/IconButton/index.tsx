@@ -1,5 +1,5 @@
-import { forwardRef, type Ref } from "react";
-import type { ViewStyle, View } from "react-native";
+import { type Ref, forwardRef } from "react";
+import type { View, ViewStyle } from "react-native";
 import { Icon, TouchableRipple } from "react-native-paper";
 import { useTheme } from "../hooks";
 

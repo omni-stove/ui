@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect } from "@storybook/test";
 import { Tooltip as Component } from ".";
-import { Button } from "../Button";
+import { Button } from "../Button/index.native";
 import { Icon } from "../Icon";
 import { getCanvas } from "../libs/storybook";
 

@@ -2,14 +2,14 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, within } from "@storybook/test";
 import { ScrollView, View } from "react-native";
 import { Dialog as Component } from ".";
-import { Button } from "../Button";
+import { Button } from "../Button/index.native";
 import { Checkbox } from "../Checkbox";
 import { Grid, GridItem } from "../Grid";
+import { IconButton } from "../IconButton";
 import { Select } from "../Select";
 import { Switch } from "../Switch";
 import { TextField } from "../TextField";
 import { Typography } from "../Typography";
-import { IconButton } from "../IconButton";
 
 const meta: Meta<typeof Component> = {
   component: Component,

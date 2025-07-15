@@ -1,4 +1,4 @@
-import { forwardRef, type ReactNode } from "react";
+import { type ReactNode, forwardRef } from "react";
 import type { View } from "react-native";
 import { Appbar as AppbarPrimitive } from "react-native-paper";
 

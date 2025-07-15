@@ -127,7 +127,7 @@ export const WithAppbarContent: Story = {
   render: () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedKey, setSelectedKey] = useState("home");
-    
+
     return (
       <AppLayout
         appbar={{
@@ -166,7 +166,9 @@ export const WithAppbarContent: Story = {
         }}
         navigationRailBreakpoint={768}
       >
-        <SampleContent title={`Search: "${searchQuery}" | Selected: ${selectedKey}`} />
+        <SampleContent
+          title={`Search: "${searchQuery}" | Selected: ${selectedKey}`}
+        />
       </AppLayout>
     );
   },

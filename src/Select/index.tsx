@@ -1,9 +1,9 @@
 import {
+  type CSSProperties,
+  type ChangeEvent,
   type ComponentProps,
   type ForwardedRef,
   forwardRef,
-  type CSSProperties,
-  type ChangeEvent,
 } from "react";
 import type { TextField } from "../TextField";
 import { useTheme } from "../hooks";

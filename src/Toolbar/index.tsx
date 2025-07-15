@@ -295,7 +295,9 @@ export const Toolbar = forwardRef<View, Props>(
                 },
               ]}
               rippleColor={
-                action.selected ? toolbarColors.selectedRipple : toolbarColors.ripple
+                action.selected
+                  ? toolbarColors.selectedRipple
+                  : toolbarColors.ripple
               }
               borderless
               accessibilityRole="button"

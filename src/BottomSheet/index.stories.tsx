@@ -3,7 +3,7 @@ import { userEvent, within } from "@storybook/test";
 import { useRef } from "react";
 import { View } from "react-native";
 import { type BottomSheetRef, BottomSheet as Component } from ".";
-import { Button } from "../Button";
+import { Button } from "../Button/index.native";
 import { Typography } from "../Typography";
 
 const meta: Meta<typeof Component> = {

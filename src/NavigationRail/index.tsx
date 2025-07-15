@@ -1,8 +1,13 @@
 "use client";
 import type { ComponentRef } from "react";
 import { forwardRef, useEffect, useState } from "react";
-import { type StyleProp, StyleSheet, View, type ViewStyle, Dimensions } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  Dimensions,
+  type StyleProp,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from "react-native";
 import {
   Badge,
   Icon,
@@ -17,6 +22,7 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Typography } from "../Typography";
 import { useTheme } from "../hooks";
 
@@ -111,7 +117,7 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
     ref,
   ) => {
     const theme = useTheme();
-    const screenHeight = Dimensions.get('window').height;
+    const screenHeight = Dimensions.get("window").height;
     const [status, setStatus] = useState<Status>(
       variant === "modal" ? "expanded" : initialStatus,
     );
@@ -480,13 +486,13 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
           {/* Button to toggle modal visibility, only visible when modal is closed */}
           {variant === "modal" && !isModalOpen && (
             <Portal>
-              <SafeAreaView 
-                edges={["top"]} 
-                style={{ 
-                  position: "absolute", 
+              <SafeAreaView
+                edges={["top"]}
+                style={{
+                  position: "absolute",
                   zIndex: 1002,
                   paddingTop: 8,
-                  paddingLeft: 16 
+                  paddingLeft: 16,
                 }}
               >
                 <IconButton
@@ -511,11 +517,11 @@ export const NavigationRail = forwardRef<ComponentRef<typeof View>, Props>(
                   }
                 }}
                 contentContainerStyle={dynamicModalContentStyle}
-                style={{ 
+                style={{
                   alignItems: "flex-start",
                   margin: 0,
                   justifyContent: "flex-start",
-                  flex: 1
+                  flex: 1,
                 }}
               >
                 {railContent}

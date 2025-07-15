@@ -2,7 +2,7 @@ import { type ReactNode, useCallback, useEffect, useState } from "react";
 import { BackHandler, Pressable, StyleSheet, View } from "react-native";
 import { Icon, Dialog as PaperDialog, Portal } from "react-native-paper";
 import type { IconSource } from "react-native-paper/lib/typescript/components/Icon";
-import { Button } from "../Button";
+import { Button } from "../Button/index.native";
 import { Typography } from "../Typography";
 import { useTheme } from "../hooks";
 

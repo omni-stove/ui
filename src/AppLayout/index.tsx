@@ -157,7 +157,6 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
 
     const railVariant = navigationRail ? getNavigationRailVariant() : null;
 
-
     const bottomColor = useMemo(() => {
       if (!toolbar) {
         return theme.colors.background;
@@ -172,7 +171,6 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
 
     return (
       <>
-        
         <SafeAreaView
           style={[
             {
@@ -189,54 +187,53 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
           testID={testID}
           accessibilityLabel={accessibilityLabel}
         >
-        <KeyboardAvoidingView
-          ref={ref}
-          style={{ flex: 1 }}
-          behavior={keyboardBehavior}
-          keyboardVerticalOffset={keyboardVerticalOffset}
-        >
-          <View style={{ flex: 1, flexDirection: "row" }}>
-            {/* NavigationRail - standard variant (full height) */}
-            {navigationRail && railVariant === "standard" && (
-              <NavigationRail
-                variant="standard"
-                items={navigationRail.items}
-                selectedItemKey={navigationRail.selectedItemKey}
-                onMenuPress={navigationRail.onMenuPress}
-                fabIcon={navigationRail.fabIcon}
-                fabLabel={navigationRail.fabLabel}
-                onFabPress={navigationRail.onFabPress}
-                initialStatus={navigationRail.initialStatus}
-              />
-            )}
-
-            {/* Main content area with Appbar */}
-            <View style={{ flex: 1 }}>
-              {/* Appbar */}
-              {appbar && (
-                <Appbar
-                  title={appbar.title}
-                  onBack={appbar.backAction?.onPress}
-                  actions={appbar.actions?.map(action => ({
-                    icon: action.icon as string,
-                    onPress: action.onPress,
-                    accessibilityLabel: action.accessibilityLabel
-                  }))}
-                  content={appbar.content}
+          <KeyboardAvoidingView
+            ref={ref}
+            style={{ flex: 1 }}
+            behavior={keyboardBehavior}
+            keyboardVerticalOffset={keyboardVerticalOffset}
+          >
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              {/* NavigationRail - standard variant (full height) */}
+              {navigationRail && railVariant === "standard" && (
+                <NavigationRail
+                  variant="standard"
+                  items={navigationRail.items}
+                  selectedItemKey={navigationRail.selectedItemKey}
+                  onMenuPress={navigationRail.onMenuPress}
+                  fabIcon={navigationRail.fabIcon}
+                  fabLabel={navigationRail.fabLabel}
+                  onFabPress={navigationRail.onFabPress}
+                  initialStatus={navigationRail.initialStatus}
                 />
               )}
 
-              {/* Main content */}
-              <View style={{ flex: 1 }}>{children}</View>
+              {/* Main content area with Appbar */}
+              <View style={{ flex: 1 }}>
+                {/* Appbar */}
+                {appbar && (
+                  <Appbar
+                    title={appbar.title}
+                    onBack={appbar.backAction?.onPress}
+                    actions={appbar.actions?.map((action) => ({
+                      icon: action.icon as string,
+                      onPress: action.onPress,
+                      accessibilityLabel: action.accessibilityLabel,
+                    }))}
+                    content={appbar.content}
+                  />
+                )}
 
-              {/* Toolbar */}
-              {toolbar && <Toolbar {...toolbar} />}
+                {/* Main content */}
+                <View style={{ flex: 1 }}>{children}</View>
+
+                {/* Toolbar */}
+                {toolbar && <Toolbar {...toolbar} />}
+              </View>
             </View>
-          </View>
-        </KeyboardAvoidingView>
-
+          </KeyboardAvoidingView>
         </SafeAreaView>
-        
+
         {/* NavigationRail - modal variant (hidden when BackAction is present) */}
         {navigationRail && railVariant === "modal" && !appbar?.backAction && (
           <NavigationRail
@@ -250,12 +247,13 @@ export const AppLayout = forwardRef<KeyboardAvoidingView, AppLayoutProps>(
             initialModalOpen={false}
           />
         )}
-        
+
         {/* Bottom safe area for Toolbar */}
         {toolbar && (
           <SafeAreaView
-            style={{ 
-              backgroundColor: toolbar.variant === "docked" ? bottomColor : "transparent" 
+            style={{
+              backgroundColor:
+                toolbar.variant === "docked" ? bottomColor : "transparent",
             }}
             edges={["bottom"]}
           />
