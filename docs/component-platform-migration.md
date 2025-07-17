@@ -27,7 +27,7 @@ rm src/ComponentName/index.web.tsx
 mv src/ComponentName/index.tsx src/ComponentName/index.native.tsx
 
 # 2. cody-uiを参考にWeb用実装を新しいindex.tsxとして作成
-# 参考URL: https://github.com/codyogden/cody-ui
+# 参考URL: https://github.com/codynog/cody-ui
 ```
 
 ## Web用実装の指針
