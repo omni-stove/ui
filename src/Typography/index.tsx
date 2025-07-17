@@ -1,52 +1,36 @@
-import type { ComponentProps, ReactNode } from "react";
-import { Text as PaperText } from "react-native-paper";
-import { useTheme } from "../hooks";
-import type { Material3Colors } from "../hooks/types";
-
-type PaperTextVariant = ComponentProps<typeof PaperText>["variant"];
-
-type TypographyProps = {
-  /**
-   * The text variant.
-   * Uses the variant from the react-native-paper Text component.
-   * @default 'bodyMedium'
-   * @see https://callstack.github.io/react-native-paper/docs/components/Text/
-   */
-  variant?: PaperTextVariant;
-  /**
-   * The text color.
-   * Specifies a color defined in ExtendedTheme.
-   * @default 'onSurface'
-   */
-  color?: keyof Material3Colors;
-  /**
-   * The content to display.
-   */
-  children: ReactNode;
-};
+"use client";
+import { forwardRef } from "react";
+import { Text } from "react-aria-components";
+import styles from "./index.module.css";
+import type { Props } from "./types";
 
 /**
- * A component for displaying text.
- * This component extends the react-native-paper Text component,
- * allowing color specification from ExtendedTheme.
- *
- * @param {TypographyProps} props - The component's props.
- * @param {PaperTextVariant} [props.variant='bodyMedium'] - The variant of the react-native-paper Text component.
- * @param {keyof Material3Colors} [props.color='onSurface'] - The color defined in ExtendedTheme.
- * @param {ReactNode} props.children - The child elements to render.
- * @returns {ComponentProps<typeof PaperText>} Returns the PaperText component.
+ * Typography component applies Material Design 3 typographic styles and colors.
+ * It can render as a `<span>` or a `react-aria-components/Text` component if a `slot` is provided.
  */
-export const Typography = ({
-  variant = "bodyMedium",
-  color = "onSurface",
-  children,
-}: TypographyProps) => {
-  const theme = useTheme();
-  const textColor = theme.colors[color];
+export const Typography = forwardRef<HTMLSpanElement, Props>(
+  ({ children, variant = "bodyMedium", color = "onSurface", slot }, ref) => {
+    const toKebabCase = (str: string) => {
+      return str.replace(/([A-Z])/g, "-$1").toLowerCase();
+    };
 
-  return (
-    <PaperText variant={variant} style={[{ color: textColor }]}>
-      {children}
-    </PaperText>
-  );
-};
+    const className = styles[variant];
+    const style = { color: `var(--md-sys-color-${toKebabCase(color)})` };
+
+    if (slot) {
+      return (
+        <Text ref={ref} className={className} style={style} slot={slot}>
+          {children}
+        </Text>
+      );
+    }
+
+    return (
+      <span ref={ref} className={className} style={style}>
+        {children}
+      </span>
+    );
+  },
+);
+
+Typography.displayName = "Typography";

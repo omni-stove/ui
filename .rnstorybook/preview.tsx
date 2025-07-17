@@ -1,10 +1,11 @@
 import { withBackgrounds } from "@storybook/addon-ondevice-backgrounds";
 import type { Preview } from "@storybook/react";
-import React from "react";
 import { useColorScheme } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { MD3DarkTheme, MD3LightTheme } from "react-native-paper";
 import { UIProvider } from "../src/Provider";
+import "../src/theme.css"; // Import theme.css
+import "../src/global.css"; // Add this line to import global styles
 
 const ThemeAwareDecorator = (Story: any, context: any) => {
 	const colorScheme = useColorScheme();

@@ -27,3 +27,6 @@ CLAUDE.personal.md
 
 # env
 .env
+
+# css
+src/**/*.d.ts

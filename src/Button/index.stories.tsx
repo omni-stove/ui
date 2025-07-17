@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect } from "@storybook/test";
 import { View } from "react-native";
-import { Button as Component } from ".";
+import { Button as Component } from "./index.native";
 import { getCanvas } from "../libs/storybook";
 
 const meta: Meta<typeof Component> = {
