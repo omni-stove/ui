@@ -26,7 +26,7 @@
   ],
   "scripts": {
     "preinstall": "npx -y only-allow npm",
-    "postinstall": "npx -y @omni-stove/ai-rules",
+    "postinstall": "ai-rules",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
@@ -70,6 +70,7 @@
     "@babel/preset-env": "^7.25.4",
     "@biomejs/biome": "^1.9.4",
     "@chromatic-com/storybook": "^3.2.6",
+    "@omni-stove/ai-rules": "latest",
     "@expo/metro-runtime": "~5.0.4",
     "@modelcontextprotocol/sdk": "^1.12.1",
     "@storybook/addon-actions": "^8.6.12",
