@@ -11,14 +11,6 @@ runs:
         registry-url: 'https://npm.pkg.github.com'
         scope: '@omni-stove'
 
-    - name: Configure npm authentication
-      shell: bash
-      run: |
-        echo "@omni-stove:registry=https://npm.pkg.github.com/" >> ~/.npmrc
-        echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" >> ~/.npmrc
-      env:
-        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
-
     - name: Get npm cache directory
       id: npm-cache-dir
       shell: bash
@@ -36,6 +28,7 @@ runs:
       shell: bash
       env:
         NODE_AUTH_TOKEN: ${{ env.NODE_AUTH_TOKEN || env.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
 
     - name: Save npm cache
       uses: actions/cache/save@v4
