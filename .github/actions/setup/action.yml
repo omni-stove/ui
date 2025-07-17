@@ -10,7 +10,14 @@ runs:
         node-version-file: ".node-version"
         registry-url: 'https://npm.pkg.github.com'
         scope: '@omni-stove'
-        always-auth: true
+
+    - name: Configure npm authentication
+      shell: bash
+      run: |
+        echo "@omni-stove:registry=https://npm.pkg.github.com/" >> ~/.npmrc
+        echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" >> ~/.npmrc
+      env:
+        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
 
     - name: Get npm cache directory
       id: npm-cache-dir
