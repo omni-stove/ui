@@ -12,10 +12,9 @@ runs:
         app-id: 1625136
         private-key: ${{ env.PRIVATE_KEY }}
         owner: omni-stove
-        permissions: |
-          contents: read
-          metadata: read  
-          packages: read
+        permission-contents: read
+        permission-metadata: read
+        permission-packages: read
 
     - name: Debug - Check token permissions
       shell: bash
