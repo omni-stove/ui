@@ -12,19 +12,23 @@ runs:
         app-id: 1625136
         private-key: ${{ env.PRIVATE_KEY }}
         owner: omni-stove
+        permissions: |
+          contents: read
+          metadata: read  
+          packages: read
 
     - name: Debug - Check token permissions
       shell: bash
       run: |
-        echo "Testing GitHub App token..."
+        echo "Testing GitHub App installation..."
         curl -H "Authorization: token ${{ steps.app-token.outputs.token }}" \
           -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/user
+          https://api.github.com/installation/repositories
         echo ""
-        echo "Checking package access..."
+        echo "Checking specific package access..."
         curl -H "Authorization: token ${{ steps.app-token.outputs.token }}" \
           -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/orgs/omni-stove/packages
+          https://api.github.com/orgs/omni-stove/packages/npm/ai-rules
 
     - uses: actions/setup-node@v4
       with:
