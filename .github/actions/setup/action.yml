@@ -1,14 +1,17 @@
 name: setup
 description: 'Setup Node.js with .node-version file and cache npm dependencies using cache v4'
 
-inputs:
-  github-token:
-    description: 'GitHub token for private package access'
-    required: true
-
 runs:
   using: "composite"
   steps:
+
+    - name: Generate app token
+      id: app-token
+      uses: actions/create-github-app-token@v2
+      with:
+        app-id: 1625136
+        private-key: ${{ env.PRIVATE_KEY }}
+        owner: omni-stove
 
     - uses: actions/setup-node@v4
       with:
@@ -32,8 +35,8 @@ runs:
       run: npm ci
       shell: bash
       env:
-        NODE_AUTH_TOKEN: ${{ inputs.github-token }}
-        GITHUB_TOKEN: ${{ inputs.github-token }}
+        NODE_AUTH_TOKEN: ${{ steps.app-token.outputs.token }}
+        GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
     - name: Save npm cache
       uses: actions/cache/save@v4
